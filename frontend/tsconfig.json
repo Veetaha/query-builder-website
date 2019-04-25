@@ -1,0 +1,19 @@
+{
+    "extends": "../tsconfig.json",
+    "compileOnSave": false,
+    "compilerOptions": {
+        "outDir": "./dist/out-tsc",
+
+        "baseUrl": "./src/app",
+        "paths": {
+            "@app/*":     [ "./*" ],
+            "@modules/*": [ "./modules/*" ]
+        },
+
+        "module": "esnext",
+        "moduleResolution": "node",
+        
+        "target": "es2015",
+        "lib": [ "esnext", "dom" ]
+    }
+}

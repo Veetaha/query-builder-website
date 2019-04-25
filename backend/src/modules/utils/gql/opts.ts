@@ -1,0 +1,1 @@
+export const Nullable = { nullable: true } as const;

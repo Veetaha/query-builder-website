@@ -1,0 +1,43 @@
+{
+    "name": "frontend",
+    "version": "0.0.0",
+    "scripts": {
+        "ng": "ng",
+        "start": "ng serve",
+        "build": "ng build",
+        "test": "ng test",
+        "lint": "ng lint",
+        "e2e": "ng e2e"
+    },
+    "private": true,
+    "dependencies": {
+        "@angular/animations": "latest",
+        "@angular/common": "latest",
+        "@angular/compiler": "latest",
+        "@angular/core": "latest",
+        "@angular/forms": "latest",
+        "@angular/platform-browser": "latest",
+        "@angular/platform-browser-dynamic": "latest",
+        "@angular/router": "latest",
+        "core-js": "^2.6.5",
+        "zone.js": "latest"
+    },
+    "devDependencies": {
+        "@angular-devkit/build-angular": "latest",
+        "@angular/cli": "latest",
+        "@angular/compiler-cli": "latest",
+        "@angular/language-service": "latest",
+        "@types/core-js": "^2.5.0",
+        "@types/jasmine": "latest",
+        "@types/jasminewd2": "latest",
+        "codelyzer": "latest",
+        "jasmine-core": "latest",
+        "jasmine-spec-reporter": "latest",
+        "karma": "latest",
+        "karma-chrome-launcher": "latest",
+        "karma-coverage-istanbul-reporter": "latest",
+        "karma-jasmine": "latest",
+        "karma-jasmine-html-reporter": "latest",
+        "protractor": "latest"
+    }
+}

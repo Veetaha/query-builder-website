@@ -1,0 +1,58 @@
+{
+  "name": "ts-nestjs-angular-template",
+  "version": "1.0.0",
+  "description": "Fullstack TypeScript, NestJS, Angular7+ project.",
+  "main": "backend/dist/backend/src/main.js",
+  "scripts": {
+    "test": "(cd backend && npm run test)",
+    "build": "(cd frontend && npm run build)",
+    "start": "(cd backend  && npm run start)",
+    "dev": "(cd backend  && npm run dev)",
+    "docker": "docker-compose up",
+    "docker:dev": "docker-compose --file debug.docker-compose.yml up",
+    "postinstall": "npm install --prefix backend && npm install --prefix frontend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Veetaha/ts-nestjs-angular-template.git"
+  },
+  "keywords": [
+    "template",
+    "project",
+    "starter"
+  ],
+  "author": "Vitaly Kryvenko",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Veetaha/ts-nestjs-angular-template/issues"
+  },
+  "homepage": "https://github.com/Veetaha/ts-nestjs-angular-template#readme",
+  "dependencies": {
+    "class-transformer": "latest",
+    "class-transformer-validator": "^0.7.1",
+    "class-validator": "latest",
+    "coveralls": "^3.0.3",
+    "graphql": "^14.2.1",
+    "joi": "latest",
+    "lodash": "latest",
+    "mathjs": "latest",
+    "reflect-metadata": "latest",
+    "rimraf": "latest",
+    "rxjs": "latest",
+    "ts-node": "latest",
+    "ts-typedefs": "^2.5.1",
+    "tslib": "^1.9.3",
+    "typesafe-joi": "latest",
+    "typescript": "^3.4.5",
+    "typescript-collections": "latest",
+    "yaml": "latest"
+  },
+  "devDependencies": {
+    "@types/yaml": "latest",
+    "@types/lodash": "latest",
+    "@types/mathjs": "latest",
+    "@types/node": "latest",
+    "prettier": "latest",
+    "tslint": "latest"
+  }
+}

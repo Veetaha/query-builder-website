@@ -1,0 +1,13 @@
+version: '3'
+services: 
+    web-debug:
+        build:
+            context: '.'
+            dockerfile: debug.dockerfile
+        volumes:
+            - .:/home/veetaha/my/projects/ts-nestjs-angular-template
+            - /home/veetaha/my/projects/ts-nestjs-angular-template/node_modules
+        ports:
+            - "${PORT}:${PORT}"
+            - "9229:9229"
+        env_file: .env
