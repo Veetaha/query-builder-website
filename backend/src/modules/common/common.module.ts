@@ -5,7 +5,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule      } from '@nestjs/jwt';
 
 import { UtilsModule  } from '@utils/utils.module';
-import { ConfigModule } from '@modules/config';
+import { ConfigModule } from '@modules/config/config.module';
 
 
 

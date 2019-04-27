@@ -3,17 +3,27 @@ import { composeDecorators } from '@utils/meta';
 
 const ValidationsMetaKey = 'app:constraints';
 
+export type PropDecor = I.PropertyDecorator<unknown, string>;
+
 /**
  * Defines and stores validations for the given property of target class.
  * @param validations `'class-validator'` decorators to store and reuse.
  */
 export function Validations
-(...validations: I.PropertyDecorator<unknown, string>[]): I.PropertyDecorator<unknown, string> {
+(...validations: PropDecor[]): PropDecor {
     return (proto, key) => {
         const composedValidations = composeDecorators(...validations);
 
-        Reflect.defineMetadata(ValidationsMetaKey, composedValidations, proto.constructor, key);
-
+        const meta: undefined | PropDecor[] = Reflect.getOwnMetadata(
+            ValidationsMetaKey, proto.constructor, key
+        );
+        if (meta != null) {
+            meta.push(...validations);
+        } else {
+            Reflect.defineMetadata(
+                ValidationsMetaKey, composedValidations, proto.constructor, key
+            );
+        }
         return composedValidations(proto, key);
     }; 
 }
@@ -25,7 +35,7 @@ export function Validations
  */
 export function ValidateAs
 <TSrcClass extends I.Class>
-(SrcClass: TSrcClass, key: keyof InstanceType<TSrcClass>): I.PropertyDecorator {
+(SrcClass: TSrcClass, key: keyof InstanceType<TSrcClass>): PropDecor {
     const validations = Reflect.getOwnMetadata(ValidationsMetaKey, SrcClass, key as any);
     if (validations == null) {
         throw new Error(`No validation were previously defined for ${SrcClass.name}['${key}']`);

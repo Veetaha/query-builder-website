@@ -2,10 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 
 import * as I from '@app/interfaces';
-import { QueryAndParams } from '@utils/gql/filtering/filter-builder';
+import { QueryAndParams  } from '@utils/gql/filtering/filter-builder';
+import { PaginationInput } from '@utils/gql/pagination/pagination.input';
+import { GqlUtilsService } from '@utils/gql/gql-utils.service';
 
 @Injectable()
 export class OrmUtilsService {
+
+    constructor(private readonly gql: GqlUtilsService) {}
 
     /**
      * Removes properties that are defined as required in `TypeOrm.Entity`, but
@@ -38,9 +42,9 @@ export class OrmUtilsService {
      */
     async updateOne<TEntityRepo extends Repository<any>>(
         repo: TEntityRepo,
-        upd:  I.NullableProps<ReturnType<TEntityRepo['create']>>, 
+        upd:  I.NullableProps<I.EntityFromRepo<TEntityRepo>>, 
         ...whereParams: QueryAndParams
-    ): Promise<I.CoreObjData<ReturnType<TEntityRepo['create']>>> {
+    ): Promise<I.Nullable<I.CoreObjData<I.EntityFromRepo<TEntityRepo>>>> {
         return (await repo
             .createQueryBuilder()
             .update(this.removeNilFromRequiredProps(repo, upd))
@@ -49,6 +53,21 @@ export class OrmUtilsService {
             .execute()
             )   
             .raw[0];
+    }
+
+    async getPage<TEntity extends I.Obj>(
+        repo: Repository<TEntity>,
+        { limit, offset, sort, filter }: PaginationInput
+    ) {
+        const tableAlias = repo.metadata.targetName;
+        const [data, total] = await repo
+            .createQueryBuilder(tableAlias)
+            .where(...this.gql.getFilterParams(filter, tableAlias))
+            .orderBy(this.gql.getOrderByCondition(sort, tableAlias))
+            .skip(offset)
+            .take(limit)
+            .getManyAndCount();
+        return { data, total };
     }
 
 

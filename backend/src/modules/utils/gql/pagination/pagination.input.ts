@@ -2,10 +2,12 @@ import { InputType } from 'type-graphql';
 import { Min, Max } from 'class-validator';
 
 import * as I from '@app/interfaces';
-import { IntField          } from '@utils/gql/decorators/explicit-type-field.decorator';
-import { NestedInputField  } from '@utils/gql/decorators/nested-input-field.decorator';
-import { ISortInput        } from '@utils/gql/sorting/sort-input.interface';
-import { IFilterInput, MetaObjFilterInput } from '@utils/gql/filtering';
+import { IntField           } from '@utils/gql/decorators/explicit-type-field.decorator';
+import { NestedInputField   } from '@utils/gql/decorators/nested-input-field.decorator';
+import { ISortInput         } from '@utils/gql/sorting/sort-input.interface';
+import { IFilterInput       } from '@utils/gql/filtering/inputs/filter-input.interface';
+import { MetaObjFilterInput } from '@utils/gql/filtering/inputs/meta-obj-filter.input';
+
 
 
 export interface PaginationInputOpts<

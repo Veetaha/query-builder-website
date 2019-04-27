@@ -108,16 +108,18 @@ export class FilterBuilder
         meta: ColumnMetadata
     ) {
         switch (operator) {
-            case FilterOperator.Eq:    return this.tryCreateEq   (this.getColumnName(meta), operand, meta.isNullable, true);
-            case FilterOperator.Neq:   return this.tryCreateEq   (this.getColumnName(meta), operand, meta.isNullable, false);
-            case FilterOperator.Gt:    return this.tryCreateBinOp(this.getColumnName(meta), SqlBinOp.Gt,  operand);
-            case FilterOperator.Lt:    return this.tryCreateBinOp(this.getColumnName(meta), SqlBinOp.Lt,  operand);
-            case FilterOperator.Geq:   return this.tryCreateBinOp(this.getColumnName(meta), SqlBinOp.Geq, operand);
-            case FilterOperator.Leq:   return this.tryCreateBinOp(this.getColumnName(meta), SqlBinOp.Leq, operand);
-            case FilterOperator.In:    return this.tryCreateIn   (this.getColumnName(meta), operand as I.Nullable<unknown[]>, true);
-            case FilterOperator.Nin:   return this.tryCreateIn   (this.getColumnName(meta), operand as I.Nullable<unknown[]>, false);
-            case FilterOperator.Like:  return this.tryCreateLike (this.getColumnName(meta), operand as I.Nullable<string>, true);
-            case FilterOperator.Nlike: return this.tryCreateLike (this.getColumnName(meta), operand as I.Nullable<string>, false);
+            case FilterOperator.Eq:     return this.tryCreateEq   (this.getColumnName(meta), operand, meta.isNullable, true);
+            case FilterOperator.Neq:    return this.tryCreateEq   (this.getColumnName(meta), operand, meta.isNullable, false);
+            case FilterOperator.Gt:     return this.tryCreateBinOp(this.getColumnName(meta), SqlBinOp.Gt,  operand);
+            case FilterOperator.Lt:     return this.tryCreateBinOp(this.getColumnName(meta), SqlBinOp.Lt,  operand);
+            case FilterOperator.Geq:    return this.tryCreateBinOp(this.getColumnName(meta), SqlBinOp.Geq, operand);
+            case FilterOperator.Leq:    return this.tryCreateBinOp(this.getColumnName(meta), SqlBinOp.Leq, operand);
+            case FilterOperator.In:     return this.tryCreateIn   (this.getColumnName(meta), operand as I.Nullable<unknown[]>, true);
+            case FilterOperator.Nin:    return this.tryCreateIn   (this.getColumnName(meta), operand as I.Nullable<unknown[]>, false);
+            case FilterOperator.Like:   return this.tryCreateLike (this.getColumnName(meta), operand as I.Nullable<string>, true);
+            case FilterOperator.Nlike:  return this.tryCreateLike (this.getColumnName(meta), operand as I.Nullable<string>, false);
+            case FilterOperator.Ilike:  return this.tryCreateIlike(this.getColumnName(meta), operand as I.Nullable<string>, true);
+            case FilterOperator.Nilike: return this.tryCreateIlike(this.getColumnName(meta), operand as I.Nullable<string>, false);
             default: throw new I.Debug.UnreachableCodeError(operator);
         }
     }
@@ -218,6 +220,14 @@ export class FilterBuilder
     private tryCreateLike(columnName: string, operand: I.Nullable<string>, shouldBeLike: boolean) {
         return operand == null ? '' : 
             `${columnName}${this.getNotIf(!shouldBeLike)}LIKE :${this.createParam(operand)}`;
+    }
+
+    /**
+     * Same as `tryCreateLike` but for `ILIKE`
+     */
+    private tryCreateIlike(columnName: string, operand: I.Nullable<string>, shouldBeIlike: boolean) {
+        return operand == null ? '' : 
+            `${columnName}${this.getNotIf(!shouldBeIlike)}ILIKE :${this.createParam(operand)}`;
     }
 
     /**

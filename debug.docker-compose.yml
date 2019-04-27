@@ -1,12 +1,12 @@
 version: '3'
 services: 
-    web-debug:
+    query-builder-web-debug:
         build:
             context: '.'
             dockerfile: debug.dockerfile
         volumes:
-            - .:/home/veetaha/my/projects/ts-nestjs-angular-template
-            - /home/veetaha/my/projects/ts-nestjs-angular-template/node_modules
+            - .:/home/${USER}/my/projects/query-builder-website
+            - /home/${USER}/my/projects/query-builder-website/node_modules
         ports:
             - "${PORT}:${PORT}"
             - "9229:9229"

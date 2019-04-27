@@ -1,27 +1,21 @@
 import { ObjectType, Field } from 'type-graphql';
 import { 
-    Entity, CreateDateColumn, UpdateDateColumn, Column, PrimaryColumn 
+    Entity, CreateDateColumn, UpdateDateColumn, Column 
 } from 'typeorm';
 
 import * as I from '@app/interfaces';
-import { UserRole          } from './user-role.enum';
-import { IntegerRange      } from '@utils/math/integer-range.class';
-import { StringLength      } from '@utils/validation/string-length.decorator';
-import { Validations       } from '@utils/validation/validations.decorator';
-import { ValidateIfPresent } from '@utils/validation/validate-if-present.decorator';
+import { ConfigService } from '@modules/config/config.service';
+import { Nullable      } from '@utils/gql/opts';
+import { StringColumn  } from '@utils/orm/decorators/string-column.decorator';
+import { UserRole      } from './user-role.enum';
 import { StringField, DateField } from '@utils/gql/decorators/explicit-type-field.decorator';
-import { Nullable } from '@utils/gql/opts';
 
+
+const { limits } = ConfigService;
 
 @ObjectType()
 @Entity()
 export class User {
-    static readonly limits = {
-        name:      new IntegerRange(3, 256),
-        password:  new IntegerRange(5, 37),
-        login:     new IntegerRange(2, 37),
-        avatarUrl: new IntegerRange(0, 256)
-    };
 
     @CreateDateColumn() 
     @DateField()
@@ -31,6 +25,12 @@ export class User {
     @DateField()
     lastUpdateDate!: Date;
 
+    // @OneToMany(_type => Proposal, proposal => proposal.creator)
+    // proposals!: Promise<Proposal[]>;
+
+    // @OneToMany(_type => Like, like => like.rater)
+    // likes!: Promise<Like[]>;
+
     @Column({
         type:    'enum',
         enum:    UserRole,
@@ -39,28 +39,22 @@ export class User {
     @Field(_type => UserRole)
     role = UserRole.Regular;
 
-    @Validations(StringLength(User.limits.name))
-    @Column({ length: User.limits.name.max })
+    @StringColumn(limits.user.name)
     @StringField()        
     name!: string;
 
-    @Validations(StringLength(User.limits.login))
-    @PrimaryColumn({ length: User.limits.login.max }) 
+    @StringColumn(limits.user.login, { primary: true })
     @StringField()
     login!: string;
     
     @Column({ select: false })        
     passwordHash?: string;
 
-    @Validations(
-        StringLength(User.limits.avatarUrl),
-        ValidateIfPresent
-    )
-    @Column({ 
-        type:    'varchar',
-        length:   User.limits.avatarUrl.max, 
-        nullable: true 
-    })
+    @StringColumn(limits.imageUrl, Nullable)
     @StringField(Nullable)
     avatarUrl?: I.Nullable<string>;
+
+    isAdmin() {
+        return this.role === UserRole.Admin;
+    }
 }

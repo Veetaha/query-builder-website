@@ -3,9 +3,12 @@ import { Injectable } from '@nestjs/common';
 import { OrderByCondition } from 'typeorm';
 
 import * as I from '@app/interfaces';
+import { SortInput          } from './sorting/sort.input';
+import { ISortInput         } from './sorting/sort-input.interface';
+import { MetaObjFilterInput } from './filtering/inputs/meta-obj-filter.input';
 import { FilterBuilder, QueryAndParams } from './filtering/filter-builder';
-import { MetaObjFilterInput            } from './filtering';
-import { ISortInput, SortInput         } from './sorting';
+
+
 
 
 @Injectable()

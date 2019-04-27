@@ -8,5 +8,7 @@ export const enum FilterOperator {
     In    = 'in',
     Nin   = 'nin',
     Like  = 'like',
-    Nlike = 'nlike'
+    Nlike = 'nlike',
+    Ilike  = 'ilike',
+    Nilike = 'nilike'
 }

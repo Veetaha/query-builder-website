@@ -1,7 +1,11 @@
 import { EntityRepository, Repository } from 'typeorm';
 
-import { User } from './user.entity';
-import { HashedCredentials } from '@modules/auth/gql/credentials.input';
+import * as I from '@app/interfaces';
+import { CredentialsInput } from '@modules/auth/gql/credentials.input';
+import { User             } from './user.entity';
+
+export type HashedCredentials = I.RenameKey<CredentialsInput, 'password', 'passwordHash'>;
+
 
 @EntityRepository(User)
 export class UserRepo extends Repository<User> {

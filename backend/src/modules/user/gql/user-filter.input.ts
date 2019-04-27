@@ -1,16 +1,13 @@
 import { InputType, Field } from 'type-graphql';
 
 import * as I from '@app/interfaces';
-import { Nullable } from '@utils/gql/opts';
-import { User } from '../user.entity';
+import { Nullable     } from '@utils/gql/opts';
+import { IFilterInput } from '@utils/gql/filtering/inputs/filter-input.interface';
+import { StringFilterInputField, StringFilterInput } from '@utils/gql/filtering/inputs/string.input';
+import { DateFilterInputField,   DateFilterInput   } from '@utils/gql/filtering/inputs/date.input';
+import { User                } from '../user.entity';
 import { UserRoleFilterInput } from './user-role-filter.input';
-import { 
-    IFilterInput, 
-    StringFilterInput, 
-    StringFilterInputField, 
-    DateFilterInput, 
-    DateFilterInputField
-} from '@utils/gql/filtering';
+
 
 @InputType()
 export class UserFilterInput implements IFilterInput<User> {

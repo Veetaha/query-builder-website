@@ -8,7 +8,7 @@ RUN npm set unsafe-perm true
 
 RUN npm install
 
-EXPOSE 3000
+EXPOSE ${PORT}
 
 RUN npm run build
 

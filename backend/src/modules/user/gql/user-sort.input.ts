@@ -1,9 +1,12 @@
 import { InputType } from 'type-graphql';
 
 import * as I from '@app/interfaces';
-import { Nullable } from '@utils/gql/opts';
+import { Nullable       } from '@utils/gql/opts';
+import { SortInput      } from '@utils/gql/sorting/sort.input';
+import { ISortInput     } from '@utils/gql/sorting/sort-input.interface';
+import { SortInputField } from '@utils/gql/sorting/sort-input-field.decorator';
 import { User } from '../user.entity';
-import { ISortInput, SortInput, SortInputField } from '@utils/gql/sorting';
+
 
 
 @InputType()

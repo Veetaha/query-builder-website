@@ -54,19 +54,6 @@ enum FilterUnion {
   Nor
 }
 
-input FloatFilterInput {
-  """Defines the mode (logical operator) to unite all filter conditions."""
-  unionMode: FilterUnion
-  eq: Float
-  neq: Float
-  geq: Float
-  leq: Float
-  gt: Float
-  lt: Float
-  in: [Float!]
-  nin: [Float!]
-}
-
 input IntFilterInput {
   """Defines the mode (logical operator) to unite all filter conditions."""
   unionMode: FilterUnion
@@ -80,6 +67,73 @@ input IntFilterInput {
   nin: [Int!]
 }
 
+type Like {
+  """Login of the user that set the like."""
+  raterLogin: String!
+
+  """Id of the proposal that the user rated."""
+  proposalId: Int!
+
+  """Defines whether the user liked the proposal or not."""
+  liked: Boolean!
+  rater: User!
+  proposal: Proposal!
+}
+
+input LikeFilterInput {
+  proposalId: IntFilterInput
+  raterLogin: StringFilterInput
+  liked: BooleanFilterInput
+}
+
+type LikePage {
+  """Contains an array of items payload for this page."""
+  data: [Like!]!
+
+  """
+  Total number of items a client can query with this request. It must me an integer that is >= 0.
+  """
+  total: Int!
+}
+
+input LikePaginationInput {
+  """
+  Maximum amount of items to return for page. It must be an integer within the range [0, 500]
+  """
+  limit: Int!
+
+  """
+  Offset that defines an index of the beginning of the page of items. It must be an integer that is >= 0.
+  """
+  offset: Int!
+
+  """Defines filters that the items of the returned page must match."""
+  filter: MetaLikeFilterInput
+
+  """
+  Defines sorting order for the items according to their property values.
+  """
+  sort: LikeSortInput
+}
+
+input LikeSortInput {
+  proposalId: SortInput
+  raterLogin: SortInput
+  liked: SortInput
+}
+
+input MetaLikeFilterInput {
+  """Defines the mode (logical operator) to unite all filter conditions."""
+  unionMode: FilterUnion
+  props: LikeFilterInput!
+}
+
+input MetaProposalFilterInput {
+  """Defines the mode (logical operator) to unite all filter conditions."""
+  unionMode: FilterUnion
+  props: ProposalFilterInput!
+}
+
 input MetaUserFilterInput {
   """Defines the mode (logical operator) to unite all filter conditions."""
   unionMode: FilterUnion
@@ -89,14 +143,142 @@ input MetaUserFilterInput {
 type Mutation {
   signIn(credentials: CredentialsInput!): UserAndToken
   signUp(data: SignUpInput!): UserAndToken!
+
+  """Requires auth. Updates current client data and returns it."""
   updateMe(params: UserUpdateInput!): User!
-  updateUser(params: AdminUserUpdateInput!): User!
+
+  """
+  Requires 'Admin' rights. Updates user by the given login and returns it, but
+  retuns `null` if there nothing was found for the given login.
+  """
+  updateUser(params: AdminUserUpdateInput!): User
+
+  """
+  Requires auth. Creates a proposal on behalf of the client and returns it.
+  """
+  createProposal(params: ProposalCreateInput!): Proposal!
+
+  """
+  Requires auth. Updates proposal and returns it, but throws if propsal doesn't
+  exist or client has no rights to mutate the proposal.
+  """
+  updateProposal(params: ProposalUpdateInput!): Proposal!
+
+  """
+  Requires auth. Deletes the proposal by id and returns `true`, but throws  if
+  propsal doesn't exist or client has no rights to mutate the proposal.
+  """
+  deleteProposal(id: Float!): Boolean!
+  setLike(proposalId: Int!, liked: Boolean!): Like!
+}
+
+type Proposal {
+  id: Int!
+  creationDate: DateTime!
+  lastUpdateDate: DateTime!
+  creatorLogin: String!
+  name: String!
+  introText: String!
+  bodyText: String!
+  mainPictureUrl: String
+
+  """
+  Returns existing `mainPictureUrl` or default one if former was not set.
+  """
+  mainPictureUrlOrDefault: String!
+
+  """Returns the user that created this proposal."""
+  creator: User!
+}
+
+input ProposalCreateInput {
+  name: String!
+  introText: String!
+  bodyText: String!
+  mainPictureUrl: String
+}
+
+input ProposalFilterInput {
+  id: IntFilterInput
+  name: StringFilterInput
+  introText: StringFilterInput
+  creatorLogin: StringFilterInput
+  creationDate: DateFilterInput
+  lastUpdateDate: DateFilterInput
+}
+
+type ProposalPage {
+  """Contains an array of items payload for this page."""
+  data: [Proposal!]!
+
+  """
+  Total number of items a client can query with this request. It must me an integer that is >= 0.
+  """
+  total: Int!
+}
+
+input ProposalPaginationInput {
+  """
+  Maximum amount of items to return for page. It must be an integer within the range [0, 500]
+  """
+  limit: Int!
+
+  """
+  Offset that defines an index of the beginning of the page of items. It must be an integer that is >= 0.
+  """
+  offset: Int!
+
+  """Defines filters that the items of the returned page must match."""
+  filter: MetaProposalFilterInput
+
+  """
+  Defines sorting order for the items according to their property values.
+  """
+  sort: ProposalSortInput
+}
+
+input ProposalSortInput {
+  id: SortInput
+  creationDate: SortInput
+  lastUpdateDate: SortInput
+  name: SortInput
+  creatorLogin: SortInput
+  introText: SortInput
+}
+
+input ProposalUpdateInput {
+  id: Int!
+  name: String
+  introText: String
+  bodyText: String
+  mainPictureUrl: String
 }
 
 type Query {
+  """Returns user by login, or `null` if nothing was found."""
   getUserByLogin(login: String!): User
+
+  """Paginates all users."""
   getUsersPage(params: UserPaginationInput!): UserPage!
+
+  """Requires auth. Returns `User` that represents the current client."""
   getMe: User!
+
+  """Paginates all proposals."""
+  getProposalsPage(params: ProposalPaginationInput!): ProposalPage!
+
+  """Returns proposal by id, or `null` if nothing was found."""
+  getProposalById(id: Int!): Proposal
+  getRatingOfProposal(id: Int!): Rating
+  getLikesPage(params: LikePaginationInput!): LikePage!
+}
+
+type Rating {
+  """Total amount of likes."""
+  likes: Int!
+
+  """Total amount of dislikes."""
+  dislikes: Int!
 }
 
 input SignUpInput {
@@ -127,6 +309,8 @@ input StringFilterInput {
   unionMode: FilterUnion
   eq: String
   neq: String
+  ilike: String
+  nilike: String
   like: String
   nlike: String
   in: [String!]
@@ -140,6 +324,8 @@ type User {
   name: String!
   login: String!
   avatarUrl: String
+
+  """Returns existing `avatarUrl` or default one if former was not set."""
   avatarUrlOrDefault: String!
 }
 

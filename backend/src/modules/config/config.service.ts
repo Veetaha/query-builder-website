@@ -7,16 +7,39 @@ import { JwtOptionsFactory, JwtModuleOptions         } from '@nestjs/jwt';
 import { AuthOptionsFactory, AuthModuleOptions       } from '@nestjs/passport';
 import { ExtractJwt, StrategyOptions as PassportJwtStrategyOptions } from 'passport-jwt';
 
+import { getResolveContext } from '@modules/common/resolve-context';
 import { EnvService        } from '@utils/env/env.service';
-import { getResolveContext } from '@modules/common';
+import { IntegerRange      } from '@utils/math/integer-range.class';
 
 @Injectable()
 export class ConfigService
 implements TypeOrmOptionsFactory, GqlOptionsFactory, JwtOptionsFactory, AuthOptionsFactory {
+    static readonly limits = {
+        proposal: {
+            name:      new IntegerRange(1, 256),
+            introText: new IntegerRange(0, 256),
+            bodyText:  new IntegerRange(0, 5001),
+        },
+    
+        user: {
+            name:     new IntegerRange(3, 256),
+            password: new IntegerRange(5, 37),
+            login:    new IntegerRange(2, 37),
+        },
+    
+        imageUrl:     new IntegerRange(0, 256)
+    } as const;
+
+    readonly default = {
+        user:     { avatarUrl: 'default user avatar url' },
+        proposal: { mainPictureUrl: 'default proposal main picture url' }
+    } as const;
+
+
     readonly passwordSalt         = this.env.readEnvOrFail('PASSWORD_SALT');
     readonly port                 = this.env.readPortFromEnvOrFail('PORT');
     readonly frontendPublicDir    = this.pathFromRoot('frontend/dist/frontend');
-    readonly defaultUserAvatarUrl = 'default ava url';
+    
 
     readonly jwtKeypair = this.env.parseFileSyncOrThrow(
         this.pathFromRoot('backend/.rsa-keypair.json'),
@@ -39,8 +62,9 @@ implements TypeOrmOptionsFactory, GqlOptionsFactory, JwtOptionsFactory, AuthOpti
     createGqlOptions(): GqlModuleOptions {
         return {
             playground:     true,
-            autoSchemaFile: this.pathFromRoot('common/schema.graphql'),
             introspection:  true,
+            debug:          true,
+            autoSchemaFile: this.pathFromRoot('common/schema.graphql'),
             path:           '/gql',
             context:        getResolveContext
         };
@@ -48,7 +72,6 @@ implements TypeOrmOptionsFactory, GqlOptionsFactory, JwtOptionsFactory, AuthOpti
 
     createTypeOrmOptions(): TypeOrmModuleOptions {
         return {   
-            logging:     true,
             type:        'postgres',
             port:        this.env.readPortFromEnvOrFail('DB_PORT'),
             host:        this.env.readEnvOrFail('DB_HOST'),
@@ -56,7 +79,8 @@ implements TypeOrmOptionsFactory, GqlOptionsFactory, JwtOptionsFactory, AuthOpti
             password:    this.env.readEnvOrFail('DB_PASSWORD'),
             database:    this.env.readEnvOrFail('DB_DB'),
             entities:   [this.pathFromRoot('backend/src/modules/**/*.entity.ts')],
-            synchronize: true,
+            logging:     true, // TODO remove on production
+            synchronize: true  // 
         };
     }
 

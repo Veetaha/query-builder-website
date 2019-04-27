@@ -3,7 +3,8 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 import { ExecutionContext, Injectable   } from '@nestjs/common';
 import { AuthGuard as PassportAuthGuard } from '@nestjs/passport';
 
-import { UserRole, User } from '@modules/user';
+import { User         } from '@modules/user/user.entity';
+import { UserRole     } from '@modules/user/user-role.enum';
 import { RolesMetaKey } from './roles-meta-key.constant';
 
 @Injectable()

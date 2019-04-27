@@ -1,14 +1,13 @@
 import { Injectable       } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { HashedCredentials   } from '@modules/auth';
-import { GqlUtilsService     } from '@utils/gql/gql-utils.service';
+import * as I from '@app/interfaces';
 import { OrmUtilsService     } from '@utils/orm/orm-utils.service';
-import { UserRepo            } from './user.repository';
-import { UserUpdateInput     } from './gql/user-update.input';
 import { User                } from './user.entity';
 import { UserPaginationInput } from './gql/user-pagination.input';
-import { UserPage            } from './gql/user-page.object';
+import { UserRepo, HashedCredentials } from './user.repository';
+import { GraphQLDatabaseLoader } from 'typeorm-loader';
+import { GraphQLResolveInfo } from 'graphql';
 
 
 
@@ -17,7 +16,6 @@ export class UserService {
     constructor(
         @InjectRepository(UserRepo)
         private readonly repo: UserRepo,
-        private readonly gql: GqlUtilsService,
         private readonly orm: OrmUtilsService
     ) {}
 
@@ -29,6 +27,10 @@ export class UserService {
         return this.repo.getByLogin(login);
     }
 
+    async loadByLogin(loader: GraphQLDatabaseLoader, info: GraphQLResolveInfo, login: string) {
+        return loader.loadOne<User>(User, {login}, info);
+    }
+
     async getByHashedCredentials(credentials: HashedCredentials) {
         return this.repo.getByHashedCredentials(credentials);
     }
@@ -37,26 +39,17 @@ export class UserService {
         return this.repo.loginIsTaken(login);
     }
 
-    async createUser(user: Partial<User>) {
+    async create(user: Partial<User>) {
         return this.repo.save(user);
     }
 
-    async getPage({ limit, offset, filter, sort }: UserPaginationInput) {
-        const tableAlias = 'user';
-        const [data, total] = await this
-            .repo
-            .createQueryBuilder(tableAlias)
-            .where(...this.gql.getFilterParams(filter, tableAlias))
-            .orderBy(this.gql.getOrderByCondition(sort, tableAlias))
-            .skip(offset)
-            .take(limit)
-            .getManyAndCount();     
-            
-        return new UserPage({ data, total });
+    async getPage(pageInput: UserPaginationInput) {
+        return this.orm.getPage(this.repo, pageInput);
     }
 
-    async update(login: string, upd: UserUpdateInput) {
-        return this.orm.updateOne(this.repo, upd, 'login = :login', {login});
+    async update(login: string, upd: I.UpdateInput<User, 'login'>) {
+        const res = await this.orm.updateOne(this.repo, upd, 'login = :login', {login});
+        return res;
     }       
 
 }

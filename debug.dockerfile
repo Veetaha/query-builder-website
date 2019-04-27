@@ -1,5 +1,5 @@
 FROM node:latest
-WORKDIR /home/veetaha/my/projects/ts-nestjs-angular-template
+WORKDIR /home/veetaha/my/projects/query-builder-website
 
 COPY . .
 
@@ -8,7 +8,7 @@ RUN npm set unsafe-perm true
 
 RUN npm install
 
-EXPOSE 3000
+EXPOSE ${PORT}
 
 RUN npm run build
 

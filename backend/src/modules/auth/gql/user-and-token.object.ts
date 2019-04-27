@@ -1,6 +1,6 @@
 import { ObjectType, Field } from 'type-graphql';
  
-import { User } from '@modules/user';
+import { User                } from '@modules/user/user.entity';
 import { StringField         } from '@utils/gql/decorators/explicit-type-field.decorator';
 import { AssignConstructable } from '@utils/objects/assign-constructable';
 

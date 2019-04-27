@@ -16,6 +16,8 @@ const NullableStringArrayField = StringArrField(Nullable);
 export class StringFilterInput extends AbstractFilterInput {
     @NullableStringField      eq?:    I.Nullable<string>;
     @NullableStringField      neq?:   I.Nullable<string>;
+    @NullableStringField      ilike?:  I.Nullable<string>;
+    @NullableStringField      nilike?: I.Nullable<string>;
     @NullableStringField      like?:  I.Nullable<string>;
     @NullableStringField      nlike?: I.Nullable<string>;
     @NullableStringArrayField in?:    I.Nullable<string[]>;

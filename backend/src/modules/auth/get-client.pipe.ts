@@ -1,8 +1,8 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
 
 import * as I from '@app/interfaces';
-import { ResolveContext } from '@modules/common';
-import { User           } from '@modules/user';
+import { ResolveContext } from '@modules/common/resolve-context';
+import { User           } from '@modules/user/user.entity';
 
 @Injectable()
 export class GetClientPipe implements PipeTransform {

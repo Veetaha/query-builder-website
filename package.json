@@ -1,5 +1,6 @@
 {
-  "name": "ts-nestjs-angular-template",
+  "name": "query-builder-website",
+  "private": true,
   "version": "1.0.0",
   "description": "Fullstack TypeScript, NestJS, Angular7+ project.",
   "main": "backend/dist/backend/src/main.js",
@@ -8,6 +9,7 @@
     "build": "(cd frontend && npm run build)",
     "start": "(cd backend  && npm run start)",
     "dev": "(cd backend  && npm run dev)",
+    "docs": "graphdoc --endpoint http://localhost/gql --force --output ./frontend/dist/frontend/gql/docs",
     "docker": "docker-compose up",
     "docker:dev": "docker-compose --file debug.docker-compose.yml up",
     "postinstall": "npm install --prefix backend && npm install --prefix frontend"
@@ -17,16 +19,14 @@
     "url": "git+https://github.com/Veetaha/ts-nestjs-angular-template.git"
   },
   "keywords": [
-    "template",
-    "project",
-    "starter"
+    "project"
   ],
   "author": "Vitaly Kryvenko",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Veetaha/ts-nestjs-angular-template/issues"
+    "url": "https://github.com/Veetaha/query-builder-website/issues"
   },
-  "homepage": "https://github.com/Veetaha/ts-nestjs-angular-template#readme",
+  "homepage": "https://github.com/Veetaha/query-builder-website#readme",
   "dependencies": {
     "class-transformer": "latest",
     "class-transformer-validator": "^0.7.1",
@@ -48,10 +48,12 @@
     "yaml": "latest"
   },
   "devDependencies": {
-    "@types/yaml": "latest",
+    "@2fd/graphdoc": "^2.4.0",
     "@types/lodash": "latest",
     "@types/mathjs": "latest",
     "@types/node": "latest",
+    "@types/yaml": "latest",
+    "graphql-docs": "^0.2.0",
     "prettier": "latest",
     "tslint": "latest"
   }

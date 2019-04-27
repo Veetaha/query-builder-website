@@ -4,8 +4,8 @@ import { JwtService } from '@nestjs/jwt';
 import { Injectable, ForbiddenException } from '@nestjs/common';
 
 import * as I from '@app/interfaces';
-import { ConfigService    } from '@modules/config';
-import { UserService      } from '@modules/user';
+import { ConfigService    } from '@modules/config/config.service';
+import { UserService      } from '@modules/user/user.service';
 import { CredentialsInput } from './gql/credentials.input';
 import { UserAndToken     } from './gql/user-and-token.object';
 import { SignUpInput      } from './gql/sign-up.input';
@@ -72,7 +72,7 @@ export class AuthService {
         if (await this.users.loginIsTaken(login)) {
             throw new ForbiddenException(`Login '${login}' is already taken.`);
         }
-        const user = await this.users.createUser({
+        const user = await this.users.create({
             login,
             name,
             passwordHash: this.getPasswordHash(password)
