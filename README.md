@@ -1,7 +1,7 @@
 # Fullstack app template
 
-[![Build Status](https://travis-ci.com/Veetaha/ts-nestjs-angular-template.svg?branch=master)](https://travis-ci.com/Veetaha/ts-nestjs-angular-template) 
-[![Coverage Status](https://coveralls.io/repos/github/Veetaha/ts-nestjs-angular-template/badge.svg?branch=master)](https://coveralls.io/github/Veetaha/ts-nestjs-angular-template?branch=master)
+[![Build Status](https://travis-ci.com/Veetaha/query-builder-website.svg?branch=master)](https://travis-ci.com/Veetaha/query-builder-website) 
+[![Coverage Status](https://coveralls.io/repos/github/Veetaha/query-builder-website/badge.svg?branch=master)](https://coveralls.io/github/Veetaha/query-builder-website?branch=master)
 
 ## Development stack
 
