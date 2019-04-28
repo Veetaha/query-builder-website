@@ -5,11 +5,12 @@ import { ISortInput     } from '@utils/gql/sorting/sort-input.interface';
 import { SortInputField } from '@utils/gql/sorting/sort-input-field.decorator';
 import { Nullable       } from '@utils/gql/opts';
 import { SortInput      } from '@utils/gql/sorting/sort.input';
-import { Like           } from '../like.entity';
+
+import { Rating } from '../rating.entity';
 
 
 @InputType()
-export class LikeSortInput implements ISortInput<Like> {
+export class RatingSortInput implements ISortInput<Rating> {
     @SortInputField(Nullable) proposalId?: I.Nullable<SortInput>;
     @SortInputField(Nullable) raterLogin?: I.Nullable<SortInput>;
     @SortInputField(Nullable) liked?:      I.Nullable<SortInput>;

@@ -18,6 +18,7 @@ import { ProposalCreateInput     } from './gql/proposal-create.input';
 import { ProposalUpdateInput     } from './gql/proposal-update.input';
 
 
+
 @Resolver(Proposal)
 export class ProposalResolver {
 
@@ -40,12 +41,13 @@ export class ProposalResolver {
         description: "Returns the user that created this proposal."
     })
     async creator(
-        @Root() {creatorLogin}: Proposal, 
-        @Info() info: GraphQLResolveInfo,
-        @DataLoader loader: GraphQLDatabaseLoader
+        @Root()     {creatorLogin}: Proposal, 
+        @Info()     info:           GraphQLResolveInfo,
+        @DataLoader loader:         GraphQLDatabaseLoader
     ) {
         return this.users.loadByLogin(loader, info, creatorLogin);
     }
+
 
     @Query(_returns => ProposalPage, {
         description: "Paginates all proposals."

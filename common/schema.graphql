@@ -67,71 +67,16 @@ input IntFilterInput {
   nin: [Int!]
 }
 
-type Like {
-  """Login of the user that set the like."""
-  raterLogin: String!
-
-  """Id of the proposal that the user rated."""
-  proposalId: Int!
-
-  """Defines whether the user liked the proposal or not."""
-  liked: Boolean!
-  rater: User!
-  proposal: Proposal!
-}
-
-input LikeFilterInput {
-  proposalId: IntFilterInput
-  raterLogin: StringFilterInput
-  liked: BooleanFilterInput
-}
-
-type LikePage {
-  """Contains an array of items payload for this page."""
-  data: [Like!]!
-
-  """
-  Total number of items a client can query with this request. It must me an integer that is >= 0.
-  """
-  total: Int!
-}
-
-input LikePaginationInput {
-  """
-  Maximum amount of items to return for page. It must be an integer within the range [0, 500]
-  """
-  limit: Int!
-
-  """
-  Offset that defines an index of the beginning of the page of items. It must be an integer that is >= 0.
-  """
-  offset: Int!
-
-  """Defines filters that the items of the returned page must match."""
-  filter: MetaLikeFilterInput
-
-  """
-  Defines sorting order for the items according to their property values.
-  """
-  sort: LikeSortInput
-}
-
-input LikeSortInput {
-  proposalId: SortInput
-  raterLogin: SortInput
-  liked: SortInput
-}
-
-input MetaLikeFilterInput {
-  """Defines the mode (logical operator) to unite all filter conditions."""
-  unionMode: FilterUnion
-  props: LikeFilterInput!
-}
-
 input MetaProposalFilterInput {
   """Defines the mode (logical operator) to unite all filter conditions."""
   unionMode: FilterUnion
   props: ProposalFilterInput!
+}
+
+input MetaRatingFilterInput {
+  """Defines the mode (logical operator) to unite all filter conditions."""
+  unionMode: FilterUnion
+  props: RatingFilterInput!
 }
 
 input MetaUserFilterInput {
@@ -141,7 +86,14 @@ input MetaUserFilterInput {
 }
 
 type Mutation {
+  """
+  Returns `UserAndToken` for the client according to the given `credentials`.
+  """
   signIn(credentials: CredentialsInput!): UserAndToken
+
+  """
+  Registers the client in the database and returns its `UserAndToken`. Throws if failed to register new client.
+  """
   signUp(data: SignUpInput!): UserAndToken!
 
   """Requires auth. Updates current client data and returns it."""
@@ -169,7 +121,16 @@ type Mutation {
   propsal doesn't exist or client has no rights to mutate the proposal.
   """
   deleteProposal(id: Float!): Boolean!
-  setLike(proposalId: Int!, liked: Boolean!): Like!
+
+  """
+  Requires auth. Creates or updates existing rating the client gave to the proposal.
+  """
+  rateProposal(proposalId: Int!, liked: Boolean!): Rating!
+
+  """
+  Requires auth. Deletes rating instance on behalf of the client. Returns `true` if deletion was successful.
+  """
+  deleteRating(proposalId: Float!): Boolean!
 }
 
 type Proposal {
@@ -181,6 +142,12 @@ type Proposal {
   introText: String!
   bodyText: String!
   mainPictureUrl: String
+
+  """Returns the total number of likes for this proposal."""
+  likes: Int!
+
+  """Returns the total number of dislikes for this proposal."""
+  dislikes: Int!
 
   """
   Returns existing `mainPictureUrl` or default one if former was not set.
@@ -269,16 +236,69 @@ type Query {
 
   """Returns proposal by id, or `null` if nothing was found."""
   getProposalById(id: Int!): Proposal
-  getRatingOfProposal(id: Int!): Rating
-  getLikesPage(params: LikePaginationInput!): LikePage!
+
+  """Paginates all ratings."""
+  getLikesPage(params: RatingPaginationInput!): RatingPage!
 }
 
+"""Represents a [dis]like instance that the users put to proposals."""
 type Rating {
-  """Total amount of likes."""
-  likes: Int!
+  """Login of the user that rated the proposal."""
+  raterLogin: String!
 
-  """Total amount of dislikes."""
-  dislikes: Int!
+  """Id of the proposal that the user rated."""
+  proposalId: Int!
+
+  """Defines whether the user liked the proposal or not."""
+  liked: Boolean!
+
+  """Returns the user that rated the given `proposal`."""
+  rater: User!
+
+  """Returns proposal that was rated by the given `rater`."""
+  proposal: Proposal!
+}
+
+input RatingFilterInput {
+  proposalId: IntFilterInput
+  raterLogin: StringFilterInput
+  liked: BooleanFilterInput
+}
+
+type RatingPage {
+  """Contains an array of items payload for this page."""
+  data: [Rating!]!
+
+  """
+  Total number of items a client can query with this request. It must me an integer that is >= 0.
+  """
+  total: Int!
+}
+
+input RatingPaginationInput {
+  """
+  Maximum amount of items to return for page. It must be an integer within the range [0, 500]
+  """
+  limit: Int!
+
+  """
+  Offset that defines an index of the beginning of the page of items. It must be an integer that is >= 0.
+  """
+  offset: Int!
+
+  """Defines filters that the items of the returned page must match."""
+  filter: MetaRatingFilterInput
+
+  """
+  Defines sorting order for the items according to their property values.
+  """
+  sort: RatingSortInput
+}
+
+input RatingSortInput {
+  proposalId: SortInput
+  raterLogin: SortInput
+  liked: SortInput
 }
 
 input SignUpInput {

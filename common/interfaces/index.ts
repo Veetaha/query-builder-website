@@ -18,6 +18,9 @@ export type Decorator = (
     | ParameterDecorator
 );
 
+// TODO move it to 'ts-typedefs'
+export type StrKeyOf<TObj extends Obj> = Extract<keyof TObj, string>;
+
 // number within range [0-65635]
 export type port_t = Tag<number, 'PortNumber'>;
 export type int    = Tag<number, 'Integer'>;

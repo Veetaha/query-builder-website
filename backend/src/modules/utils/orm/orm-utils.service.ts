@@ -6,6 +6,7 @@ import { QueryAndParams  } from '@utils/gql/filtering/filter-builder';
 import { PaginationInput } from '@utils/gql/pagination/pagination.input';
 import { GqlUtilsService } from '@utils/gql/gql-utils.service';
 
+
 @Injectable()
 export class OrmUtilsService {
 
@@ -45,16 +46,53 @@ export class OrmUtilsService {
         upd:  I.NullableProps<I.EntityFromRepo<TEntityRepo>>, 
         ...whereParams: QueryAndParams
     ): Promise<I.Nullable<I.CoreObjData<I.EntityFromRepo<TEntityRepo>>>> {
-        return (await repo
+    
+        const result: I.PgUpdateResult<I.EntityFromRepo<TEntityRepo>> = await repo
             .createQueryBuilder()
             .update(this.removeNilFromRequiredProps(repo, upd))
             .where(...whereParams)
             .returning('*')
-            .execute()
-            )   
-            .raw[0];
+            .execute();
+
+        return result.raw.length === 0 
+            ? null
+            : result.raw[0];
+            
     }
 
+    /**
+     * Executes fast and effictient `DELETE` query without but does not supply
+     * live entity to event subscribers attached to deleted tuple.
+     * Returns `true` if deletion was successful, `false` otherwise.
+     */
+    async delete<TEntity extends I.Obj>(
+        repo: Repository<TEntity>, 
+        ...whereParams: Parameters<Repository<TEntity>['delete']>
+    ) {
+        return 0 < (await repo.delete(...whereParams)).affected!;
+    }
+
+    /**
+     * Tries to delete entity from the database.
+     * Returns `true` if deletion was successful, `false` if no raws were affected.
+     * It queries the entity first and removes it in order to trigger subscriber
+     * events with live entity in arguments.
+     */
+    async removeOne<TEntity extends I.Obj>(
+        repo: Repository<TEntity>, 
+        ...findParams: Parameters<Repository<TEntity>['findOne']>
+    ) {
+        const entity = await repo.findOne(...findParams);
+        if (entity == null) {
+            return false;
+        }
+        await repo.remove(entity);
+        return true;
+    }
+
+    /**
+     * Returns a raw page of entites according to the given `PaginationInput` parameters.
+     */
     async getPage<TEntity extends I.Obj>(
         repo: Repository<TEntity>,
         { limit, offset, sort, filter }: PaginationInput
@@ -69,6 +107,5 @@ export class OrmUtilsService {
             .getManyAndCount();
         return { data, total };
     }
-
 
 }

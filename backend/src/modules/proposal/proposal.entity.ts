@@ -35,7 +35,7 @@ export class Proposal {
     @DateField()
     lastUpdateDate!: Date;
 
-    @ManyToOne(_type => User, { cascade: ['remove'] })
+    @ManyToOne(_type => User, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'creatorLogin' })
     creator!: Promise<User>;
 
@@ -51,4 +51,16 @@ export class Proposal {
     @StringColumn(limits.imageUrl, Nullable)
     @StringField(Nullable)
     mainPictureUrl?: I.Nullable<string>;
+
+    @Column({ default: 0 })
+    @IntField({ 
+        description: "Returns the total number of likes for this proposal."
+    })
+    likes!: number;
+
+    @Column({ default: 0 })
+    @IntField({
+        description: "Returns the total number of dislikes for this proposal."
+    })
+    dislikes!: number;
 }

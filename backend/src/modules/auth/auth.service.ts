@@ -68,14 +68,15 @@ export class AuthService {
         );
     }
 
+    /**
+     * Creates user in the database and returns `UserAndToken` for it.
+     * Throws if user already exists.
+     */
     async signUpOrFail({ credentials: {login, password}, name }: SignUpInput) {
-        if (await this.users.loginIsTaken(login)) {
-            throw new ForbiddenException(`Login '${login}' is already taken.`);
-        }
-        const user = await this.users.create({
-            login,
-            name,
-            passwordHash: this.getPasswordHash(password)
+        await this.users.ensureUserNotExistsOrFail(login);
+
+        const user = await this.users.create({ 
+            login, name, passwordHash: this.getPasswordHash(password) 
         });
 
         const jwtPayload: I.JwtPayload = { sub: user.login };

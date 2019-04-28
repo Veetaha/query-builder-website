@@ -1,4 +1,4 @@
-import { Injectable       } from '@nestjs/common';
+import { Injectable, ForbiddenException       } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import * as I from '@app/interfaces';
@@ -35,8 +35,10 @@ export class UserService {
         return this.repo.getByHashedCredentials(credentials);
     }
 
-    async loginIsTaken(login: string) {
-        return this.repo.loginIsTaken(login);
+    async ensureUserNotExistsOrFail(login: string) {
+        if (await this.repo.loginIsTaken(login)) {
+            throw new ForbiddenException(`Login '${login}' is already taken.`);
+        }
     }
 
     async create(user: Partial<User>) {
