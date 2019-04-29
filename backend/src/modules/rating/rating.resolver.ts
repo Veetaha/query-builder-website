@@ -51,7 +51,7 @@ export class RatingResolver {
     @Query(_returns => RatingPage, {
         description: 'Paginates all ratings.'
     })
-    async getLikesPage(@Args('params') params: RatingPaginationInput) {
+    async getRatingsPage(@Args('params') params: RatingPaginationInput) {
         return this.ratings.getPage(params);
     }
 

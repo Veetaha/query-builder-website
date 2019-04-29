@@ -31,14 +31,14 @@ implements TypeOrmOptionsFactory, GqlOptionsFactory, JwtOptionsFactory, AuthOpti
     } as const;
 
     readonly default = {
-        user:     { avatarUrl: 'default user avatar url' },
-        proposal: { mainPictureUrl: 'default proposal main picture url' }
+        user:     { avatarUrl:      '/assets/default-user-avatar.svg'           },
+        proposal: { mainPictureUrl: '/assets/default-proposal-main-picture.svg' }
     } as const;
 
 
-    readonly passwordSalt         = this.env.readEnvOrFail('PASSWORD_SALT');
-    readonly port                 = this.env.readPortFromEnvOrFail('PORT');
-    readonly frontendPublicDir    = this.pathFromRoot('frontend/dist/frontend');
+    readonly passwordSalt      = this.env.readEnvOrFail('PASSWORD_SALT');
+    readonly port              = this.env.readPortFromEnvOrFail('PORT');
+    readonly frontendPublicDir = this.pathFromRoot('frontend/dist/frontend');
     
 
     readonly jwtKeypair = this.env.parseFileSyncOrThrow(
@@ -51,9 +51,7 @@ implements TypeOrmOptionsFactory, GqlOptionsFactory, JwtOptionsFactory, AuthOpti
 
     constructor(
         private readonly env: EnvService
-    ) {
-        env.loadDotenv();
-    }
+    ) {}
 
     pathFromRoot(...pathParts: string[]) {        
         return Path.normalize(Path.join(__dirname, '../../../../', ...pathParts));
@@ -79,8 +77,10 @@ implements TypeOrmOptionsFactory, GqlOptionsFactory, JwtOptionsFactory, AuthOpti
             password:    this.env.readEnvOrFail('DB_PASSWORD'),
             database:    this.env.readEnvOrFail('DB_DB'),
             entities:   [this.pathFromRoot('backend/src/modules/**/*.entity.ts')],
-            logging:     true, // TODO remove on production
-            synchronize: true  // 
+            keepConnectionAlive:   true,
+            maxQueryExecutionTime: 200, //TODO remove on production
+            logging:     true,          // 
+            synchronize: true           //   
         };
     }
 

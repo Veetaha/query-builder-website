@@ -150,6 +150,11 @@ type Proposal {
   dislikes: Int!
 
   """
+  Defines whether the author of this proposal is ready to accept requests for it.
+  """
+  isOpenned: Boolean!
+
+  """
   Returns existing `mainPictureUrl` or default one if former was not set.
   """
   mainPictureUrlOrDefault: String!
@@ -238,7 +243,7 @@ type Query {
   getProposalById(id: Int!): Proposal
 
   """Paginates all ratings."""
-  getLikesPage(params: RatingPaginationInput!): RatingPage!
+  getRatingsPage(params: RatingPaginationInput!): RatingPage!
 }
 
 """Represents a [dis]like instance that the users put to proposals."""

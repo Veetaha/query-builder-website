@@ -11,8 +11,15 @@ import * as I from '@app/interfaces';
 @Injectable()
 export class EnvService {
 
+    constructor() {
+        // this.loadDotenv(); // use it outside of docker container
+    }
+
     loadDotenv() {
         Dotenv.config();
+        // Dotenv.config({
+        //     path: '/home/veetaha/my/projects/query-builder-website/.env'
+        // });
     }
 
     /**

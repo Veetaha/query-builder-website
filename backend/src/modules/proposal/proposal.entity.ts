@@ -15,7 +15,7 @@ import { User          } from '@modules/user/user.entity';
 import { Nullable      } from '@utils/gql/opts';
 import { StringColumn  } from '@utils/orm/decorators/string-column.decorator';
 import { 
-    StringField, DateField, IntField 
+    StringField, DateField, IntField, BooleanField 
 } from '@utils/gql/decorators/explicit-type-field.decorator';
 
 const { limits } = ConfigService;
@@ -63,4 +63,11 @@ export class Proposal {
         description: "Returns the total number of dislikes for this proposal."
     })
     dislikes!: number;
+
+    @Column({ default: true })
+    @BooleanField({
+        description: 
+        "Defines whether the author of this proposal is ready to accept requests for it."
+    })
+    isOpenned!: boolean;
 }

@@ -34,10 +34,10 @@ export class RatingEntitySubscriber implements EntitySubscriberInterface<Rating>
     /**
      * @override implements `EntitySubscriberInterface<>`
      */
-    afterRemove(e: RemoveEvent<Rating>): Promise<any> | void {
-        if (e.entity != null) {
+    afterRemove({entity, manager, entityId}: RemoveEvent<Pick<Rating, 'liked'>>): Promise<any> | void {
+        if (entity != null) {
             return this.decrement(
-                e.manager, e.entityId.proposalId, this.getUpdColName(e.entity.liked)
+                manager, entityId.proposalId, this.getUpdColName(entity.liked)
             );
         }
     }

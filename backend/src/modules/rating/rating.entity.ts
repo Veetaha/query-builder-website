@@ -21,11 +21,11 @@ import {
 @Entity()
 export class Rating {
 
-    @ManyToOne(_type => User,     { primary: true, onDelete: 'CASCADE' })
+    @ManyToOne(_type => User, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'raterLogin' })
     rater!: Promise<User>;
 
-    @ManyToOne(_type => Proposal, { primary: true, onDelete: 'CASCADE' })
+    @ManyToOne(_type => Proposal, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'proposalId' })
     proposal!: Promise<Proposal>;
     

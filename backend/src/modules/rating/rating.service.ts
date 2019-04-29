@@ -29,7 +29,8 @@ export class RatingService {
 
     /**
      * Creates or updates like in the database.
-     * Pre: user under `raterLogin` and proposal under `proposalId` already exist
+     * 
+     * **Pre:** user under `raterLogin` and proposal under `proposalId` already exist
      * in the database. 
      */
     async setRating(raterLogin: string, proposalId: number, liked: boolean) {

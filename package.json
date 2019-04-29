@@ -11,7 +11,7 @@
     "dev": "(cd backend  && npm run dev)",
     "docs": "graphdoc --endpoint http://localhost/gql --force --output ./frontend/dist/frontend/gql/docs",
     "docker": "docker-compose up",
-    "docker:dev": "docker-compose --file debug.docker-compose.yml up",
+    "docker:dev": "docker-compose --file debug.docker-compose.yml run --rm --service-ports query-builder-web-debug",
     "postinstall": "npm install --prefix backend && npm install --prefix frontend"
   },
   "repository": {

@@ -10,3 +10,4 @@ services:
             - "9229:9229"
         command: npm run start
         env_file: .env
+        
