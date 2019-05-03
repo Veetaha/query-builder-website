@@ -1,13 +1,13 @@
 import { InputType, Field } from "type-graphql";
 
 import * as I from '@app/interfaces';
-import { Nullable                } from '@utils/gql/opts';
+import { NullableOpt             } from '@utils/gql/opts';
 import { DateField, DateArrField } from '@utils/gql/decorators/explicit-type-field.decorator';
 import { AbstractFilterInput     } from './abstract-filter.input';
 
 
-const NullableDateField      = DateField(Nullable);
-const NullableDateArrayField = DateArrField(Nullable);
+const NullableDateField      = DateField(NullableOpt);
+const NullableDateArrayField = DateArrField(NullableOpt);
 
 @InputType({
     description: 'Filter input parameters for `Date` type.'

@@ -8,7 +8,6 @@
     "test": " (cd backend  && npm run test)",
     "build": "(cd frontend && npm run build)",
     "start": "docker-compose up",
-    "docs": "graphdoc --endpoint http://localhost/gql --force --output ./frontend/src/assets/gql/docs",
     "backend:container:start": "(cd backend && npm run start)",
     "backend:container:dev": "  (cd backend && npm run dev)",
     "backend:dev": "docker-compose --file debug.docker-compose.yml run --rm --service-ports query-builder-web-debug",
@@ -17,6 +16,7 @@
     "create-modules-graph:backend": " (cd backend  && npm run create-modules-graph)",
     "create-modules-graph:frontend": "(cd frontend && npm run create-modules-graph)",
     "postinstall": "npm install --prefix backend && npm install --prefix frontend",
+    "gql:docs": "graphdoc --endpoint http://localhost/gql --force --output ./common/docs/gql",
     "gql:codegen": "gql-gen"
   },
   "repository": {
@@ -33,6 +33,10 @@
   },
   "homepage": "https://github.com/Veetaha/query-builder-website#readme",
   "dependencies": {
+    "@ngxs/form-plugin": "^3.4.3-dev.master-9e6263a",
+    "@ngxs/router-plugin": "^3.4.3-dev.master-9e6263a",
+    "@ngxs/storage-plugin": "^3.4.3-dev.master-9e6263a",
+    "@ngxs/store": "^3.4.3-dev.master-9e6263a",
     "class-transformer": "latest",
     "class-transformer-validator": "^0.7.1",
     "class-validator": "latest",

@@ -1,1 +1,1 @@
-export const Nullable = { nullable: true } as const;
+export const NullableOpt = { nullable: true } as const;

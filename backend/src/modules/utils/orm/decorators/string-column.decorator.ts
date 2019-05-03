@@ -1,20 +1,19 @@
-import { ColumnOptions } from 'typeorm';
-import { Column } from 'typeorm';
+import { ColumnOptions, Column  } from 'typeorm';
 
-import * as I from '@app/interfaces';
-import { composeDecorators } from '@utils/meta';
-import { StringLength } from '@utils/validation/string-length.decorator';
-import { IntegerRange } from '@utils/math/integer-range.class';
+import { RemoveKeys             } from '@app/interfaces';
+import { IntRange               } from '@common/utils/math/int-range';
+import { composeDecorators      } from '@utils/meta';
+import { StringLength           } from '@utils/validation/string-length.decorator';
+import { ValidateIfPresent      } from '@utils/validation/validate-if-present.decorator';
 import { Validations, PropDecor } from '@utils/validation/validations.decorator';
-import { ValidateIfPresent } from '@utils/validation/validate-if-present.decorator';
 
 /**
  * Defines a `@Column({ type: 'varchar', length: range.max })` column
  * and adds `@Validations` constraints for `class-validator` for the decorated property.
  */
 export function StringColumn(
-    range: IntegerRange,  
-    opts?: I.RemoveKeys<ColumnOptions, 'length'>
+    range: IntRange,  
+    opts?: RemoveKeys<ColumnOptions, 'length'>
 ) {
     return composeDecorators(
 

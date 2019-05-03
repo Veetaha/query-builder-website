@@ -1,8 +1,12 @@
+import { createPayloadedAction } from '@utils/ngxs/create-payloaded-action';
+import { createSimpleAction    } from '@utils/ngxs/create-simple-action';
 import { CredentialsInput, SignUpInput } from '@app/gql/generated';
-import { createAction } from '@utils/ngxs/create-action';
 
-export class SignIn extends createAction<CredentialsInput>('[Auth] SignIn') {}
 
-export class SignUp extends createAction<SignUpInput>('[Auth] SignUp') {}
+export const SignIn = createPayloadedAction<CredentialsInput>('[Auth] SignIn');
+export type SignIn = InstanceType<typeof SignIn>;
 
-export class SignOut { static readonly type = '[Auth] SignOut'; }
+export const SignUp = createPayloadedAction<SignUpInput>('[Auth] SignUp');
+export type SignUp = InstanceType<typeof SignUp>;
+
+export const SignOut = createSimpleAction('[Auth] SignOut');

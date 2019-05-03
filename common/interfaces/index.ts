@@ -22,5 +22,5 @@ export type Decorator = (
 export type StrKeyOf<TObj extends Obj> = Extract<keyof TObj, string>;
 
 // number within range [0-65635]
-export type port_t = Tag<number, 'PortNumber'>;
-export type int    = Tag<number, 'Integer'>;
+export type port_t = Tag<number, 'port_t'>;
+export type int    = Tag<number, 'int'>;

@@ -1,6 +1,7 @@
-import { IntegerRange } from '../math/integer-range.class';
-import { Length } from 'class-validator';
+import { Length   } from 'class-validator';
 
-export function StringLength({ min, max}: IntegerRange) {
+import { IntRange } from '@common/utils/math/int-range';
+
+export function StringLength({ min, max}: IntRange) {
     return Length(min, max - 1);
 }

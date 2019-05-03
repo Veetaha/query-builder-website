@@ -59,7 +59,7 @@ export function PaginationInput<
 
         @NestedInputField(_type => MetaEntityFilterInput, {
             nullable: true,
-            description: `Defines filters that the items of the returned page must match.`
+            description: `Defines limitations for the items of the returned page.`
         })
         filter?: I.Nullable<MetaEntityFilterInput>;
 

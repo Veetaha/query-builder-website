@@ -14,7 +14,9 @@ input AdminUserUpdateInput {
 
 """Filter input parameters for `Boolean` type."""
 input BooleanFilterInput {
-  """Defines the mode (logical operator) to unite all filter conditions."""
+  """
+  Defines the mode (logical operator) to unite all filter conditions (`And` by default).
+  """
   unionMode: FilterUnion
   eq: Boolean
   neq: Boolean
@@ -27,7 +29,9 @@ input CredentialsInput {
 
 """Filter input parameters for `Date` type."""
 input DateFilterInput {
-  """Defines the mode (logical operator) to unite all filter conditions."""
+  """
+  Defines the mode (logical operator) to unite all filter conditions (`And` by default).
+  """
   unionMode: FilterUnion
   eq: DateTime
   neq: DateTime
@@ -55,7 +59,9 @@ enum FilterUnion {
 }
 
 input IntFilterInput {
-  """Defines the mode (logical operator) to unite all filter conditions."""
+  """
+  Defines the mode (logical operator) to unite all filter conditions (`And` by default).
+  """
   unionMode: FilterUnion
   eq: Int
   neq: Int
@@ -68,19 +74,25 @@ input IntFilterInput {
 }
 
 input MetaProposalFilterInput {
-  """Defines the mode (logical operator) to unite all filter conditions."""
+  """
+  Defines the mode (logical operator) to unite all filter conditions (`And` by default).
+  """
   unionMode: FilterUnion
   props: ProposalFilterInput!
 }
 
 input MetaRatingFilterInput {
-  """Defines the mode (logical operator) to unite all filter conditions."""
+  """
+  Defines the mode (logical operator) to unite all filter conditions (`And` by default).
+  """
   unionMode: FilterUnion
   props: RatingFilterInput!
 }
 
 input MetaUserFilterInput {
-  """Defines the mode (logical operator) to unite all filter conditions."""
+  """
+  Defines the mode (logical operator) to unite all filter conditions (`And` by default).
+  """
   unionMode: FilterUnion
   props: UserFilterInput!
 }
@@ -200,7 +212,7 @@ input ProposalPaginationInput {
   """
   offset: Int!
 
-  """Defines filters that the items of the returned page must match."""
+  """Defines limitations for the items of the returned page."""
   filter: MetaProposalFilterInput
 
   """
@@ -291,7 +303,7 @@ input RatingPaginationInput {
   """
   offset: Int!
 
-  """Defines filters that the items of the returned page must match."""
+  """Defines limitations for the items of the returned page."""
   filter: MetaRatingFilterInput
 
   """
@@ -330,7 +342,9 @@ input SortInput {
 
 """Filter input parameters for `String` type"""
 input StringFilterInput {
-  """Defines the mode (logical operator) to unite all filter conditions."""
+  """
+  Defines the mode (logical operator) to unite all filter conditions (`And` by default).
+  """
   unionMode: FilterUnion
   eq: String
   neq: String
@@ -348,6 +362,8 @@ type User {
   role: UserRole!
   name: String!
   login: String!
+
+  """User avatar picture url, or null of was not set."""
   avatarUrl: String
 
   """Returns existing `avatarUrl` or default one if former was not set."""
@@ -394,7 +410,7 @@ input UserPaginationInput {
   """
   offset: Int!
 
-  """Defines filters that the items of the returned page must match."""
+  """Defines limitations for the items of the returned page."""
   filter: MetaUserFilterInput
 
   """
@@ -411,7 +427,9 @@ enum UserRole {
 }
 
 input UserRoleFilterInput {
-  """Defines the mode (logical operator) to unite all filter conditions."""
+  """
+  Defines the mode (logical operator) to unite all filter conditions (`And` by default).
+  """
   unionMode: FilterUnion
   eq: UserRole
   neq: UserRole

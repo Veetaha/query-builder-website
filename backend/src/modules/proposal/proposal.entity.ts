@@ -10,15 +10,14 @@ import {
 } from 'typeorm';
 
 import * as I from '@app/interfaces';
-import { ConfigService } from '@modules/config/config.service';
 import { User          } from '@modules/user/user.entity';
-import { Nullable      } from '@utils/gql/opts';
+import { NullableOpt   } from '@utils/gql/opts';
 import { StringColumn  } from '@utils/orm/decorators/string-column.decorator';
 import { 
     StringField, DateField, IntField, BooleanField 
 } from '@utils/gql/decorators/explicit-type-field.decorator';
 
-const { limits } = ConfigService;
+import { limits } from '@common/constants';
 
 @ObjectType()
 @Entity()
@@ -48,8 +47,8 @@ export class Proposal {
     @StringField() @StringColumn(limits.proposal.bodyText)  bodyText!:  string;
     
         
-    @StringColumn(limits.imageUrl, Nullable)
-    @StringField(Nullable)
+    @StringColumn(limits.imageUrl, NullableOpt)
+    @StringField(NullableOpt)
     mainPictureUrl?: I.Nullable<string>;
 
     @Column({ default: 0 })

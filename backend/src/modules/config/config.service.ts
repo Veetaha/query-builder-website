@@ -1,6 +1,7 @@
 import * as Path from 'path';
 import * as Joi from 'typesafe-joi';
 import { Injectable } from '@nestjs/common';
+import { ServeStaticOptions } from '@nestjs/platform-express/interfaces/serve-static-options.interface';
 import { TypeOrmOptionsFactory, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { GqlOptionsFactory, GqlModuleOptions         } from '@nestjs/graphql';
 import { JwtOptionsFactory, JwtModuleOptions         } from '@nestjs/jwt';
@@ -9,7 +10,6 @@ import { ExtractJwt, StrategyOptions as PassportJwtStrategyOptions } from 'passp
 
 import { getResolveContext } from '@modules/common/resolve-context';
 import { EnvService        } from '@utils/env/env.service';
-import { IntegerRange      } from '@utils/math/integer-range.class';
 
 @Injectable()
 export class ConfigService
@@ -17,30 +17,14 @@ implements TypeOrmOptionsFactory, GqlOptionsFactory, JwtOptionsFactory, AuthOpti
     // development mode by default
     static readonly isDevelopmentMode = process.env.NODE_ENV !== 'production';
 
-    static readonly limits = {
-        proposal: {
-            name:      new IntegerRange(1, 256),
-            introText: new IntegerRange(0, 256),
-            bodyText:  new IntegerRange(0, 5001),
-        },
-    
-        user: {
-            name:     new IntegerRange(3, 256),
-            password: new IntegerRange(5, 37),
-            login:    new IntegerRange(2, 37),
-        },
-    
-        imageUrl:     new IntegerRange(0, 256)
-    } as const;
-
     readonly default = {
         user:     { avatarUrl:      '/assets/default-user-avatar.svg'           },
         proposal: { mainPictureUrl: '/assets/default-proposal-main-picture.svg' }
     } as const;
 
-
     readonly passwordSalt          = this.env.readEnvOrFail('PASSWORD_SALT');
     readonly port                  = this.env.readPortFromEnvOrFail('PORT');
+    readonly gqlApiDocsDir         = this.pathFromRoot('common/docs/gql');
     readonly frontendPublicDir     = this.pathFromRoot('frontend/dist/frontend');
     readonly frontendIndexHtmlPath = `${this.frontendPublicDir}/index.html`;
     
@@ -59,6 +43,10 @@ implements TypeOrmOptionsFactory, GqlOptionsFactory, JwtOptionsFactory, AuthOpti
 
     pathFromRoot(...pathParts: string[]) {        
         return Path.normalize(Path.join(__dirname, '../../../../', ...pathParts));
+    }
+
+    createGqlApiDocsServeStaticOptions(): ServeStaticOptions {
+        return { prefix: '/gql/docs' };
     }
 
     createGqlOptions(): GqlModuleOptions {

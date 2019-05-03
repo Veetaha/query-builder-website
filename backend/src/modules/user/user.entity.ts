@@ -3,15 +3,11 @@ import {
     Entity, CreateDateColumn, UpdateDateColumn, Column 
 } from 'typeorm';
 
-import * as I from '@app/interfaces';
-import { ConfigService } from '@modules/config/config.service';
-import { Nullable      } from '@utils/gql/opts';
+import { Nullable      } from '@app/interfaces';
+import { limits        } from '@common/constants';
 import { StringColumn  } from '@utils/orm/decorators/string-column.decorator';
 import { UserRole      } from './user-role.enum';
 import { StringField, DateField } from '@utils/gql/decorators/explicit-type-field.decorator';
-
-
-const { limits } = ConfigService;
 
 @ObjectType()
 @Entity()
@@ -24,12 +20,6 @@ export class User {
     @UpdateDateColumn() 
     @DateField()
     lastUpdateDate!: Date;
-
-    // @OneToMany(_type => Proposal, proposal => proposal.creator)
-    // proposals!: Promise<Proposal[]>;
-
-    // @OneToMany(_type => Like, like => like.rater)
-    // likes!: Promise<Like[]>;
 
     @Column({
         type:    'enum',
@@ -50,9 +40,12 @@ export class User {
     @Column({ select: false })        
     passwordHash?: string;
 
-    @StringColumn(limits.imageUrl, Nullable)
-    @StringField(Nullable)
-    avatarUrl?: I.Nullable<string>;
+    @StringColumn(limits.imageUrl, { nullable: true })
+    @StringField({
+        nullable: true,
+        description: 'User avatar picture url, or null of was not set.'
+    })
+    avatarUrl?: Nullable<string>;
 
     isAdmin() {
         return this.role === UserRole.Admin;

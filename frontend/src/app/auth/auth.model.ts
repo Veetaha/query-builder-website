@@ -1,7 +1,6 @@
+import { Nullable               } from '@app/interfaces';
 import { AssignConstructable    } from '@common/utils/obj/assign-constructable';
 import { Client, ClientAndToken } from './interfaces';
-import { Injectable } from '@angular/core';
-import { Nullable } from '@app/interfaces';
 
 export type AuthStateModel = AuthSnap | UnAuthSnap;
 
@@ -13,10 +12,11 @@ implements ClientAndToken
     readonly client!: Client;
     readonly isSignedIn       = true;
     readonly isFetchingClient = false;
-    ensureCanAuthOrFail() { 
+    ensureCanAuthOrFail = () => { 
         throw new Error('client is already signed in.');
     }
-    ensureCanSignOutOrFail() { }
+    
+    ensureCanSignOutOrFail = () => {};
     
 }
 
@@ -25,18 +25,22 @@ export abstract class UnAuthSnap {
     readonly client?    = null;
     readonly isSignedIn = false;
     abstract readonly isFetchingClient: boolean;
-    abstract ensureCanAuthOrFail(): void;
+    abstract ensureCanAuthOrFail: () => void;
     
-    ensureCanSignOutOrFail() {
+    ensureCanSignOutOrFail = () => {
         throw new Error("client is not signed in.");
     }
 } 
 
-@Injectable({ providedIn: 'root' })
+
 export class StableUnAuthSnap extends UnAuthSnap {
+    static readonly instance = new StableUnAuthSnap;
+
     readonly token            = null;
     readonly isFetchingClient = false;
-    ensureCanAuthOrFail() { }
+    ensureCanAuthOrFail = () => { };
+
+    private constructor() { super(); }
 }
 
 export class FetchingClientSnap extends UnAuthSnap {
@@ -45,7 +49,7 @@ export class FetchingClientSnap extends UnAuthSnap {
     }
 
     readonly isFetchingClient = true;
-    ensureCanAuthOrFail() {
+    ensureCanAuthOrFail = () => {
         throw new Error("can't sign in, previous request is not ready.");
     }
 }

@@ -1,11 +1,10 @@
-import { InputType } from 'type-graphql';
+import { InputType     } from 'type-graphql';
 
 import { User          } from '@modules/user/user.entity';
-import { ConfigService } from '@modules/config/config.service';
+import { limits        } from '@common/constants';
 import { StringField   } from '@utils/gql/decorators/explicit-type-field.decorator';
 import { StringLength  } from '@utils/validation/string-length.decorator';
 import { ValidateAs    } from '@utils/validation/validations.decorator';
-
 
 @InputType()
 export class CredentialsInput {
@@ -14,6 +13,6 @@ export class CredentialsInput {
     login!: string;
 
     @StringField()
-    @StringLength(ConfigService.limits.user.password)
+    @StringLength(limits.user.password)
     password!: string;
 }

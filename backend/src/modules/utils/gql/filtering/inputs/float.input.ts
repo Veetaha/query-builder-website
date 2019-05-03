@@ -1,14 +1,14 @@
 import { InputType, Field } from "type-graphql";
 
 import * as I from '@app/interfaces';
-import { Nullable                  } from '@utils/gql/opts';
+import { NullableOpt                  } from '@utils/gql/opts';
 import { FloatField, FloatArrField } from '@utils/gql/decorators/explicit-type-field.decorator';
 import { AbstractFilterInput       } from './abstract-filter.input';
 
 
 
-const NullableFloatField      = FloatField(Nullable);
-const NullableFloatArrayField = FloatArrField(Nullable);
+const NullableFloatField      = FloatField(NullableOpt);
+const NullableFloatArrayField = FloatArrField(NullableOpt);
 
 /**
  * Filter input parameters for `Float` type.

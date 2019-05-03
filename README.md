@@ -1,4 +1,4 @@
-# Fullstack app template
+# QueryBuilder website fullstack projec
 
 [![Build Status](https://travis-ci.com/Veetaha/query-builder-website.svg?branch=master)](https://travis-ci.com/Veetaha/query-builder-website) 
 [![Coverage Status](https://coveralls.io/repos/github/Veetaha/query-builder-website/badge.svg?branch=master)](https://coveralls.io/github/Veetaha/query-builder-website?branch=master)
@@ -125,7 +125,7 @@ It is `Angular 7` bug. As a workaround set `"target": "es5"` in your `"frontend/
 
 ### `'Cannot instantiate cyclic dependency! ErrorHandler ("[ERROR ->]")'`
 
-Use angular `Injector` in order to get dependencies in your custom `ErrorHandler`.
+Use angular `Injector` in order to get dependencies into your custom `ErrorHandler`.
 See [this article](https://medium.com/@amcdnl/global-error-handling-with-angular2-6b992bdfb59c)
 for details.
 
@@ -141,6 +141,6 @@ See [this issue](https://github.com/ngxs/store/issues/917) for details.
 
 ### Ngxs `dispatch()` doesn't dispatch an action that `extends Error`
 
-// TODO investigate
+TODO investigate.
 As a workaround, don't derive your action from `Error`, but save the error in
 your action property.

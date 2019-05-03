@@ -1,13 +1,13 @@
 import { InputType, Field } from "type-graphql";
 
 import * as I from '@app/interfaces';
-import { Nullable              } from '@utils/gql/opts';
+import { NullableOpt              } from '@utils/gql/opts';
 import { IntField, IntArrField } from '@utils/gql/decorators/explicit-type-field.decorator';
 import { AbstractFilterInput   } from './abstract-filter.input';
 
 
-const NullableIntField      = IntField(Nullable);
-const NullableIntArrayField = IntArrField(Nullable);
+const NullableIntField      = IntField(NullableOpt);
+const NullableIntArrayField = IntArrField(NullableOpt);
 
 /**
  * Filter input parameters for `Int` type.

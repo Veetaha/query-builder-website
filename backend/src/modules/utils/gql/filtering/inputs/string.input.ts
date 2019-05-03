@@ -1,14 +1,14 @@
 import { InputType, Field } from 'type-graphql';
 
 import * as I from '@app/interfaces';
-import { Nullable                    } from '@utils/gql/opts';
+import { NullableOpt                    } from '@utils/gql/opts';
 import { StringField, StringArrField } from '@utils/gql/decorators/explicit-type-field.decorator';
 import { AbstractFilterInput         } from './abstract-filter.input';
 
 
 
-const NullableStringField      = StringField(Nullable);
-const NullableStringArrayField = StringArrField(Nullable);
+const NullableStringField      = StringField(NullableOpt);
+const NullableStringArrayField = StringArrField(NullableOpt);
 
 @InputType({ 
     description: 'Filter input parameters for `String` type' 

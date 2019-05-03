@@ -1,6 +1,38 @@
 <h1>Sign in component</h1>
-<form [formGroup]="form" novalidate ngxsForm="auth.signIn.form" (ngSubmit)="onSubmit()">
-    <input type="text" formControlName="login" />
-    <input type="password" formControlName="password" />
-    <button type="submit">Order</button>
+<form
+    [formGroup]="form"
+    (ngSubmit)="submitForm()"
+    class="sign-in-form"
+    ngxsForm="signIn"
+    
+>
+    <label>
+        Login: 
+        <input 
+            [maxlength]="limits.user.login.max - 1"
+            [minlength]="limits.user.login.min"
+            formControlName="login" 
+            type="text"
+            required
+        />
+    </label>
+
+    <label>
+        Password: 
+        <input 
+            [maxlength]="limits.user.password.max - 1"
+            [minlength]="limits.user.password.min"
+            formControlName="password" 
+            type="password"
+            required
+        />
+    </label>
+
+    <button 
+        [disabled]="form.invalid"
+        class="submit-button" 
+        type="submit"
+    >
+        Sign in
+    </button>
 </form>

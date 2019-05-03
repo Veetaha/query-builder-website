@@ -1,12 +1,15 @@
 import { Injectable          } from '@angular/core';
+import { NgxsModule          } from '@ngxs/store';
 import { ApolloClientOptions } from 'apollo-client';
 import { InMemoryCache       } from 'apollo-cache-inmemory';
 import { HttpLink, HttpLinkHandler } from 'apollo-angular-link-http';
 import { StorageOption, NgxsStoragePluginOptions } from '@ngxs/storage-plugin';
-import { ModuleOptions as NgxsModuleOptions } from '@ngxs/store/src/module';
 
 import { isDevelopmentMode   } from './environment';
 import { NgxsDevtoolsOptions } from '@ngxs/devtools-plugin';
+
+
+type NgxsModuleOptions = NonNullable<Parameters<(typeof NgxsModule)['forRoot']>[1]>;
 
 
 @Injectable({ providedIn: 'root' })

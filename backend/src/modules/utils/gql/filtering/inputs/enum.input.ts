@@ -1,7 +1,7 @@
 import { InputType, Field } from "type-graphql";
 
 import * as I from '@app/interfaces';
-import { Nullable } from '@utils/gql/opts';
+import { NullableOpt } from '@utils/gql/opts';
 import { AbstractFilterInput } from './abstract-filter.input';
 
 
@@ -13,8 +13,8 @@ import { AbstractFilterInput } from './abstract-filter.input';
 export function EnumFilterInput<TEnum extends I.Obj<any>>(EnumObj: TEnum, enumName: string) {
     type TEnumValue = I.ValueOf<TEnum>;
 
-    const NullableEnumField      = Field(_type => EnumObj,   Nullable);
-    const NullableEnumArrayField = Field(_type => [EnumObj], Nullable);
+    const NullableEnumField      = Field(_type => EnumObj,   NullableOpt);
+    const NullableEnumArrayField = Field(_type => [EnumObj], NullableOpt);
 
     @InputType({
         isAbstract: true,

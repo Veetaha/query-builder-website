@@ -1,7 +1,7 @@
 import { InputType, Field } from 'type-graphql';
 
 import * as I from '@app/interfaces';
-import { Nullable        } from '@utils/gql/opts';
+import { NullableOpt     } from '@utils/gql/opts';
 import { ValidateAs      } from '@utils/validation/validations.decorator';
 import { StringField     } from '@utils/gql/decorators/explicit-type-field.decorator';
 import { UserRole        } from '../user-role.enum';
@@ -17,6 +17,6 @@ export class AdminUserUpdateInput extends UserUpdateInput {
     @StringField({ description: 'Defines the login of the user to update' })
     login!: string;
 
-    @Field(_type => UserRole, Nullable)
+    @Field(_type => UserRole, NullableOpt)
     role?: I.Nullable<UserRole>;
 }

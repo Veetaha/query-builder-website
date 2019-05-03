@@ -1,8 +1,7 @@
+import Morgan  from 'morgan';
 import { NestFactory            } from '@nestjs/core';
 import { ValidationPipe         } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import Morgan from 'morgan';
-
 
 import { AppModule     } from '@modules/app.module';
 import { ConfigService } from '@modules/config/config.service';
@@ -16,6 +15,10 @@ async function bootstrap() {
     await app
         .useGlobalPipes(new ValidationPipe({ transform: true }))
         .useStaticAssets(config.frontendPublicDir)
+        .useStaticAssets(
+            config.gqlApiDocsDir,
+            config.createGqlApiDocsServeStaticOptions()
+        )
         .use(Morgan('dev'))
         .listen(config.port);
         

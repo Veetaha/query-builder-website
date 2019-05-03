@@ -1,11 +1,14 @@
-import { Component  } from '@angular/core';
-import { Select     } from '@ngxs/store';
-import { Observable } from 'rxjs';
-
-import { Nullable  } from '@app/interfaces';
-import { AuthState } from '../auth.state';
-import { Client    } from '../interfaces';
+import { Component, OnInit      } from '@angular/core';
+import { Store                  } from '@ngxs/store';
 import { FormGroup, FormControl } from '@angular/forms';
+
+import { limits           } from '@common/constants';
+import { Disposable       } from '@utils/disposable';
+import { SubmitSignInForm } from './sign-in.actions';
+import { AuthState        } from '../auth.state';
+import { OpenHomePage } from '@app/store/app.actions';
+
+
 
 
 @Component({
@@ -13,15 +16,25 @@ import { FormGroup, FormControl } from '@angular/forms';
   templateUrl: './sign-in.component.html',
   styleUrls:  ['./sign-in.component.scss']
 })
-export class SignInComponent {
-    @Select(AuthState.client) client$!: Observable<Nullable<Client>>;
+export class SignInComponent extends Disposable implements OnInit {
+    constructor(private readonly store: Store) { super(); }
 
-    form = new FormGroup({
+    readonly limits = limits;
+    readonly form = new FormGroup({
         login:    new FormControl(''),
         password: new FormControl('')
     });
 
-    onSubmit() {
-
+    ngOnInit() {
+        this.addHandle(this.store
+            .select<boolean>(AuthState.isSignedIn)
+            .subscribe((isSignedIn) => isSignedIn && this.store.dispatch(OpenHomePage))
+        );
     }
+
+    submitForm() {
+        this.store.dispatch(SubmitSignInForm.instance);
+    }
+
+
 }

@@ -1,8 +1,11 @@
 import _ from 'lodash';
 import * as Joi from 'typesafe-joi';
 import * as MathJs from 'mathjs';
-import { DebugService } from '@utils/debug/debug.service';
 import { Injectable } from '@nestjs/common';
+
+import { DebugService } from '@utils/debug/debug.service';
+
+import { swapItems } from '@common/utils/array';
 
 
 @Injectable()
@@ -60,18 +63,6 @@ export class AlgorithmsService {
         return null;
     }
 
-    /**
-     * Swaps items in `arr` at indexes `i`, `j`.
-     * @param arr Array to swap items in. 
-     * @param i   Index of `arr` item to swap with `arr[j]`
-     * @param j   Index of `arr` item to swap with `arr[i]`
-     */
-    swapItems<T>(arr: T[], i: number, j: number) {
-        const temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-    }
-
 
     /**
      * Returns IterableIterator<T> which randomly picks each arr[i] value at most
@@ -98,8 +89,8 @@ export class AlgorithmsService {
             const randomIndex = MathJs.randomInt(edgeIndex, arr.length);
             const randomValue = arr[randomIndex];
             if (!--times[randomIndex]) {
-                this.swapItems(arr,   randomIndex, edgeIndex);
-                this.swapItems(times, randomIndex, edgeIndex);
+                swapItems(arr,   randomIndex, edgeIndex);
+                swapItems(times, randomIndex, edgeIndex);
                 ++edgeIndex;
             }
             yield randomValue;

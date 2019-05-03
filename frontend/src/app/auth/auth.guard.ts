@@ -7,7 +7,6 @@ import { CanActivate, ActivatedRouteSnapshot } from '@angular/router';
 import { AuthState } from './auth.state';
 import { UserRole } from '@app/gql/generated';
 import { Nullable } from '@app/interfaces';
-import { CriticalError } from '@app/error/store/error.actions';
 
 
 
@@ -37,13 +36,12 @@ export class AuthGuard implements CanActivate {
         allowedRoles: Nullable<UserRole[] | UserRole>,
         deniedRoles:  Nullable<UserRole[] | UserRole>
     ) {
+        console.log('tryGrantAccess()');
         if (deniedRoles  != null && deniedRoles.includes(userRole) ||
             allowedRoles != null && !allowedRoles.includes(userRole))
         {
-            this.store.dispatch(
-                new CriticalError('You have no rights to access this route')
-            );
-            return false;
+            debugger;
+            throw new Error('You have no rights to access this route');
         }
 
         return true;

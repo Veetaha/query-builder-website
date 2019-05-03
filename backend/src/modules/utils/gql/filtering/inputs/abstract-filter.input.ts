@@ -9,7 +9,8 @@ export abstract class AbstractFilterInput<TInputType = unknown> {
     @Field(_type => FilterUnion, {
         nullable: true,
         description: 
-        'Defines the mode (logical operator) to unite all filter conditions.'
+        "Defines the mode (logical operator) to unite all filter conditions " + 
+        "(`And` by default)."
     })
     unionMode?: I.Nullable<FilterUnion>;
 

@@ -1,5 +1,5 @@
-import * as I from '@app/interfaces';
-import { ActionClass } from './action.interface';
+import { PayloadedActionClass } from './payloaded-action-class.interface';
+import { DeepReadonly, Obj } from 'ts-typedefs';
 
 /**
  * Higher order function to define an action class with the given `TPaload` type
@@ -9,11 +9,11 @@ import { ActionClass } from './action.interface';
  * 
  * @param type Type name use `static readonly type` property of the defined class.
  */
-export function createAction<TPayload extends I.Obj = {}>(type: string) {
+export function createPayloadedAction<TPayload extends Obj = {}>(type: string) {
     return class {
         static readonly type = type;
         constructor(payload: TPayload) {
             Object.assign(this, payload);
         }
-    } as ActionClass<TPayload>;
+    } as PayloadedActionClass<DeepReadonly<TPayload>>;
 }

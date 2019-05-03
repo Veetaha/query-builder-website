@@ -1,16 +1,16 @@
 import _ from 'lodash';
 import * as MathJS from 'mathjs';
 
-import * as I from '@app/interfaces';
-import { AlgorithmsService } from '../algorithms/algorithms.service';
+import { swapItems } from '../array';
+
 /**
- * Represents a range of integers [min, max), 
+ * Represents a range of integers `[min, max)`, 
  * i.e. min bound is inclusive, but max bound is exclusive.
  * 
  * Note that this class is immutable, create new instance if
  * you need another range bounds.
  */
-export class IntegerRange {
+export class IntRange {
 
     /**
      * Returns the number of integers, covered by this range, or `max - min`
@@ -22,51 +22,51 @@ export class IntegerRange {
     /**
      * Represents minimum range bound (inclusive)
      */
-    public readonly min: I.int;
+    public readonly min: number;
     /**
      * Represents maximum range bound (exclusive)
      */
-    public readonly max: I.int;
+    public readonly max: number;
 
     /**
-     * Creates an instance of `IntegerRange`, rounds min and max values if those
-     * have decimal parts and swaps them if min > max.
+     * Creates an instance of `IntRange`, rounds min and max values if those
+     * have decimal parts and swaps them if `min > max`.
      * 
      * @param min minimum range bound (inclusive)
      * @param max maximim range bound (exclusive)
      */
     constructor(min: number, max: number) {
         if (min > max) {
-            this.min = Math.round(max) as I.int;
-            this.max = Math.round(min) as I.int;
+            this.min = Math.round(max);
+            this.max = Math.round(min);
         } else {
-            this.min = Math.round(min) as I.int;
-            this.max = Math.round(max) as I.int;
+            this.min = Math.round(min);
+            this.max = Math.round(max);
         }
     }
 
     /**
-     * Retuns true if suspect is integer and it goes inside this `IntegerRange`.
-     * @param suspect Value to test wheter it is inside this `IntegerRange`
+     * Retuns `true` if suspect is integer and it goes inside this `IntRange`.
+     * @param suspect Value to test wheter it is inside this `IntRange`
      */
     includes(suspect: number) {
         return Number.isInteger(suspect) && suspect >= this.min && suspect < this.max;
     }
 
     /**
-     * Returns a random integer from the range [min, max)
+     * Returns a random integer from the range `[min, max)`
      */
     random() {
-        return MathJS.randomInt(this.min, this.max) as I.int;
+        return MathJS.randomInt(this.min, this.max);
     }
 
     /**
-     * Returns IterableIterator<number> over random unique integers 
+     * Returns `IterableIterator<number>` over random unique integers 
      * within this range.
      * 
      * @remarks 
-     * Iterator's inner algorithm has O(max - min) linear memory complexity in 
-     * all cases, and O(1) time complexity to generate each successive random integer.
+     * Iterator's inner algorithm has `O(max - min)` linear memory complexity in 
+     * all cases, and `O(1)` time complexity to generate each successive random integer.
      * 
      * @copyright https://stackoverflow.com/a/196065/9259330
      * 
@@ -74,11 +74,11 @@ export class IntegerRange {
      * @param limit The maximum amount of numbers to generate, 
      *              which is `max - min` by default
      */
-    *randomUniqueIntegers(limit = this.rangeLength, algo: AlgorithmsService){
+    *randomUniqueIntegers(limit = this.rangeLength){
         const numbers = _.range(this.min, this.max);
         for (let i = 0; i < numbers.length && i < limit; ++i) {
-            algo.swapItems(numbers, i, MathJS.randomInt(i, numbers.length));
-            yield numbers[i] as I.int;
+            swapItems(numbers, i, MathJS.randomInt(i, numbers.length));
+            yield numbers[i];
         }
     }
     
