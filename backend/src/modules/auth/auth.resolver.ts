@@ -16,7 +16,7 @@ export class AuthResolver {
         nullable: true,
         description: "Returns `UserAndToken` for the client according to the given `credentials`."
     })
-    async signIn(@Args('credentials') credentials: CredentialsInput) {
+    async signIn(@Args('params') credentials: CredentialsInput) {
         return this.auth.signIn(credentials);
     }
 
@@ -25,8 +25,8 @@ export class AuthResolver {
         "Registers the client in the database and returns its `UserAndToken`. " +
         "Throws if failed to register new client."
     })
-    async signUp(@Args('data') data: SignUpInput) {
-        return this.auth.signUpOrFail(data);
+    async signUp(@Args('params') params: SignUpInput) {
+        return this.auth.signUpOrFail(params);
     }
 
 }

@@ -89,12 +89,12 @@ type Mutation {
   """
   Returns `UserAndToken` for the client according to the given `credentials`.
   """
-  signIn(credentials: CredentialsInput!): UserAndToken
+  signIn(params: CredentialsInput!): UserAndToken
 
   """
   Registers the client in the database and returns its `UserAndToken`. Throws if failed to register new client.
   """
-  signUp(data: SignUpInput!): UserAndToken!
+  signUp(params: SignUpInput!): UserAndToken!
 
   """Requires auth. Updates current client data and returns it."""
   updateMe(params: UserUpdateInput!): User!
@@ -355,8 +355,13 @@ type User {
 }
 
 type UserAndToken {
+  """User instance that represents the client data."""
   user: User!
-  jwt: String!
+
+  """
+  Bearer auth token that the client has to pass in "Authorization" header
+  """
+  token: String!
 }
 
 input UserFilterInput {

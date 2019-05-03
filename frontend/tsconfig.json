@@ -1,19 +1,23 @@
 {
-    "extends": "../tsconfig.json",
-    "compileOnSave": false,
-    "compilerOptions": {
-        "outDir": "./dist/out-tsc",
-
-        "baseUrl": "./src/app",
-        "paths": {
-            "@app/*":     [ "./*" ],
-            "@modules/*": [ "./modules/*" ]
-        },
-
-        "module": "esnext",
-        "moduleResolution": "node",
-        
-        "target": "es2015",
-        "lib": [ "esnext", "dom" ]
-    }
+  "extends": "../tsconfig.json",
+  "compileOnSave": false,
+  "compilerOptions": {
+    "outDir": "./dist/out-tsc",
+    "baseUrl": "./src/app",
+    "paths": {
+        "@utils/*": [ "./utils/*" ],
+      "@app/*":     [ "./*" ],
+      "@modules/*": [ "./modules/*" ],
+      "@common/*":  [ "../../../common/*" ]
+    },
+    "sourceMap": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "es5",
+    "lib": [
+      "esnext",
+      "dom",
+      "esnext.asynciterable"
+    ]
+  }
 }

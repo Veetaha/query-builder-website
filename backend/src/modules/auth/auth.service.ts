@@ -33,7 +33,7 @@ export class AuthService {
         const payload: I.JwtPayload = { sub: user.login };
         return new UserAndToken({
             user,
-            jwt: this.jwt.sign(payload)
+            token: this.jwt.sign(payload)
         });
     }
 
@@ -82,7 +82,7 @@ export class AuthService {
         const jwtPayload: I.JwtPayload = { sub: user.login };
         return new UserAndToken({
             user,
-            jwt: this.jwt.sign(jwtPayload)
+            token: this.jwt.sign(jwtPayload)
         });
     }
 

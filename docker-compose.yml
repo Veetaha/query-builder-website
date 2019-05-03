@@ -1,13 +1,10 @@
 version: '3'
 services: 
     query-builder-web:
-        build:   '.'
-        # volumes:
-        #     - .:/usr/app/
-        #     - /usr/app/node_modules
+        build: .
         ports:
-            - "${PORT}:${PORT}"
-            - "9229:9229"
-        command: npm run start
+            - ${PORT}:${PORT}
+            - 9229:9229
+        command:  npm run start
         env_file: .env
         

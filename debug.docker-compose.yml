@@ -6,8 +6,7 @@ services:
             dockerfile: debug.dockerfile
         volumes:
             - .:/home/${USER}/my/projects/query-builder-website
-            - /home/${USER}/my/projects/query-builder-website/node_modules
         ports:
-            - "${PORT}:${PORT}"
-            - "9229:9229"
+            - ${PORT}:${PORT}
+            - 9229:9229
         env_file: .env

@@ -12,4 +12,6 @@ EXPOSE ${PORT}
 
 RUN npm run build
 
-CMD ["npm", "run", "start"]
+ENV NODE_ENV=production
+
+CMD ["npm", "run", "backend:container:start"]

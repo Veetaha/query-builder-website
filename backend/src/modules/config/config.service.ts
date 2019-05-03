@@ -14,6 +14,9 @@ import { IntegerRange      } from '@utils/math/integer-range.class';
 @Injectable()
 export class ConfigService
 implements TypeOrmOptionsFactory, GqlOptionsFactory, JwtOptionsFactory, AuthOptionsFactory {
+    // development mode by default
+    static readonly isDevelopmentMode = process.env.NODE_ENV !== 'production';
+
     static readonly limits = {
         proposal: {
             name:      new IntegerRange(1, 256),
@@ -36,9 +39,10 @@ implements TypeOrmOptionsFactory, GqlOptionsFactory, JwtOptionsFactory, AuthOpti
     } as const;
 
 
-    readonly passwordSalt      = this.env.readEnvOrFail('PASSWORD_SALT');
-    readonly port              = this.env.readPortFromEnvOrFail('PORT');
-    readonly frontendPublicDir = this.pathFromRoot('frontend/dist/frontend');
+    readonly passwordSalt          = this.env.readEnvOrFail('PASSWORD_SALT');
+    readonly port                  = this.env.readPortFromEnvOrFail('PORT');
+    readonly frontendPublicDir     = this.pathFromRoot('frontend/dist/frontend');
+    readonly frontendIndexHtmlPath = `${this.frontendPublicDir}/index.html`;
     
 
     readonly jwtKeypair = this.env.parseFileSyncOrThrow(
@@ -61,10 +65,10 @@ implements TypeOrmOptionsFactory, GqlOptionsFactory, JwtOptionsFactory, AuthOpti
         return {
             playground:     true,
             introspection:  true,
-            debug:          true,
-            autoSchemaFile: this.pathFromRoot('common/schema.graphql'),
+            autoSchemaFile: this.pathFromRoot('common/schema.gql'),
             path:           '/gql',
-            context:        getResolveContext
+            context:        getResolveContext,
+            debug:          ConfigService.isDevelopmentMode
         };
     }
 
@@ -78,9 +82,9 @@ implements TypeOrmOptionsFactory, GqlOptionsFactory, JwtOptionsFactory, AuthOpti
             database:    this.env.readEnvOrFail('DB_DB'),
             entities:   [this.pathFromRoot('backend/src/modules/**/*.entity.ts')],
             keepConnectionAlive:   true,
-            maxQueryExecutionTime: 200, //TODO remove on production
-            logging:     true,          // 
-            synchronize: true           //   
+            maxQueryExecutionTime: ConfigService.isDevelopmentMode ? 200 : void 0,
+            logging:               ConfigService.isDevelopmentMode,
+            synchronize:           ConfigService.isDevelopmentMode
         };
     }
 
@@ -92,7 +96,7 @@ implements TypeOrmOptionsFactory, GqlOptionsFactory, JwtOptionsFactory, AuthOpti
         return { 
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             secretOrKey:    this.jwtKeypair.private,
-            algorithms: ['RS256']
+            algorithms:     ['RS256']
         };
     }
 

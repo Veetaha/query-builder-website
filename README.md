@@ -22,8 +22,12 @@ create `'.env'` file that must contain the same variables as in `'example.env'`.
 ### Development
 
 **Run:**
+Before running the container you have to install `npm` dependencies, because all
+the project directory will be mounted into the container working directory.
+
 ```bash
-npm run docker:dev
+npm i
+npm run backend:dev
 ```
 This command creates `web_debug` image and runs it as a docker container that 
 represents the backend side of your app. 
@@ -92,3 +96,51 @@ tty allocated.
 ### `npm install` fails with Node.js v12
 
 The blame goes to `'generate-rsa-keypair'`, you may watch the issue [here](https://github.com/LinusU/node-generate-rsa-keypair/issues/5).
+
+---
+
+### Error with `'node-sass'` platform support when running `npm install`
+
+This is the problem with `NodeJS v12` just downgrade to `11.13.10`
+
+```bash
+nvm use 11.13.0
+```
+
+---
+
+### `'madge'` doesn't work when invoking it from `'backend'/'frontend'` project parent directory.
+
+TODO file a bug. As a workaround change directory into `'backend'/'frontend'` before using `madge`.
+
+---
+
+### Apollo client `Query` doesn't get its dependencies injected.
+
+It is `Angular 7` bug. As a workaround set `"target": "es5"` in your `"frontend/tsconfig.json"`.
+
+[Link to the github issue.](https://github.com/dotansimha/graphql-code-generator/issues/1617)
+
+---
+
+### `'Cannot instantiate cyclic dependency! ErrorHandler ("[ERROR ->]")'`
+
+Use angular `Injector` in order to get dependencies in your custom `ErrorHandler`.
+See [this article](https://medium.com/@amcdnl/global-error-handling-with-angular2-6b992bdfb59c)
+for details.
+
+---
+
+### `ngxsOnInit()` in not called
+
+This is an issue with `@ngxs/store-plugin@3.4`, as a workaround don't use it or
+downgrade all `@ngxs/*` libs to `3.3` version.
+See [this issue](https://github.com/ngxs/store/issues/917) for details.
+
+---
+
+### Ngxs `dispatch()` doesn't dispatch an action that `extends Error`
+
+// TODO investigate
+As a workaround, don't derive your action from `Error`, but save the error in
+your action property.

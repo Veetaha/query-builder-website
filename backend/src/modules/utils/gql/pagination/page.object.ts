@@ -2,7 +2,7 @@ import { ObjectType, Field } from 'type-graphql';
 import { Min } from 'class-validator';
 
 import * as I from '@app/interfaces';
-import { AssignConstructable } from '@app/modules/utils/objects/assign-constructable';
+import { AssignConstructable } from '@common/utils/obj/assign-constructable';
 import { IntField } from '../decorators/explicit-type-field.decorator';
 
 /**

@@ -1,0 +1,19 @@
+query getProposalsPage($params: ProposalPaginationInput!) {
+    getProposalsPage(params: $params) {
+        total
+        data {
+            id
+            name
+            introText
+            isOpenned
+            likes
+            dislikes
+            mainPictureUrl: mainPictureUrlOrDefault
+            creator {
+                login
+                avatarUrl: avatarUrlOrDefault
+                role
+            }
+        }
+    }
+}

@@ -2,14 +2,19 @@ import { ObjectType, Field } from 'type-graphql';
  
 import { User                } from '@modules/user/user.entity';
 import { StringField         } from '@utils/gql/decorators/explicit-type-field.decorator';
-import { AssignConstructable } from '@utils/objects/assign-constructable';
+import { AssignConstructable } from '@common/utils/obj/assign-constructable';
+
 
 
 @ObjectType()
 export class UserAndToken extends AssignConstructable<UserAndToken> {
-    @Field()
+    @Field({
+        description: 'User instance that represents the client data.'
+    })
     user!: User;
 
-    @StringField()
-    jwt!: string;
+    @StringField({
+        description: 'Bearer auth token that the client has to pass in "Authorization" header'
+    })
+    token!: string;
 }

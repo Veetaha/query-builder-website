@@ -1,0 +1,6 @@
+<h1>Sign in component</h1>
+<form [formGroup]="form" novalidate ngxsForm="auth.signIn.form" (ngSubmit)="onSubmit()">
+    <input type="text" formControlName="login" />
+    <input type="password" formControlName="password" />
+    <button type="submit">Order</button>
+</form>

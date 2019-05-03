@@ -1,5 +1,5 @@
 {
-  "extends": "tslint:recommended",
+  "extends": "../tslint.json",
   "rulesDirectory": [
     "codelyzer"
   ],
@@ -17,7 +17,7 @@
     "max-classes-per-file": false,
     "max-line-length": [
       true,
-      140
+      100
     ],
     "member-access": false,
     "member-ordering": [
@@ -45,7 +45,7 @@
       true,
       "ignore-params"
     ],
-    "no-non-null-assertion": true,
+    "no-non-null-assertion": false,
     "no-redundant-jsdoc": true,
     "no-switch-case-fall-through": true,
     "no-use-before-declare": true,
@@ -56,11 +56,6 @@
     ],
     "object-literal-sort-keys": false,
     "ordered-imports": false,
-    "quotemark": [
-      true,
-      "single"
-    ],
-    "trailing-comma": false,
     "no-output-on-prefix": true,
     "use-input-property-decorator": true,
     "use-output-property-decorator": true,

@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 
-import { CommonModule   } from '@modules/common/common.module';
-import { UserModule     } from '@modules/user/user.module';
-import { AuthModule     } from '@modules/auth/auth.module';
-import { ProposalModule } from '@modules/proposal/proposal.module';
-import { RatingModule   } from '@modules/rating/rating.module';
+import { CommonModule   } from './common/common.module';
+import { UserModule     } from './user/user.module';
+import { AuthModule     } from './auth/auth.module';
+import { ProposalModule } from './proposal/proposal.module';
+import { RatingModule   } from './rating/rating.module';
+import { FrontendModule } from './frontend/frontend.module';
 
 @Module({
     imports: [
@@ -12,7 +13,8 @@ import { RatingModule   } from '@modules/rating/rating.module';
         UserModule,
         AuthModule,
         ProposalModule,
-        RatingModule
+        RatingModule,
+        FrontendModule
     ]
 })
 export class AppModule {}

@@ -1,10 +1,19 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-const routes: Routes = [];
+import { HomeComponent } from './home/home.component';
+
+
+const routes: Routes = [
+    { path: '', component: HomeComponent },
+    {
+        path: '**',
+        redirectTo: `error;status=404;message=${encodeURIComponent('Not found')}`
+    }
+];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule]
 })
 export class AppRoutingModule { }
