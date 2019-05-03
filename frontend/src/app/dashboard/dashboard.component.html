@@ -1,3 +1,5 @@
 <h1>Dashboard component</h1>
-<a routerLink="/auth/sign-in">Sign in</a>
-<p>Client: {{ client$ | async | json }}</p>
+<a routerLink="/">QueryBuilder</a>
+<br/>
+
+<a *ngIf="!(isSignedIn$ | async)" routerLink="/auth/sign-in">Sign in</a>

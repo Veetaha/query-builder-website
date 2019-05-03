@@ -11,7 +11,5 @@ export class GlobalErrorHandler implements ErrorHandler {
         this.injector
             .get<Store>(Store)
             .dispatch(new CriticalError(err));
-            
-        throw err;
     }
 }

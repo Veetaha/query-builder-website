@@ -9,17 +9,17 @@ type StateCtx = StateContext<StateModel>;
 @State<StateModel>({
     name: 'error',
     defaults: {
-        err: null
+        message: null
     }
 })
 export class ErrorState {
 
-    @Selector() static err({err}: StateModel) { return err; }
+    @Selector() static message({message}: StateModel) { return message; }
 
 
     @Action(CriticalError)
-    raiseError({ dispatch, setState }: StateCtx, { err }: CriticalError) {
-        setState({err});
+    raiseError({ dispatch, setState }: StateCtx, err: CriticalError) {
+        setState(err);
         dispatch(OpenErrorPage);
     }
 

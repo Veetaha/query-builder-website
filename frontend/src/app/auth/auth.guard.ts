@@ -40,7 +40,6 @@ export class AuthGuard implements CanActivate {
         if (deniedRoles  != null && deniedRoles.includes(userRole) ||
             allowedRoles != null && !allowedRoles.includes(userRole))
         {
-            debugger;
             throw new Error('You have no rights to access this route');
         }
 

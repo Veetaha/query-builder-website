@@ -1,8 +1,6 @@
 <h1>Error component</h1>
-<ng-container *ngIf="(err$ | async) as err; else elseNoError" >
-    <pre>
-    {{err.stack}}
-    </pre>
+<ng-container *ngIf="(errMessage$ | async) as errMessage; else elseNoError" >
+    <strong>Error: </strong> <pre>{{errMessage}}</pre>
 </ng-container>
 <ng-template #elseNoError>
     <strong>

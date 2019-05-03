@@ -3,7 +3,6 @@ import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
 
 import { AuthState } from '@app/auth/auth.state';
-import { Client } from '@app/auth/interfaces';
 
 
 @Component({
@@ -12,5 +11,5 @@ import { Client } from '@app/auth/interfaces';
     styleUrls:  ['./dashboard.component.scss']
 })
 export class DashboardComponent {
-    @Select(AuthState.client) client$!: Observable<Client>;
+    @Select(AuthState.isSignedIn) isSignedIn$!: Observable<boolean>;
 }
