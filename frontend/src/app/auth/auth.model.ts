@@ -10,7 +10,6 @@ implements ClientAndToken
 {
     readonly token!:  string;
     readonly client!: Client;
-    readonly isSignedIn       = true;
     readonly isFetchingClient = false;
     ensureCanAuthOrFail = () => { 
         throw new Error('client is already signed in.');
@@ -22,8 +21,7 @@ implements ClientAndToken
 
 export abstract class UnAuthSnap {
     abstract readonly token?: Nullable<string>;
-    readonly client?    = null;
-    readonly isSignedIn = false;
+    readonly client?  = null;
     abstract readonly isFetchingClient: boolean;
     abstract ensureCanAuthOrFail: () => void;
     
@@ -38,7 +36,7 @@ export class StableUnAuthSnap extends UnAuthSnap {
 
     readonly token            = null;
     readonly isFetchingClient = false;
-    ensureCanAuthOrFail = () => { };
+    ensureCanAuthOrFail = () => {};
 
     private constructor() { super(); }
 }

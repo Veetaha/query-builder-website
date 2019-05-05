@@ -7,6 +7,7 @@ import { Disposable       } from '@utils/disposable';
 import { SubmitSignInForm } from './sign-in.actions';
 import { AuthState        } from '../auth.state';
 import { OpenHomePage } from '@app/store/app.actions';
+import { UserRole } from '@app/gql/generated';
 
 
 
@@ -26,10 +27,9 @@ export class SignInComponent extends Disposable implements OnInit {
     });
 
     ngOnInit() {
-        this.addHandle(this.store
-            .select<boolean>(AuthState.isSignedIn)
-            .subscribe((isSignedIn) => isSignedIn && this.store.dispatch(OpenHomePage))
-        );
+        this.addHandle(AuthState.selectClientRole(this.store).subscribe(
+            role => { if (role !== UserRole.Guest) this.store.dispatch(OpenHomePage); }
+        ));
     }
 
     submitForm() {

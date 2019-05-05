@@ -1,43 +1,21 @@
-import { NgModule                      } from '@angular/core';
-import { BrowserModule                 } from '@angular/platform-browser';
-import { NgxsModule                    } from '@ngxs/store';
-import { NgxsFormPluginModule          } from '@ngxs/form-plugin';
-import { NgxsRouterPluginModule        } from '@ngxs/router-plugin';
-import { NgxsStoragePluginModule       } from '@ngxs/storage-plugin';
-import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgModule      } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 
-
-import { ConfigService } from '@app/config/config.service';
+import { VeeModule     } from '@utils/vee/vee.module';
 import { GraphQLModule } from '@app/gql/gql.module';
+
+import { CommonNgxsModule    } from './common-ngxs.module';
+import { CommonPrimeNgModule } from './common-prime-ng.module';
 
 
 
 @NgModule({
-    declarations: [],
-    imports: [
-        BrowserModule, 
-        GraphQLModule,
-        FormsModule,
-        ReactiveFormsModule,
-        NgxsModule
-            .forRoot([], ConfigService.createNgxsOptions()),
-        NgxsRouterPluginModule
-            .forRoot(),
-        NgxsFormPluginModule
-            .forRoot(),
-        NgxsStoragePluginModule
-            .forRoot(ConfigService.createNgxsStoragePluginOptions()),
-        NgxsReduxDevtoolsPluginModule
-            .forRoot(ConfigService.createNgxsDevtoolsPluginOptions())
-    ],
     exports: [
+        VeeModule,
         BrowserModule, 
-        FormsModule,
-        ReactiveFormsModule,
-        NgxsModule, 
         GraphQLModule,
-        NgxsFormPluginModule
+        CommonNgxsModule, 
+        CommonPrimeNgModule
     ]
 })
 export class CommonModule { }

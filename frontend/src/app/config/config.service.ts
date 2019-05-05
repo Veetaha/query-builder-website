@@ -1,12 +1,15 @@
 import { Injectable          } from '@angular/core';
-import { NgxsModule          } from '@ngxs/store';
+
 import { ApolloClientOptions } from 'apollo-client';
 import { InMemoryCache       } from 'apollo-cache-inmemory';
 import { HttpLink, HttpLinkHandler } from 'apollo-angular-link-http';
+
+import { NgxsModule              } from '@ngxs/store';
+import { NgxsDevtoolsOptions     } from '@ngxs/devtools-plugin';
+import { NgxsLoggerPluginOptions } from '@ngxs/logger-plugin';
 import { StorageOption, NgxsStoragePluginOptions } from '@ngxs/storage-plugin';
 
 import { isDevelopmentMode   } from './environment';
-import { NgxsDevtoolsOptions } from '@ngxs/devtools-plugin';
 
 
 type NgxsModuleOptions = NonNullable<Parameters<(typeof NgxsModule)['forRoot']>[1]>;
@@ -21,6 +24,12 @@ export class ConfigService {
 
     constructor(httpLink: HttpLink) {
         this.httpLinkHandler = httpLink.create({ uri: '/gql' });
+    }
+
+    static createNgxsLoggerPluginOptions(): NgxsLoggerPluginOptions {
+        return {
+            disabled: !this.isDevelopmentMode
+        };
     }
 
     static createNgxsDevtoolsPluginOptions(): NgxsDevtoolsOptions {

@@ -1,9 +1,15 @@
-import { tap } from 'rxjs/operators';
+import { tap, skip, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { State, Selector, StateContext, Action, NgxsOnInit, UpdateState } from '@ngxs/store';
 
-import { Nullable                } from '@app/interfaces';
-import { ClientAndToken          } from './interfaces';
+import { State, Selector, StateContext, Action, NgxsOnInit, UpdateState, Store } from '@ngxs/store';
+
+
+import { UserRole } from '@app/gql/generated';
+import { Nullable } from '@app/interfaces';
+
+import { LoggingService } from '@utils/logging.service';
+
+import { ClientAndToken, Client  } from './interfaces';
 import { SignIn, SignUp, SignOut } from './auth.actions';
 import { AuthService             } from './auth.service';
 import { 
@@ -14,37 +20,61 @@ import {
     FetchingClientSnap
 } from './auth.model';
 
+
+
 type StateCtx = StateContext<StateModel>;
 
 @State<StateModel>({
     name: 'auth'
 })
 export class AuthState implements NgxsOnInit {
-
     constructor(
-        private readonly auth: AuthService
+        private readonly auth:  AuthService,
+        private readonly log:   LoggingService
     ) {}
 
-    @Selector() static client    ({client}:     StateModel) { return client; }
-    @Selector() static isSignedIn({isSignedIn}: StateModel) { return isSignedIn; }
-    @Selector() static token     ({token}:      StateModel) { return token; }
-    @Selector() static isFetchingClient(state: StateModel) { 
-        return state.isFetchingClient; 
+    static selectClientRole(store: Store) {
+        return this.selectClient(store).pipe(map(
+            client => client == null ? UserRole.Guest : client.role
+        ));
+    }
+
+    static selectClient(store: Store) {
+        return this.skipOneIfFetchingClient(store, store.select(this.clientSnap));
+    }
+
+    @Selector() static clientRoleSnap  (s: StateModel) { return this.getClientRole(s.client); } 
+    @Selector() static token           (s: StateModel) { return s.token; }
+    @Selector() static clientSnap      (s: StateModel) { return s.client; }
+    @Selector() static isFetchingClient(s: StateModel) { return s.isFetchingClient; }
+
+    private static skipOneIfFetchingClient<TValue>
+    (store: Store, observable: Observable<TValue>) {
+        return store.selectSnapshot(this.isFetchingClient) 
+            ? observable.pipe(skip<TValue>(1))
+            : observable;
+    }
+
+    private static getClientRole(client: Nullable<Client>) {
+        return client == null ? UserRole.Guest : client.role;
     }
 
     ngxsOnInit() {
-        console.log('ngxsOnInit() is now working!');
+        this.log.info('ngxsOnInit() is now working!');
     }
 
     @Action(UpdateState)
-    _ngxsOnInit({ getState, setState }: StateCtx) {
-        console.log('Using temporary workaround @Action(UpdateState) instead of ngxsOnInit()');
+    _ngxsOnInit({ getState, setState }: StateCtx): void | Observable<any> {
+        
+        this.log.warning('Using temporary workaround @Action(UpdateState) instead of ngxsOnInit()');
+
         const { token } = getState();
         if (token != null) {
             setState(new FetchingClientStateSnap(token));
-            this.auth
-                .getMe()
-                .subscribe(client => setState(new AuthSnap({ token, client })));
+            // you should subscribe to this observable when moving this code to ngxsOnInit()
+            return this.auth.getMe().pipe(tap(
+                client => setState(new AuthSnap({ token, client }))
+            ));
         } else {
             setState(StableUnAuthSnap.instance);
         }
@@ -67,6 +97,7 @@ export class AuthState implements NgxsOnInit {
         getState().ensureCanSignOutOrFail();
         setState(StableUnAuthSnap.instance);
     }
+
 
     private fetchClient(
         setState:    StateCtx['setState'], 

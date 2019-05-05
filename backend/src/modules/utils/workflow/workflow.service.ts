@@ -1,13 +1,15 @@
-import * as I from '@app/interfaces';
 import * as Coll from 'typescript-collections';
 import { Injectable } from '@nestjs/common';
-import { LoggerService } from '@utils/logger/logger.service';
+import { AsyncFunc, FuncContext, AsyncFuncReturnType } from 'ts-typedefs';
+
+import { LoggingService } from '@utils/logging/logging.service';
+
 
 @Injectable()
 export class WorkflowService {
 
     constructor(
-        private readonly log: LoggerService
+        private readonly log: LoggingService
     ) {}
 
     /**
@@ -27,23 +29,23 @@ export class WorkflowService {
      * @copyright https://gist.github.com/mattheworiordan/1084831 
      */
     limitExecRate<
-        TFn extends I.AsyncFunc<any[], any>
+        TFn extends AsyncFunc<any[], any>
     >
     (func: TFn, minDelay: number) {       
 
-        type PromiseResolveFn = (result: I.AsyncFuncReturnType<TFn>) => void;
+        type PromiseResolveFn = (result: AsyncFuncReturnType<TFn>) => void;
         type PromiseRejectFn  = (error: unknown) => void;
 
         const queue = new Coll.Queue<[
             PromiseResolveFn, 
             PromiseRejectFn,
-            I.FuncContext<TFn>, 
+            FuncContext<TFn>, 
             Parameters<TFn>
         ]>();
         let isWaiting = false;
         
-        return function wrapper(this: I.FuncContext<TFn>, ...args: Parameters<TFn>) {
-            return new Promise<I.AsyncFuncReturnType<TFn>>((resolve, reject) => {
+        return function wrapper(this: FuncContext<TFn>, ...args: Parameters<TFn>) {
+            return new Promise<AsyncFuncReturnType<TFn>>((resolve, reject) => {
                 if (isWaiting) {
                     queue.enqueue([resolve, reject, this, args]);
                     return;

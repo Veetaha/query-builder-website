@@ -1,5 +1,25 @@
-<h1>Dashboard component</h1>
-<a routerLink="/">QueryBuilder</a>
-<br/>
+<ng-container *veeLet="client$ | async as client">
 
-<a *ngIf="!(isSignedIn$ | async)" routerLink="/auth/sign-in">Sign in</a>
+<p-toolbar>
+    <p-button 
+        label="QueryBuilder"
+        routerLink="/"
+        styleClass="ui-button-raised ui-button-secondary"
+    ></p-button>
+
+    <p-button *appIfClientRole="[UserRole.Guest]; else elseForNotGuest"
+        label="Sign in"
+        routerLink="/sign-in"
+        styleClass="ui-button-raised ui-button-primary-"
+    ></p-button>
+    <ng-template #elseForNotGuest>
+        <p-button 
+            (click)="signOut()"
+            label="Sign out"
+            styleClass="ui-button-raised ui-button-warning"
+        ></p-button>
+    </ng-template>
+    ClientName: {{ client?.name }}
+</p-toolbar>
+
+</ng-container>

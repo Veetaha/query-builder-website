@@ -3,14 +3,14 @@ import { NestFactory            } from '@nestjs/core';
 import { ValidationPipe         } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
-import { AppModule     } from '@modules/app.module';
-import { ConfigService } from '@modules/config/config.service';
-import { LoggerService } from '@utils/logger/logger.service';
+import { AppModule      } from '@modules/app.module';
+import { ConfigService  } from '@modules/config/config.service';
+import { LoggingService } from '@utils/logging/logging.service';
 
 async function bootstrap() {
     const app    = await NestFactory.create<NestExpressApplication>(AppModule);
     const config = app.get(ConfigService);
-    const logger = app.get(LoggerService);
+    const logger = app.get(LoggingService);
 
     await app
         .useGlobalPipes(new ValidationPipe({ transform: true }))

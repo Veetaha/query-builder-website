@@ -4,7 +4,7 @@
     "directive-selector": [
       true,
       "attribute",
-      "app",
+      "app|vee",
       "camelCase"
     ],
     "component-selector": [

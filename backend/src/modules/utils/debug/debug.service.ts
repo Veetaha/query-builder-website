@@ -1,13 +1,13 @@
 import * as Joi from 'typesafe-joi';
 import { Injectable } from '@nestjs/common';
 
-import { LoggerService } from '@utils/logger/logger.service';
+import { LoggingService } from '@utils/logging/logging.service';
 
 @Injectable()
 export class DebugService {
 
     constructor(
-        private readonly log: LoggerService
+        private readonly log: LoggingService
     ) {}
 
     /**

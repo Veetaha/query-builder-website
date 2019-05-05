@@ -3,7 +3,6 @@ import { map        } from 'rxjs/operators';
 
 
 import * as Gql from '@app/gql/generated';
-export * from '@app/gql/generated';
 
 @Injectable({ providedIn: 'root' })
 export class ProposalService {

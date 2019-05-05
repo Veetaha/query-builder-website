@@ -1,13 +1,10 @@
-import Colors from 'colors/safe'; // import it only this way (https://github.com/Microsoft/TypeScript/issues/29687)
-import { Injectable } from '@nestjs/common';
+import { Injectable } from '@angular/core';
 
-@Injectable()
-export class LoggerService {
+@Injectable({ providedIn: 'root' })
+export class LoggingService {
 
-    private logCurrentTime() {
-        return process.stdout.write(Colors.bold(Colors.gray(
-            `${new Date().toUTCString()} │ `
-        )));
+    private getCurrentTime() {
+        return `${new Date().toUTCString()} │ `;
     }
 
     /**
@@ -18,8 +15,7 @@ export class LoggerService {
      * @param description   Additional info message to be logged before `payload`.
      */
     info(payload: unknown, description = '') {
-        this.logCurrentTime();
-        console.log(Colors.blue(`Info: ${description} `));
+        console.log(`${this.getCurrentTime()} Info: ${description} `);
         console.dir(payload);
     }
 
@@ -33,8 +29,7 @@ export class LoggerService {
      */
     error(payload: unknown, description = '') {
         debugger;
-        this.logCurrentTime();
-        console.log(Colors.red(`Error: ${description} `));
+        console.error(`${this.getCurrentTime()} Error: ${description} `);
         if (payload instanceof Error) {
             console.error(payload);
         } else {
@@ -50,8 +45,7 @@ export class LoggerService {
      * @param description Additional info message to be logged before `payload`.
      */
     warning(payload: unknown, description = '') {
-        this.logCurrentTime();
-        console.log(Colors.yellow(`Warning: ${description} `));
+        console.warn(`${this.getCurrentTime()} Warning: ${description} `);
         console.dir(payload);
     }
 }

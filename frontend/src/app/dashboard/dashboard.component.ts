@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
-import { Select } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { Component  } from '@angular/core';
+import { Store      } from '@ngxs/store';
 
+import { UserRole  } from '@app/gql/generated';
 import { AuthState } from '@app/auth/auth.state';
-
+import { SignOut   } from '@app/auth/auth.actions';
 
 @Component({
     selector:    'app-dashboard',
@@ -11,5 +11,13 @@ import { AuthState } from '@app/auth/auth.state';
     styleUrls:  ['./dashboard.component.scss']
 })
 export class DashboardComponent {
-    @Select(AuthState.isSignedIn) isSignedIn$!: Observable<boolean>;
+    readonly UserRole = UserRole;
+
+    readonly client$ = AuthState.selectClient(this.store);
+
+    constructor(private readonly store: Store) {}
+    
+    signOut() {
+        this.store.dispatch(SignOut.instance);
+    }
 }
