@@ -5,10 +5,9 @@
     "outDir": "./dist/out-tsc",
     "baseUrl": "./src/app",
     "paths": {
-        "@utils/*": [ "./utils/*" ],
-      "@app/*":     [ "./*" ],
-      "@modules/*": [ "./modules/*" ],
-      "@common/*":  [ "../../../common/*" ]
+        "@utils/*":   [ "./utils/*" ],
+        "@common/*":  [ "../../../common/*" ],
+        "@app/*":     [ "./*" ]
     },
     "sourceMap": true,
     "module": "esnext",

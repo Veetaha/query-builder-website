@@ -7,7 +7,7 @@
         styleClass="ui-button-raised ui-button-secondary"
     ></p-button>
 
-    <p-button *appIfClientRole="[UserRole.Guest]; else elseForNotGuest"
+    <p-button *appIfClientRole="routeMap.getRoleLimitFor('sign-in'); else elseForNotGuest"
         label="Sign in"
         routerLink="/sign-in"
         styleClass="ui-button-raised ui-button-primary-"

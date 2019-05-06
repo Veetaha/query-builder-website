@@ -1,0 +1,11 @@
+<app-pagination *veeLet="proposals$ | async as proposals"
+    [state]="paginationState"
+>
+<ng-container *ngIf="proposals != null">
+    <p *ngFor="let proposal of proposals; trackBy: trackBy">
+        {{proposal | json }}
+    </p>
+
+
+</ng-container>
+</app-pagination>

@@ -1,9 +1,9 @@
 import { Component  } from '@angular/core';
 import { Store      } from '@ngxs/store';
 
-import { UserRole  } from '@app/gql/generated';
 import { AuthState } from '@app/auth/auth.state';
 import { SignOut   } from '@app/auth/auth.actions';
+import { AuthRoutingModule } from '@app/auth/auth-routing.module';
 
 @Component({
     selector:    'app-dashboard',
@@ -11,8 +11,7 @@ import { SignOut   } from '@app/auth/auth.actions';
     styleUrls:  ['./dashboard.component.scss']
 })
 export class DashboardComponent {
-    readonly UserRole = UserRole;
-
+    readonly routeMap = AuthRoutingModule.routeMap;
     readonly client$ = AuthState.selectClient(this.store);
 
     constructor(private readonly store: Store) {}

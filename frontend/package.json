@@ -37,6 +37,7 @@
     "hammerjs": "^2.0.8",
     "primeicons": "^1.0.0",
     "primeng": "^7.1.2",
+    "vee-type-safe": "^4.2.0",
     "zone.js": "latest"
   },
   "devDependencies": {

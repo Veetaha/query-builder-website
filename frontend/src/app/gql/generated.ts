@@ -20,7 +20,7 @@ export type AdminUserUpdateInput = {
 
 /** Filter input parameters for `Boolean` type. */
 export type BooleanFilterInput = {
-    /** Defines the mode (logical operator) to unite all filter conditions. */
+    /** Defines the mode (logical operator) to unite all filter conditions (`And` by default). */
     unionMode?: Maybe<FilterUnion>;
     eq?: Maybe<Scalars["Boolean"]>;
     neq?: Maybe<Scalars["Boolean"]>;
@@ -33,7 +33,7 @@ export type CredentialsInput = {
 
 /** Filter input parameters for `Date` type. */
 export type DateFilterInput = {
-    /** Defines the mode (logical operator) to unite all filter conditions. */
+    /** Defines the mode (logical operator) to unite all filter conditions (`And` by default). */
     unionMode?: Maybe<FilterUnion>;
     eq?: Maybe<Scalars["DateTime"]>;
     neq?: Maybe<Scalars["DateTime"]>;
@@ -54,7 +54,7 @@ export enum FilterUnion {
 }
 
 export type IntFilterInput = {
-    /** Defines the mode (logical operator) to unite all filter conditions. */
+    /** Defines the mode (logical operator) to unite all filter conditions (`And` by default). */
     unionMode?: Maybe<FilterUnion>;
     eq?: Maybe<Scalars["Int"]>;
     neq?: Maybe<Scalars["Int"]>;
@@ -67,19 +67,19 @@ export type IntFilterInput = {
 };
 
 export type MetaProposalFilterInput = {
-    /** Defines the mode (logical operator) to unite all filter conditions. */
+    /** Defines the mode (logical operator) to unite all filter conditions (`And` by default). */
     unionMode?: Maybe<FilterUnion>;
     props: ProposalFilterInput;
 };
 
 export type MetaRatingFilterInput = {
-    /** Defines the mode (logical operator) to unite all filter conditions. */
+    /** Defines the mode (logical operator) to unite all filter conditions (`And` by default). */
     unionMode?: Maybe<FilterUnion>;
     props: RatingFilterInput;
 };
 
 export type MetaUserFilterInput = {
-    /** Defines the mode (logical operator) to unite all filter conditions. */
+    /** Defines the mode (logical operator) to unite all filter conditions (`And` by default). */
     unionMode?: Maybe<FilterUnion>;
     props: UserFilterInput;
 };
@@ -197,7 +197,7 @@ export type ProposalPaginationInput = {
     limit: Scalars["Int"];
     /** Offset that defines an index of the beginning of the page of items. It must be an integer that is >= 0. */
     offset: Scalars["Int"];
-    /** Defines filters that the items of the returned page must match. */
+    /** Defines limitations for the items of the returned page. */
     filter?: Maybe<MetaProposalFilterInput>;
     /** Defines sorting order for the items according to their property values. */
     sort?: Maybe<ProposalSortInput>;
@@ -287,7 +287,7 @@ export type RatingPaginationInput = {
     limit: Scalars["Int"];
     /** Offset that defines an index of the beginning of the page of items. It must be an integer that is >= 0. */
     offset: Scalars["Int"];
-    /** Defines filters that the items of the returned page must match. */
+    /** Defines limitations for the items of the returned page. */
     filter?: Maybe<MetaRatingFilterInput>;
     /** Defines sorting order for the items according to their property values. */
     sort?: Maybe<RatingSortInput>;
@@ -320,7 +320,7 @@ export type SortInput = {
 
 /** Filter input parameters for `String` type */
 export type StringFilterInput = {
-    /** Defines the mode (logical operator) to unite all filter conditions. */
+    /** Defines the mode (logical operator) to unite all filter conditions (`And` by default). */
     unionMode?: Maybe<FilterUnion>;
     eq?: Maybe<Scalars["String"]>;
     neq?: Maybe<Scalars["String"]>;
@@ -338,6 +338,7 @@ export type User = {
     role: UserRole;
     name: Scalars["String"];
     login: Scalars["String"];
+    /** User avatar picture url, or null of was not set. */
     avatarUrl?: Maybe<Scalars["String"]>;
     /** Returns existing `avatarUrl` or default one if former was not set. */
     avatarUrlOrDefault: Scalars["String"];
@@ -371,7 +372,7 @@ export type UserPaginationInput = {
     limit: Scalars["Int"];
     /** Offset that defines an index of the beginning of the page of items. It must be an integer that is >= 0. */
     offset: Scalars["Int"];
-    /** Defines filters that the items of the returned page must match. */
+    /** Defines limitations for the items of the returned page. */
     filter?: Maybe<MetaUserFilterInput>;
     /** Defines sorting order for the items according to their property values. */
     sort?: Maybe<UserSortInput>;
@@ -385,7 +386,7 @@ export enum UserRole {
 }
 
 export type UserRoleFilterInput = {
-    /** Defines the mode (logical operator) to unite all filter conditions. */
+    /** Defines the mode (logical operator) to unite all filter conditions (`And` by default). */
     unionMode?: Maybe<FilterUnion>;
     eq?: Maybe<UserRole>;
     neq?: Maybe<UserRole>;
@@ -441,6 +442,15 @@ export type SignInMutation = { __typename?: "Mutation" } & {
     >;
 };
 
+export type PaginatedProposalFragment = { __typename?: "Proposal" } & Pick<
+    Proposal,
+    "id" | "name" | "introText" | "isOpenned" | "likes" | "dislikes"
+> & { mainPictureUrl: Proposal["mainPictureUrlOrDefault"] } & {
+        creator: { __typename?: "User" } & Pick<User, "login" | "role"> & {
+                avatarUrl: User["avatarUrlOrDefault"];
+            };
+    };
+
 export type GetProposalsPageQueryVariables = {
     params: ProposalPaginationInput;
 };
@@ -451,20 +461,7 @@ export type GetProposalsPageQuery = { __typename?: "Query" } & {
         "total"
     > & {
             data: Array<
-                { __typename?: "Proposal" } & Pick<
-                    Proposal,
-                    | "id"
-                    | "name"
-                    | "introText"
-                    | "isOpenned"
-                    | "likes"
-                    | "dislikes"
-                > & { mainPictureUrl: Proposal["mainPictureUrlOrDefault"] } & {
-                        creator: { __typename?: "User" } & Pick<
-                            User,
-                            "login" | "role"
-                        > & { avatarUrl: User["avatarUrlOrDefault"] };
-                    }
+                { __typename?: "Proposal" } & PaginatedProposalFragment
             >;
         };
 };
@@ -505,6 +502,22 @@ export const EntireClientAndTokenFragmentDoc = gql`
         }
     }
     ${EntireUserFragmentDoc}
+`;
+export const PaginatedProposalFragmentDoc = gql`
+    fragment PaginatedProposal on Proposal {
+        id
+        name
+        introText
+        isOpenned
+        likes
+        dislikes
+        mainPictureUrl: mainPictureUrlOrDefault
+        creator {
+            login
+            avatarUrl: avatarUrlOrDefault
+            role
+        }
+    }
 `;
 export const GetMeDocument = gql`
     query getMe {
@@ -562,21 +575,11 @@ export const GetProposalsPageDocument = gql`
         getProposalsPage(params: $params) {
             total
             data {
-                id
-                name
-                introText
-                isOpenned
-                likes
-                dislikes
-                mainPictureUrl: mainPictureUrlOrDefault
-                creator {
-                    login
-                    avatarUrl: avatarUrlOrDefault
-                    role
-                }
+                ...PaginatedProposal
             }
         }
     }
+    ${PaginatedProposalFragmentDoc}
 `;
 
 @Injectable({

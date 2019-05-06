@@ -6,21 +6,21 @@ import { AbstractIfDirective } from '@utils/directives/abstract-if.directive';
 
 import { AuthState } from './auth.state';
 import { UserRole  } from '@app/gql/generated';
+import { UserRoleLimit } from './user-role-limit.obj';
 
 
 @Directive({
     selector: '[appIfClientRole]'
 })
 export class AppIfClientRoleDirective extends AbstractIfDirective implements OnInit {
-    private allowedRoles!: UserRole[];
+    private roleLimit!: UserRoleLimit;
 
-    @Input() set appIfClientRole(roles: UserRole[]) {
-        this.allowedRoles = roles;
+    @Input() set appIfClientRole(roleLimit: UserRoleLimit) {
+        this.roleLimit = roleLimit;
         this.renderIf(this.shouldRenderFor(this.store.selectSnapshot(
             AuthState.clientRoleSnap
         )));
     }
-    @Input('appIfClientRoleIsIn') roleShouldBeIn = true;
     @Input('appIfClientRoleElse') elseTemplateRef?: Nullable<TemplateRef<undefined>>;
 
     constructor(
@@ -38,8 +38,9 @@ export class AppIfClientRoleDirective extends AbstractIfDirective implements OnI
     }
 
     private shouldRenderFor(role: UserRole) {
-        return this.allowedRoles.includes(role) === this.roleShouldBeIn;
+        return UserRoleLimit.obeysLimit(this.roleLimit, role);
     }
+
     protected getElseTemplateRef() { 
         return this.elseTemplateRef; 
     }

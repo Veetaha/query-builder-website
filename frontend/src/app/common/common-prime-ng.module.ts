@@ -1,14 +1,24 @@
 import {NgModule} from '@angular/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
-import { ToolbarModule } from 'primeng/toolbar';
-import { ButtonModule  } from 'primeng/button';
+import { ToolbarModule         } from 'primeng/toolbar';
+import { ButtonModule          } from 'primeng/button';
+import { DropdownModule        } from 'primeng/dropdown';
+import { PasswordModule        } from 'primeng/password';
+import { PaginatorModule       } from 'primeng/paginator';
+import { ToggleButtonModule    } from 'primeng/togglebutton';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @NgModule({
     exports: [
         BrowserAnimationsModule,
+        ToolbarModule,
         ButtonModule,
-        ToolbarModule
+        DropdownModule,
+        PasswordModule,
+        PaginatorModule,
+        ToggleButtonModule,
+        ProgressSpinnerModule
     ]
 })
 export class CommonPrimeNgModule { }

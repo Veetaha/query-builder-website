@@ -54,7 +54,7 @@ export class ConfigService {
     createApolloClientOptions(): ApolloClientOptions<any> {
         return {
             link:  this.httpLinkHandler,
-            cache: new InMemoryCache,
+            cache: new InMemoryCache({ addTypename: false }),
             defaultOptions: { query: { fetchPolicy: 'no-cache' } }
         };
     }

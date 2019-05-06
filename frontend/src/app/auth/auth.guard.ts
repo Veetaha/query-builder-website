@@ -6,7 +6,7 @@ import { CanActivate, ActivatedRouteSnapshot } from '@angular/router';
 import { UserRole } from '@app/gql/generated';
 
 import { AuthState } from './auth.state';
-import { UserRoleLimit, obeysLimit } from './user-role-limit.obj';
+import { UserRoleLimit } from './user-role-limit.obj';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
@@ -20,7 +20,7 @@ export class AuthGuard implements CanActivate {
     }
 
     private tryGrantAccess(roleLimit: UserRoleLimit, clientRole: UserRole) {
-        if (obeysLimit(roleLimit, clientRole)) {
+        if (UserRoleLimit.obeysLimit(roleLimit, clientRole)) {
             return true;
         }
         throw new Error('You have no rights to access this route');
