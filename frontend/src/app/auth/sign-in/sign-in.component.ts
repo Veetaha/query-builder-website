@@ -1,13 +1,12 @@
-import { Component             } from '@angular/core';
-import { Store                  } from '@ngxs/store';
+import { Component      } from '@angular/core';
+import { Store          } from '@ngxs/store';
 import { FormGroup, FormControl } from '@angular/forms';
 
 import { limits } from '@common/constants';
+import { OpenHomePage } from '@app/app.actions';
 
 import { SubmitSignInForm } from './sign-in.actions';
-import { AbstractRouteGuardedComponent } from '../abstract-route-guarded.component';
-import { LoggingService } from '@utils/logging.service';
-import { ActivatedRoute } from '@angular/router';
+import { AuthState } from '../auth.state';
 
 
 
@@ -17,14 +16,8 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './sign-in.component.html',
   styleUrls:  ['./sign-in.component.scss']
 })
-export class SignInComponent extends AbstractRouteGuardedComponent {
-    constructor(
-        log:   LoggingService,
-        store: Store,
-        route: ActivatedRoute
-    ) { 
-        super(route, store, log); 
-    }
+export class SignInComponent {
+    constructor(private readonly store: Store) { }
 
     readonly limits = limits;
     readonly form = new FormGroup({
@@ -33,6 +26,12 @@ export class SignInComponent extends AbstractRouteGuardedComponent {
     });
 
     submitForm() {
-        this.store.dispatch(SubmitSignInForm.instance);
+        this.store
+            .dispatch(SubmitSignInForm.instance)
+            .subscribe(() => {
+                if (this.store.selectSnapshot(AuthState.clientSnap) != null) {
+                    this.store.dispatch(OpenHomePage);
+                }
+            });
     }
 }

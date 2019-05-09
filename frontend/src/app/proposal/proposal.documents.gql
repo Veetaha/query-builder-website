@@ -6,16 +6,53 @@ fragment PaginatedProposal on Proposal {
     likes
     dislikes
     mainPictureUrl: mainPictureUrlOrDefault
+    creationDate
     creator {
         login
         avatarUrl: avatarUrlOrDefault
         role
+        name
     }
 } 
-
 query getProposalsPage($params: ProposalPaginationInput!) {
     getProposalsPage(params: $params) {
         total
         data { ...PaginatedProposal }
     }
+}
+
+fragment EntireProposal on Proposal {
+    id
+    creationDate
+    lastUpdateDate
+    name
+    introText
+    bodyText
+    mainPictureUrl: mainPictureUrlOrDefault
+    likes
+    dislikes
+    isOpenned
+    creator {
+        login
+        avatarUrl: avatarUrlOrDefault
+        role
+        name
+    }   
+    myRating {
+        liked
+    }
+}
+
+query getProposalById($id: Int!) {
+    getProposalById(id: $id) { ...EntireProposal }
+}
+
+mutation rateProposal($proposalId: Int!, $liked: Boolean!) {
+    rateProposal(proposalId: $proposalId, liked: $liked) {
+        liked
+    }
+}
+
+mutation updateProposal($params: ProposalUpdateInput!) {
+    updateProposal(params: $params) { ...EntireProposal }
 }

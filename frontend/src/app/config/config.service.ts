@@ -1,4 +1,5 @@
-import { Injectable          } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { Message    } from 'primeng/api';
 
 import { ApolloClientOptions } from 'apollo-client';
 import { InMemoryCache       } from 'apollo-cache-inmemory';
@@ -10,7 +11,7 @@ import { NgxsLoggerPluginOptions } from '@ngxs/logger-plugin';
 import { StorageOption, NgxsStoragePluginOptions } from '@ngxs/storage-plugin';
 
 import { isDevelopmentMode   } from './environment';
-
+// import introspectionQueryResultData from '@common/fragment-types.json';
 
 type NgxsModuleOptions = NonNullable<Parameters<(typeof NgxsModule)['forRoot']>[1]>;
 
@@ -18,9 +19,14 @@ type NgxsModuleOptions = NonNullable<Parameters<(typeof NgxsModule)['forRoot']>[
 @Injectable({ providedIn: 'root' })
 export class ConfigService {
     
+
     static readonly isDevelopmentMode = isDevelopmentMode;
     
     private readonly httpLinkHandler: HttpLinkHandler;
+    
+    readonly defaultToastOptions: Partial<Message> = {
+        life: 8000
+    };
 
     constructor(httpLink: HttpLink) {
         this.httpLinkHandler = httpLink.create({ uri: '/gql' });
@@ -54,7 +60,11 @@ export class ConfigService {
     createApolloClientOptions(): ApolloClientOptions<any> {
         return {
             link:  this.httpLinkHandler,
-            cache: new InMemoryCache({ addTypename: false }),
+            cache: new InMemoryCache(
+                // fragmentMatcher: new IntrospectionFragmentMatcher({
+                //     introspectionQueryResultData
+                // }),
+            ), 
             defaultOptions: { query: { fetchPolicy: 'no-cache' } }
         };
     }

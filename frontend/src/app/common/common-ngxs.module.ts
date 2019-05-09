@@ -10,6 +10,8 @@ import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 
 import { ConfigService } from '@app/config/config.service';
 
+import { CommonState } from './common.state';
+
 
 @NgModule({
     imports: [
@@ -18,7 +20,7 @@ import { ConfigService } from '@app/config/config.service';
         ReactiveFormsModule,
 
         NgxsModule
-            .forRoot([], ConfigService.createNgxsOptions()),
+            .forRoot([CommonState], ConfigService.createNgxsOptions()),
         NgxsRouterPluginModule
             .forRoot(),
         NgxsFormPluginModule

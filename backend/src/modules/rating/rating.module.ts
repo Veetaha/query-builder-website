@@ -1,5 +1,5 @@
-import { Module        } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { Module, forwardRef } from '@nestjs/common';
+import { TypeOrmModule      } from '@nestjs/typeorm';
 
 import { CommonModule   } from '@modules/common/common.module';
 import { ProposalModule } from '@modules/proposal/proposal.module';
@@ -16,7 +16,7 @@ import { RatingResolver } from './rating.resolver';
     imports: [
         CommonModule,
         UserModule,
-        ProposalModule,
+        forwardRef(() => ProposalModule),
         TypeOrmModule.forFeature([Rating, RatingRepo])
     ],
     providers: [RatingService, RatingResolver],

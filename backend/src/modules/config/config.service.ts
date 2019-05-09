@@ -8,8 +8,8 @@ import { JwtOptionsFactory, JwtModuleOptions         } from '@nestjs/jwt';
 import { AuthOptionsFactory, AuthModuleOptions       } from '@nestjs/passport';
 import { ExtractJwt, StrategyOptions as PassportJwtStrategyOptions } from 'passport-jwt';
 
-import { getResolveContext } from '@modules/common/resolve-context';
-import { EnvService        } from '@utils/env/env.service';
+import { ResolveContext } from '@modules/common/resolve-context.class';
+import { EnvService     } from '@utils/env/env.service';
 
 @Injectable()
 export class ConfigService
@@ -55,7 +55,7 @@ implements TypeOrmOptionsFactory, GqlOptionsFactory, JwtOptionsFactory, AuthOpti
             introspection:  true,
             autoSchemaFile: this.pathFromRoot('common/schema.gql'),
             path:           '/gql',
-            context:        getResolveContext,
+            context:        ResolveContext.createResolveContext.bind(ResolveContext),
             debug:          ConfigService.isDevelopmentMode
         };
     }
@@ -72,7 +72,8 @@ implements TypeOrmOptionsFactory, GqlOptionsFactory, JwtOptionsFactory, AuthOpti
             keepConnectionAlive:   true,
             maxQueryExecutionTime: ConfigService.isDevelopmentMode ? 200 : void 0,
             logging:               ConfigService.isDevelopmentMode,
-            synchronize:           ConfigService.isDevelopmentMode
+            synchronize:           ConfigService.isDevelopmentMode,
+            cache: true
         };
     }
 

@@ -3,6 +3,7 @@ import {
     AccessorDecorator, MethodDecorator, ParameterDecorator
 } from 'ts-typedefs';
 export * from 'ts-typedefs';
+import { Observable } from 'rxjs';
 
 export * from './jwt-payload.interface';
 
@@ -24,3 +25,7 @@ export type StrKeyOf<TObj extends Obj> = Extract<keyof TObj, string>;
 // number within range [0-65635]
 export type port_t = Tag<number, 'port_t'>;
 export type int    = Tag<number, 'int'>;
+
+export type UnpackObservable<TObservable extends Observable<any>> = (
+    TObservable extends Observable<infer TValue> ? TValue : never
+);

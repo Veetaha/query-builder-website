@@ -1,3 +1,4 @@
 export { 
-    PaginatedProposalFragment as PaginatedProposal
+    PaginatedProposalFragment as PaginatedProposal,
+    EntireProposalFragment    as EntireProposal
 } from '@app/gql/generated';

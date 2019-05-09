@@ -118,23 +118,6 @@ type Mutation {
   updateUser(params: AdminUserUpdateInput!): User
 
   """
-  Requires auth. Creates a proposal on behalf of the client and returns it.
-  """
-  createProposal(params: ProposalCreateInput!): Proposal!
-
-  """
-  Requires auth. Updates proposal and returns it, but throws if propsal doesn't
-  exist or client has no rights to mutate the proposal.
-  """
-  updateProposal(params: ProposalUpdateInput!): Proposal!
-
-  """
-  Requires auth. Deletes the proposal by id and returns `true`, but throws  if
-  propsal doesn't exist or client has no rights to mutate the proposal.
-  """
-  deleteProposal(id: Float!): Boolean!
-
-  """
   Requires auth. Creates or updates existing rating the client gave to the proposal.
   """
   rateProposal(proposalId: Int!, liked: Boolean!): Rating!
@@ -143,6 +126,23 @@ type Mutation {
   Requires auth. Deletes rating instance on behalf of the client. Returns `true` if deletion was successful.
   """
   deleteRating(proposalId: Float!): Boolean!
+
+  """
+  Requires auth. Creates a proposal on behalf of the client and returns it.
+  """
+  createProposal(params: ProposalCreateInput!): Proposal!
+
+  """
+  Requires auth. Updates proposal and returns it, but throws if propsal doesn't
+  exist or client has no rights to mutate the proposal. 
+  """
+  updateProposal(params: ProposalUpdateInput!): Proposal!
+
+  """
+  Requires auth. Deletes the proposal by id and returns `true`, but throws  if
+  propsal doesn't exist or client has no rights to mutate the proposal.
+  """
+  deleteProposal(id: Float!): Boolean!
 }
 
 type Proposal {
@@ -165,6 +165,12 @@ type Proposal {
   Defines whether the author of this proposal is ready to accept requests for it.
   """
   isOpenned: Boolean!
+
+  """
+  Returns the rating that the client has set to this proposal or `null` if
+  client is not authenticated or he hasn't set any rating to the target proposal.
+  """
+  myRating: Rating
 
   """
   Returns existing `mainPictureUrl` or default one if former was not set.
@@ -236,6 +242,7 @@ input ProposalUpdateInput {
   introText: String
   bodyText: String
   mainPictureUrl: String
+  isOpenned: Boolean
 }
 
 type Query {
@@ -248,14 +255,14 @@ type Query {
   """Requires auth. Returns `User` that represents the current client."""
   getMe: User!
 
+  """Paginates all ratings."""
+  getRatingsPage(params: RatingPaginationInput!): RatingPage!
+
   """Paginates all proposals."""
   getProposalsPage(params: ProposalPaginationInput!): ProposalPage!
 
   """Returns proposal by id, or `null` if nothing was found."""
   getProposalById(id: Int!): Proposal
-
-  """Paginates all ratings."""
-  getRatingsPage(params: RatingPaginationInput!): RatingPage!
 }
 
 """Represents a [dis]like instance that the users put to proposals."""

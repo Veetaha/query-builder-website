@@ -1,0 +1,37 @@
+<ng-container *veeLet="proposal$ | async as proposal">
+<ng-container *veeLet="client$ | async as client">
+
+<p-card>
+    <p-header>
+        {{proposal.name}}
+    </p-header>
+    <article>
+        <figure>
+            <img 
+                [src]="proposal.mainPictureUrl"
+                class="main-picture"
+            />
+        </figure>
+        <markdown [data]="proposal.bodyText"></markdown>
+    </article>
+    <p-footer>
+        <p-button
+            [label]="proposal.likes.toString()"
+            [styleClass]="getRatingButtonClasses(proposal.myRating, true)"
+            [disabled]="shouldDisableRatingButton(proposal.myRating, true)"
+            (onClick)="rateProposal(true)"
+            icon="far fa-thumbs-up"
+        ></p-button>
+        <p-button
+            [label]="proposal.dislikes.toString()"
+            [styleClass]="getRatingButtonClasses(proposal.myRating, false)"
+            [disabled]="shouldDisableRatingButton(proposal.myRating, false)"
+            (onClick)="rateProposal(false)"
+            icon="far fa-thumbs-down"
+        ></p-button>
+    </p-footer>
+</p-card>
+
+</ng-container>
+</ng-container>
+

@@ -1,11 +1,16 @@
 <app-pagination *veeLet="proposals$ | async as proposals"
     [state]="paginationState"
+    [filterKeys]="['name']"
+    [sortKeys]="['creationDate', 'lastUpdateDate', 'name']"
 >
-<ng-container *ngIf="proposals != null">
-    <p *ngFor="let proposal of proposals; trackBy: trackBy">
-        {{proposal | json }}
-    </p>
-
-
-</ng-container>
+<div *ngIf="proposals != null"
+    class="p-grid"
+>
+    <app-paginated-proposal 
+        *ngFor="let proposal of proposals; trackBy: trackBy"
+        [proposal]="proposal"
+        class="p-col-4"
+    ></app-paginated-proposal>
+    
+</div>
 </app-pagination>

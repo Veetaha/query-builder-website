@@ -1,10 +1,11 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ErrorComponent } from './error.component';
+import { NgxsModule } from '@ngxs/store';
+
+import { NotFoundComponent  } from './not-found.component';
 import { GlobalErrorHandler } from './global-error.handler';
 import { ErrorRoutingModule } from './error.routing.module';
-import { NgxsModule } from '@ngxs/store';
-import { ErrorState } from './store/error.state';
+import { ErrorState         } from './error.state';
 
 @NgModule({
     imports: [
@@ -18,10 +19,10 @@ import { ErrorState } from './store/error.state';
             useClass: GlobalErrorHandler
         }
     ],
-    declarations: [ErrorComponent],
+    declarations: [NotFoundComponent],
     exports:      [
         ErrorRoutingModule,
-        ErrorComponent
+        NotFoundComponent
     ]
 })
 export class ErrorModule {}

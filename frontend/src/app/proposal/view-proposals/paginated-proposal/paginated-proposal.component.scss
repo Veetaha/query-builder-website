@@ -1,0 +1,17 @@
+.main-picture {
+    margin: 0;
+
+    &__img { 
+        height:    150px;
+        max-width: 300px;
+    }
+}
+
+.main-content {
+    display: flex;
+    flex-direction: row;
+}
+
+.like-count, .dislike-count {
+    margin: 5px;
+}

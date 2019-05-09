@@ -13,7 +13,10 @@ type ProposalPaginationService = PaginationService<
 @Injectable({ providedIn: 'root' })
 export class ProposalService implements ProposalPaginationService {
     constructor(
-        private readonly getProposalsPageGQL: Gql.GetProposalsPageGQL
+        private readonly getProposalsPageGQL: Gql.GetProposalsPageGQL,
+        private readonly getProposalByIdGQL:  Gql.GetProposalByIdGQL,
+        private readonly rateProposalGQL:     Gql.RateProposalGQL,
+        private readonly updateProposalGQL:   Gql.UpdateProposalGQL
     ) {}
 
     getPage(params: Gql.ProposalPaginationInput) {
@@ -22,4 +25,21 @@ export class ProposalService implements ProposalPaginationService {
             .pipe(map(v => v.data.getProposalsPage));
     }
 
+    getProposalById(id: number) {
+        return this.getProposalByIdGQL
+            .fetch({ id })
+            .pipe(map(v => v.data.getProposalById));
+    }
+
+    rateProposal(params: Gql.RateProposalMutationVariables) {
+        return this.rateProposalGQL
+            .mutate(params)
+            .pipe(map(v => v.data!.rateProposal));
+    }
+
+    updateProposal(params: Gql.ProposalUpdateInput) {
+        return this.updateProposalGQL
+            .mutate({ params })
+            .pipe(map(v => v.data!.updateProposal));
+    }
 }

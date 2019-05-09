@@ -1,20 +1,13 @@
 import _ from 'lodash';
 import { tap } from 'rxjs/operators';
-import { Nullable } from 'ts-typedefs';
 import { State, StateContext, Selector, Action } from '@ngxs/store';
 
-import { SortingOrder } from '@app/gql/generated';
-
 import { 
-    PaginationStateModel, 
-    PaginationFilterFormStateModel, 
-    PaginationSortFormStateModel 
+    PaginationStateModel
 } from './pagination.model';
-import { createPaginationActions, UpdateLimitAndOffset } from './pagination.actions';
-import { LoggingService } from '@utils/logging.service';
+import { createPaginationActions, PatchInput } from './pagination.actions';
 import { PaginationServiceClass, UnpackItemsFromService } from './pagination-service.interface';
 import { Inject } from '@angular/core';
-import { NgxsFormValidityState } from '@utils/ngxs/form.model';
 
 export interface CreatePaginationStateOpts
 <TPaginationServiceClass extends PaginationServiceClass> 
@@ -22,10 +15,6 @@ export interface CreatePaginationStateOpts
     name:              string;
     defaultLimit?:     number;
     defaultOffset?:    number;
-    debounceTime?:     number;
-    maxWait?:          number;
-    filterKeys?:       Nullable<string[]>; // initial values
-    sortKeys?:         Nullable<string[]>; // initial values
     paginationService: TPaginationServiceClass;
 }
 
@@ -40,93 +29,53 @@ export function createPaginationState
     @State<StateModel>({
         name,
         defaults: {
-            limit:        _.defaultTo(opts.defaultLimit, 10),
-            offset:       _.defaultTo(opts.defaultOffset, 0),
-            debounceTime: _.defaultTo(opts.debounceTime, 300),
-            maxWait:      _.defaultTo(opts.maxWait, 2000),
-            sortKeys:   opts.sortKeys,
-            filterKeys: opts.filterKeys,
-            currentPage: null,
-            settingsForm: {
-                dirty: false,
-                status: NgxsFormValidityState.Valid,
-                model: {}
-            }
-        } as StateModel
+            input: {
+                limit:  _.defaultTo(opts.defaultLimit, 10),
+                offset: _.defaultTo(opts.defaultOffset, 0),
+                filter: null,
+                sort:   null
+            },
+            page:   null
+        }
     })
     class PaginationState {        
         static readonly stateName = name;
         static readonly actions = createPaginationActions(opts.name);
         
-        @Selector() static limit       (s: StateModel) { return s.limit; }
-        @Selector() static offset      (s: StateModel) { return s.offset; }
-        @Selector() static maxWait     (s: StateModel) { return s.maxWait; }
-        @Selector() static debounceTime(s: StateModel) { return s.debounceTime; }
-        @Selector() static filterKeys  (s: StateModel) { return s.filterKeys; } 
-        @Selector() static sortKeys    (s: StateModel) { return s.sortKeys; } 
-        @Selector() static currentPage (s: StateModel) { return s.currentPage; }
-        @Selector() static currentItems(s: StateModel) { 
-            return s.currentPage == null ? null : s.currentPage.data;
+        @Selector() static input (s: StateModel) { return s.input; }
+        @Selector() static limit (s: StateModel) { return s.input.limit; }
+        @Selector() static offset(s: StateModel) { return s.input.offset; }
+        @Selector() static items (s: StateModel) { 
+            return s.page == null ? null : s.page.data; 
         }
-        @Selector() static currentTotal(s: StateModel) { 
-            return s.currentPage == null ? null : s.currentPage.total;
-        }
-
-        @Selector() static paginationInput({ limit, offset, settingsForm }: StateModel) {
-            return {
-                filter: this.getFilterInputFromForm(settingsForm.model.filter),
-                sort:   this.getSortInputFromForm(settingsForm.model.sort),
-                limit, 
-                offset
-            };
-        }
-        
-
-        private static getFilterInputFromForm(form: Nullable<PaginationFilterFormStateModel>) {
-            return form == null ? null : { props: { [form.key]: { ilike: form.value } } }; 
-        }
-
-        private static getSortInputFromForm(form: Nullable<PaginationSortFormStateModel>) {
-            return form == null ? null : { 
-                [form.key]: { 
-                    ordering: form.isAscendingOrder 
-                        ? SortingOrder.Asc 
-                        : SortingOrder.Desc 
-                } 
-            };
+        @Selector() static total(s: StateModel) { 
+            return s.page == null ? null : s.page.total;
         }
 
         constructor(
             @Inject(opts.paginationService)
-            private readonly pageService: InstanceType<TPaginationServiceClass>,
-            private readonly log: LoggingService
+            private readonly pages: InstanceType<TPaginationServiceClass>
         ) {}
         
-        @Action(PaginationState.actions.UpdateLimitAndOffset)
-        updateLimitAndOffset(ctx: StateCtx, {limit, offset}: UpdateLimitAndOffset) {
-            const state = ctx.getState();
-            if (state.limit === limit && state.offset === offset) { // skip if nothing changes
-                this.log.warning(
-                    "Received UpdateLimitAndOffset action, though no update is needed"
-                );
-                return;
-            }
-            ctx.patchState({limit, offset});
-            return this.updateCurrentPage(ctx);
+        @Action(PaginationState.actions.patchInput)
+        updateLimitAndOffset(ctx: StateCtx, patch: PatchInput) {
+            ctx.patchState({ 
+                input: { 
+                    ...ctx.getState().input, 
+                    ...(patch as Partial<StateModel['input']>)
+                }
+            });
+            return this.fetchPage(ctx);
         }
 
         /**
-         * Removes current page and fetches new one.
          * TODO inspect for concurrency issues
          */
-        @Action(PaginationState.actions.UpdateCurrentPage)
-        updateCurrentPage(ctx: StateCtx) {
-            
-            ctx.patchState({ currentPage: null }); 
-
-            return this.pageService
-                .getPage(PaginationState.paginationInput(ctx.getState()))
-                .pipe(tap(page => ctx.patchState({ currentPage: page })));
+        @Action(PaginationState.actions.fetchPage)
+        private fetchPage(ctx: StateCtx) {
+            return this.pages
+                .getPage(ctx.getState().input)
+                .pipe(tap(page => ctx.patchState({ page })));
         }
     }
 

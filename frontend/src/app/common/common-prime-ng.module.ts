@@ -8,6 +8,10 @@ import { PasswordModule        } from 'primeng/password';
 import { PaginatorModule       } from 'primeng/paginator';
 import { ToggleButtonModule    } from 'primeng/togglebutton';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ProgressBarModule     } from 'primeng/progressbar';
+import { PanelModule           } from 'primeng/panel';
+import { ToastModule           } from 'primeng/toast';
+import { CardModule            } from 'primeng/card';
 
 @NgModule({
     exports: [
@@ -18,7 +22,11 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
         PasswordModule,
         PaginatorModule,
         ToggleButtonModule,
-        ProgressSpinnerModule
+        ProgressSpinnerModule,
+        ProgressBarModule,
+        PanelModule,
+        ToastModule,
+        CardModule
     ]
 })
 export class CommonPrimeNgModule { }

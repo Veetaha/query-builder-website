@@ -1,31 +1,55 @@
-import { Nullable } from 'ts-typedefs';
+import { Obj, Nullable } from 'ts-typedefs';
 
-import { NgxsFormStateModel } from '@utils/ngxs/form.model';
+import { 
+    SortingOrder, 
+    StringFilterInput, 
+    IntFilterInput,
+    BooleanFilterInput,
+    DateFilterInput
+} from '@app/gql/generated';
 
-import { Page } from './pagination.interface';
+export type FilterInput = (
+    | StringFilterInput
+    | IntFilterInput
+    | BooleanFilterInput
+    | DateFilterInput
+);
 
-export interface PaginationFilterFormStateModel {
-    readonly key:   string;
-    readonly value: string;
+export interface SortInput {
+    ordering?: Nullable<SortingOrder>;
 }
 
-export interface PaginationSortFormStateModel {
-    readonly key:              string;
-    readonly isAscendingOrder: boolean;
+export type PaginationSortInput<TKeys extends string = string> = (
+    Obj<Nullable<SortInput>, TKeys>
+);
+
+export type PaginationFilterInput<TKeys extends string = string> = (
+    Obj<Nullable<FilterInput>, TKeys>
+);
+
+export interface MetaPaginationFilterInput
+<TPaginationFilterInput extends PaginationFilterInput = PaginationFilterInput>{
+    props: TPaginationFilterInput;
+}
+export interface PaginationInput<
+    TFilterInput extends PaginationFilterInput = PaginationFilterInput,
+    TSortInput   extends PaginationSortInput   = PaginationSortInput   
+> {
+    limit:   number;
+    offset:  number;
+    filter?: Nullable<MetaPaginationFilterInput<TFilterInput>>;
+    sort?:   Nullable<TSortInput>;
 }
 
-export interface PaginationFormStateModel {
-    readonly filter: Nullable<PaginationFilterFormStateModel>;
-    readonly sort:   Nullable<PaginationSortFormStateModel>;
+export interface PaginationStateModel<
+    TItems,
+    TPaginationInput extends PaginationInput = PaginationInput
+> {
+    input:   TPaginationInput;
+    page?:   Nullable<Page<TItems>>;
 }
 
-export interface PaginationStateModel<TItems> {
-    readonly limit:        number;
-    readonly offset:       number;
-    readonly maxWait:      number;
-    readonly debounceTime: number;
-    readonly sortKeys?:    Nullable<string[]>;
-    readonly filterKeys?:  Nullable<string[]>;
-    readonly settingsForm: NgxsFormStateModel<PaginationFormStateModel>;
-    readonly currentPage?: Nullable<Page<TItems>>;
+export interface Page<TItems> {
+    data:  TItems[];
+    total: number;
 }

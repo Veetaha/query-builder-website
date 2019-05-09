@@ -12,7 +12,8 @@
             "skipFiles": [ 
                 "timers.js",
                 "async_hooks.js", 
-                "inspector_async_hook.js" 
+                "inspector_async_hook.js",
+                "fs.js"
             ],
             "protocol": "inspector",
             "localRoot": "${workspaceFolder}",

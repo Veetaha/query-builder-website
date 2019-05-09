@@ -1,25 +1,43 @@
-<ng-container *veeLet="client$ | async as client">
-
-<p-toolbar>
-    <p-button 
-        label="QueryBuilder"
-        routerLink="/"
-        styleClass="ui-button-raised ui-button-secondary"
-    ></p-button>
-
-    <p-button *appIfClientRole="routeMap.getRoleLimitFor('sign-in'); else elseForNotGuest"
-        label="Sign in"
-        routerLink="/sign-in"
-        styleClass="ui-button-raised ui-button-primary-"
-    ></p-button>
-    <ng-template #elseForNotGuest>
+<ng-container *veeLet="{
+    client:              client$ | async,
+    isAwaitingResponses: isAwaitingResponses$ | async
+} as state
+">
+<div class="p-grid p-nogutter">
+    <p-toolbar class="p-col-12">
         <p-button 
-            (click)="signOut()"
-            label="Sign out"
-            styleClass="ui-button-raised ui-button-warning"
+            label="QueryBuilder"
+            routerLink="/"
+            styleClass="ui-button-raised ui-button-secondary"
         ></p-button>
-    </ng-template>
-    ClientName: {{ client?.name }}
-</p-toolbar>
 
+        <p-button
+            label="Proposals"    
+            routerLink="/proposals"
+            styleClass="ui-button-raised ui-button-primary"
+        ></p-button>
+
+
+        <p-button *appIfClientRole="routeMap.getRoleLimitFor('sign-in'); else elseForNotGuest"
+            label="Sign in"
+            routerLink="/sign-in"
+            styleClass="ui-button-raised ui-button-primary"
+        ></p-button>
+        <ng-template #elseForNotGuest>
+            <p-button 
+                (click)="signOut()"
+                label="Sign out"
+                styleClass="ui-button-raised ui-button-warning"
+            ></p-button>
+        </ng-template>
+    </p-toolbar>
+    <p-progressBar
+        [mode]="state.isAwaitingResponses ? 'indeterminate' : 'determinate'"
+        [showValue]="false"
+        class="p-col-12"
+        styleClass="progress-bar"
+        value="100"
+    >
+    </p-progressBar>
+</div>
 </ng-container>

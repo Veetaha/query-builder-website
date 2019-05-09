@@ -1,6 +1,6 @@
 import { Injectable, ErrorHandler, Injector } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { CriticalError } from './store/error.actions';
+import { CriticalError } from './error.actions';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {

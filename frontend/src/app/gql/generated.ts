@@ -95,6 +95,10 @@ export type Mutation = {
      * retuns `null` if there nothing was found for the given login.
      */
     updateUser?: Maybe<User>;
+    /** Requires auth. Creates or updates existing rating the client gave to the proposal. */
+    rateProposal: Rating;
+    /** Requires auth. Deletes rating instance on behalf of the client. Returns `true` if deletion was successful. */
+    deleteRating: Scalars["Boolean"];
     /** Requires auth. Creates a proposal on behalf of the client and returns it. */
     createProposal: Proposal;
     /** Requires auth. Updates proposal and returns it, but throws if propsal doesn't
@@ -105,10 +109,6 @@ export type Mutation = {
      * propsal doesn't exist or client has no rights to mutate the proposal.
      */
     deleteProposal: Scalars["Boolean"];
-    /** Requires auth. Creates or updates existing rating the client gave to the proposal. */
-    rateProposal: Rating;
-    /** Requires auth. Deletes rating instance on behalf of the client. Returns `true` if deletion was successful. */
-    deleteRating: Scalars["Boolean"];
 };
 
 export type MutationSignInArgs = {
@@ -127,6 +127,15 @@ export type MutationUpdateUserArgs = {
     params: AdminUserUpdateInput;
 };
 
+export type MutationRateProposalArgs = {
+    proposalId: Scalars["Int"];
+    liked: Scalars["Boolean"];
+};
+
+export type MutationDeleteRatingArgs = {
+    proposalId: Scalars["Float"];
+};
+
 export type MutationCreateProposalArgs = {
     params: ProposalCreateInput;
 };
@@ -137,15 +146,6 @@ export type MutationUpdateProposalArgs = {
 
 export type MutationDeleteProposalArgs = {
     id: Scalars["Float"];
-};
-
-export type MutationRateProposalArgs = {
-    proposalId: Scalars["Int"];
-    liked: Scalars["Boolean"];
-};
-
-export type MutationDeleteRatingArgs = {
-    proposalId: Scalars["Float"];
 };
 
 export type Proposal = {
@@ -163,6 +163,10 @@ export type Proposal = {
     dislikes: Scalars["Int"];
     /** Defines whether the author of this proposal is ready to accept requests for it. */
     isOpenned: Scalars["Boolean"];
+    /** Returns the rating that the client has set to this proposal or `null` if
+     * client is not authenticated or he hasn't set any rating to the target proposal.
+     */
+    myRating?: Maybe<Rating>;
     /** Returns existing `mainPictureUrl` or default one if former was not set. */
     mainPictureUrlOrDefault: Scalars["String"];
     /** Returns the user that created this proposal. */
@@ -218,6 +222,7 @@ export type ProposalUpdateInput = {
     introText?: Maybe<Scalars["String"]>;
     bodyText?: Maybe<Scalars["String"]>;
     mainPictureUrl?: Maybe<Scalars["String"]>;
+    isOpenned?: Maybe<Scalars["Boolean"]>;
 };
 
 export type Query = {
@@ -227,12 +232,12 @@ export type Query = {
     getUsersPage: UserPage;
     /** Requires auth. Returns `User` that represents the current client. */
     getMe: User;
+    /** Paginates all ratings. */
+    getRatingsPage: RatingPage;
     /** Paginates all proposals. */
     getProposalsPage: ProposalPage;
     /** Returns proposal by id, or `null` if nothing was found. */
     getProposalById?: Maybe<Proposal>;
-    /** Paginates all ratings. */
-    getRatingsPage: RatingPage;
 };
 
 export type QueryGetUserByLoginArgs = {
@@ -243,16 +248,16 @@ export type QueryGetUsersPageArgs = {
     params: UserPaginationInput;
 };
 
+export type QueryGetRatingsPageArgs = {
+    params: RatingPaginationInput;
+};
+
 export type QueryGetProposalsPageArgs = {
     params: ProposalPaginationInput;
 };
 
 export type QueryGetProposalByIdArgs = {
     id: Scalars["Int"];
-};
-
-export type QueryGetRatingsPageArgs = {
-    params: RatingPaginationInput;
 };
 
 /** Represents a [dis]like instance that the users put to proposals. */
@@ -407,7 +412,7 @@ export type UserUpdateInput = {
     name?: Maybe<Scalars["String"]>;
     avatarUrl?: Maybe<Scalars["String"]>;
 };
-export type EntireUserFragment = { __typename?: "User" } & Pick<
+export type EntireUserFragment = { __typename: "User" } & Pick<
     User,
     "creationDate" | "lastUpdateDate" | "role" | "name" | "login"
 > & { avatarUrl: User["avatarUrlOrDefault"] };
@@ -444,11 +449,18 @@ export type SignInMutation = { __typename?: "Mutation" } & {
 
 export type PaginatedProposalFragment = { __typename?: "Proposal" } & Pick<
     Proposal,
-    "id" | "name" | "introText" | "isOpenned" | "likes" | "dislikes"
+    | "id"
+    | "name"
+    | "introText"
+    | "isOpenned"
+    | "likes"
+    | "dislikes"
+    | "creationDate"
 > & { mainPictureUrl: Proposal["mainPictureUrlOrDefault"] } & {
-        creator: { __typename?: "User" } & Pick<User, "login" | "role"> & {
-                avatarUrl: User["avatarUrlOrDefault"];
-            };
+        creator: { __typename?: "User" } & Pick<
+            User,
+            "login" | "role" | "name"
+        > & { avatarUrl: User["avatarUrlOrDefault"] };
     };
 
 export type GetProposalsPageQueryVariables = {
@@ -464,6 +476,52 @@ export type GetProposalsPageQuery = { __typename?: "Query" } & {
                 { __typename?: "Proposal" } & PaginatedProposalFragment
             >;
         };
+};
+
+export type EntireProposalFragment = { __typename?: "Proposal" } & Pick<
+    Proposal,
+    | "id"
+    | "creationDate"
+    | "lastUpdateDate"
+    | "name"
+    | "introText"
+    | "bodyText"
+    | "likes"
+    | "dislikes"
+    | "isOpenned"
+> & { mainPictureUrl: Proposal["mainPictureUrlOrDefault"] } & {
+        creator: { __typename?: "User" } & Pick<
+            User,
+            "login" | "role" | "name"
+        > & { avatarUrl: User["avatarUrlOrDefault"] };
+        myRating: Maybe<{ __typename?: "Rating" } & Pick<Rating, "liked">>;
+    };
+
+export type GetProposalByIdQueryVariables = {
+    id: Scalars["Int"];
+};
+
+export type GetProposalByIdQuery = { __typename?: "Query" } & {
+    getProposalById: Maybe<
+        { __typename?: "Proposal" } & EntireProposalFragment
+    >;
+};
+
+export type RateProposalMutationVariables = {
+    proposalId: Scalars["Int"];
+    liked: Scalars["Boolean"];
+};
+
+export type RateProposalMutation = { __typename?: "Mutation" } & {
+    rateProposal: { __typename?: "Rating" } & Pick<Rating, "liked">;
+};
+
+export type UpdateProposalMutationVariables = {
+    params: ProposalUpdateInput;
+};
+
+export type UpdateProposalMutation = { __typename?: "Mutation" } & {
+    updateProposal: { __typename?: "Proposal" } & EntireProposalFragment;
 };
 
 export type GetUsersPageQueryVariables = {
@@ -486,6 +544,7 @@ import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export const EntireUserFragmentDoc = gql`
     fragment EntireUser on User {
+        __typename
         creationDate
         lastUpdateDate
         role
@@ -512,10 +571,35 @@ export const PaginatedProposalFragmentDoc = gql`
         likes
         dislikes
         mainPictureUrl: mainPictureUrlOrDefault
+        creationDate
         creator {
             login
             avatarUrl: avatarUrlOrDefault
             role
+            name
+        }
+    }
+`;
+export const EntireProposalFragmentDoc = gql`
+    fragment EntireProposal on Proposal {
+        id
+        creationDate
+        lastUpdateDate
+        name
+        introText
+        bodyText
+        mainPictureUrl: mainPictureUrlOrDefault
+        likes
+        dislikes
+        isOpenned
+        creator {
+            login
+            avatarUrl: avatarUrlOrDefault
+            role
+            name
+        }
+        myRating {
+            liked
         }
     }
 `;
@@ -590,6 +674,59 @@ export class GetProposalsPageGQL extends Apollo.Query<
     GetProposalsPageQueryVariables
 > {
     document = GetProposalsPageDocument;
+}
+export const GetProposalByIdDocument = gql`
+    query getProposalById($id: Int!) {
+        getProposalById(id: $id) {
+            ...EntireProposal
+        }
+    }
+    ${EntireProposalFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root"
+})
+export class GetProposalByIdGQL extends Apollo.Query<
+    GetProposalByIdQuery,
+    GetProposalByIdQueryVariables
+> {
+    document = GetProposalByIdDocument;
+}
+export const RateProposalDocument = gql`
+    mutation rateProposal($proposalId: Int!, $liked: Boolean!) {
+        rateProposal(proposalId: $proposalId, liked: $liked) {
+            liked
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root"
+})
+export class RateProposalGQL extends Apollo.Mutation<
+    RateProposalMutation,
+    RateProposalMutationVariables
+> {
+    document = RateProposalDocument;
+}
+export const UpdateProposalDocument = gql`
+    mutation updateProposal($params: ProposalUpdateInput!) {
+        updateProposal(params: $params) {
+            ...EntireProposal
+        }
+    }
+    ${EntireProposalFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root"
+})
+export class UpdateProposalGQL extends Apollo.Mutation<
+    UpdateProposalMutation,
+    UpdateProposalMutationVariables
+> {
+    document = UpdateProposalDocument;
 }
 export const GetUsersPageDocument = gql`
     query getUsersPage($params: UserPaginationInput!) {

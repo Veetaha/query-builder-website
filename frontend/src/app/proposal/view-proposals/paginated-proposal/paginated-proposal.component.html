@@ -1,0 +1,33 @@
+<p-panel routerLink="/proposals/{{proposal.id}}">
+    <p-header>
+        <h1 
+            class="ui-panel-title"
+        >
+            {{proposal.name}} by {{proposal.creator.name}}
+        </h1>
+        <p>{{proposal.isOpenned ? 'Openned' : 'Closed'}}</p>
+        <p>Created at {{proposal.creationDate | date: 'medium' }}</p>
+    </p-header>
+    <article class="main-content">
+        <figure class="main-picture">
+            <img
+                [src]="proposal.mainPictureUrl" 
+                alt="Proposal '{{proposal.name}}' main picture."
+                class="main-picture__img"
+            />
+        </figure>
+        <p>
+            {{proposal.introText}}
+        </p>
+    </article>
+    <p-footer>
+        <span class="like-count">
+            <i class="far fa-thumbs-up"></i>
+            {{proposal.likes}}
+        </span>
+        <span class="dislike-count">
+            <i class="far fa-thumbs-down"></i>
+            {{proposal.dislikes}}
+        </span>
+    </p-footer>
+</p-panel>

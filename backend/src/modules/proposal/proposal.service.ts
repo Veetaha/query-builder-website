@@ -51,7 +51,7 @@ export class ProposalService {
         info:   GraphQLResolveInfo,
         id:     number
     ) {
-        return loader.loadOne(Proposal, { id }, info);
+        return loader.loadOne<Proposal>(Proposal, { id }, info);
     }
 
     /**

@@ -1,7 +1,7 @@
 import { Class      } from 'ts-typedefs';
 import { Observable } from 'rxjs';
 
-import { PaginationInput, Page } from './pagination.interface';
+import { PaginationInput, Page } from './pagination.model';
 
 
 export interface PaginationService

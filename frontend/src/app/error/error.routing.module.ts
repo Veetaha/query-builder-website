@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ErrorComponent } from './error.component';
+import { NotFoundComponent } from './not-found.component';
 
 
 const routes: Routes = [
-    { path: 'error', component: ErrorComponent }
+    { path: 'error/not-found', component: NotFoundComponent }
 ];
 
 @NgModule({

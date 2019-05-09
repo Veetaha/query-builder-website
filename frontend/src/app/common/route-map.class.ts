@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { RouteArray, RouteMapObj } from './pagination/route-map.interface';
+import { RouteArray, RouteMapObj } from './route-map.interface';
 
 export interface RouteMapAndArray<TPaths extends string> {
     routeMap: RouteMap<TPaths>;
@@ -23,7 +23,7 @@ export class RouteMap<TPaths extends string> {
     getRoleLimitFor(path: TPaths) {
         const roleLimit = this.routeMap[path].data;
         if (roleLimit == null) {
-            throw new TypeError('required role limit, but it was null');
+            throw new TypeError('Required role limit, but it was null');
         }
         return roleLimit;
     }

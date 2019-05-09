@@ -4,9 +4,26 @@ import { Store     } from '@ngxs/store';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Component, Input, OnInit } from '@angular/core';
 
-import { Disposable } from '@utils/disposable';
+import { Disposable   } from '@utils/disposable';
+
+import { SortingOrder } from '@app/gql/generated';
 
 import { PaginationStateClass } from '../pagination.state';
+import { PaginationSortInput, MetaPaginationFilterInput } from '../pagination.model';
+
+interface ToggleButtonOption {
+    label: string;
+}
+
+interface FormValue {
+    filter: {
+        key?:  Nullable<ToggleButtonOption>;
+    };
+    sort: {
+        isAscendingOrder: boolean;
+        key?: Nullable<ToggleButtonOption>;
+    };
+}
 
 @Component({
     selector:    'app-pagination-settings',
@@ -19,68 +36,89 @@ export class PaginationSettingsComponent extends Disposable implements OnInit {
         super();
     }
 
-    @Input('state') PaginationState!: PaginationStateClass;
+    @Input() state!: PaginationStateClass;
+    /** only for init */
+    @Input() readonly filterKeys!: string[];
+    @Input() readonly sortKeys!:   string[];
+    
 
-    sortOptions:   Nullable<{ label: string }[]>;
-    filterOptions: Nullable<{ label: string }[]>;
+    @Input() readonly debounceTime = 300;   // milliseconds
+    @Input() readonly maxWait      = 3000;  // milliseconds
 
-    form = new FormGroup({});
-    updateCurrentPageDebounced!: PaginationSettingsComponent['updateCurrentPageImmediate'];
+    fetchPageDebounced!: PaginationSettingsComponent['fetchPage'];
 
-    getNgxsFormName() {
-        return `${this.PaginationState.stateName}.settingsForm`;
+    searchQuery = new FormControl('');
+
+    sortOptions:   Nullable<ToggleButtonOption[]>;
+    filterOptions: Nullable<ToggleButtonOption[]>;
+
+    form!: FormGroup;
+
+    private getSortInput(sort: FormValue['sort']): Nullable<PaginationSortInput> {
+        return {
+            [sort.key == null ? this.sortKeys[0] : sort.key.label]: {
+                ordering: SortingOrder[sort.isAscendingOrder ? 'Asc' : 'Desc']
+            }
+        };
     }
 
-    updateCurrentPageImmediate() {
-        this.store.dispatch(this.PaginationState.actions.UpdateCurrentPage.instance);
+    private getMetaFitlerInput(
+        {key}:      FormValue['filter'], 
+        searchQuery: string
+    ): Nullable<MetaPaginationFilterInput> {
+        return {
+            props: {
+                [key == null ? this.filterKeys[0] : key.label]: {
+                    ilike: `%${searchQuery}%`
+                }
+            }
+        };
+    }
+
+    // TODO prevent excessive queries
+    private fetchPage({
+        formValue   = this.form.value,
+        searchQuery = this.searchQuery.value
+    }: { formValue?: FormValue, searchQuery?: string } = {}) {
+        this.store.dispatch(new this.state.actions.patchInput({
+            sort:   this.getSortInput(formValue.sort),
+            filter: this.getMetaFitlerInput(formValue.filter, searchQuery)
+        }));
     }
 
 
-    private initDebounceMethod(debounceTime: number, maxWait: number) {
-        this.updateCurrentPageDebounced = _.debounce(
-            this.updateCurrentPageImmediate,
-            debounceTime,
-            { trailing: true, maxWait }
+    private initSubscriptions() {
+        this.addHandle(this.form.valueChanges.subscribe(
+            (formValue: FormValue) => this.fetchPage({ formValue })
+        ));
+        this.addHandle(this.searchQuery.valueChanges.subscribe(
+            (searchQuery: string) => this.fetchPageDebounced({ searchQuery })
+        ));
+    }
+
+    private initDebounceMethod() {
+        this.fetchPageDebounced = _.debounce(
+            this.fetchPage,
+            this.debounceTime,
+            { trailing: true, maxWait: this.maxWait }
         );
     }
+
     private initFormControlls() {
-        this.addHandle(this.store.select(this.PaginationState.filterKeys).subscribe(
-            filterKeys => {
-                console.log('updating filter keys'); // TODO remove
-                if (filterKeys == null) {
-                    return this.form.removeControl('filter');
-                }
-                this.form.setControl('filter', new FormGroup({
-                    value: new FormControl(''),
-                    key:   new FormControl(filterKeys[0])
-                }));
-                this.filterOptions = this.createOptions(filterKeys);
-            }
-        ));
-        this.addHandle(this.store.select(this.PaginationState.sortKeys).subscribe(
-            sortKeys => {
-                if (sortKeys == null) {
-                    return this.form.removeControl('sort');
-                }
-                this.form.setControl('sort', new FormGroup({
-                    isAscendingOrder:  new FormControl(true),
-                    key:               new FormControl(sortKeys[0]),
-                }));
-                this.sortOptions = this.createOptions(sortKeys);
-            }
-        ));
+        this.form = new FormGroup({
+            filter: new FormGroup({ key: new FormControl }),
+            sort: new FormGroup({
+                isAscendingOrder:  new FormControl(true),
+                key:               new FormControl
+            })
+        });
+        this.filterOptions = this.filterKeys.map(label => ({label}));
+        this.sortOptions   = this.sortKeys.map(label => ({label}));
     }
-
-    private createOptions(options: string[]) {
-        return options.map(option => ({ label: option }));
-    }
-
 
     ngOnInit() {
-        this.initDebounceMethod(
-            this.store.selectSnapshot(this.PaginationState.debounceTime),
-            this.store.selectSnapshot(this.PaginationState.maxWait)
-        );
+        this.initDebounceMethod();
         this.initFormControlls();
+        this.initSubscriptions();
     }
 }

@@ -58,7 +58,7 @@ export class AuthService {
      * 
      * @param payload Deserialized jwt payload
      */
-    async getUserByJwtPayloadOrFail(payload: unknown) {
+    async getUserByJwtPayload(payload: unknown) {
         return this.users.getByLogin(
             Joi.attempt(
                 payload, 

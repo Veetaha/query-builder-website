@@ -6,10 +6,7 @@ import { HomeComponent } from './home/home.component';
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
-    {
-        path: '**',
-        redirectTo: `error;status=404;message=${encodeURIComponent('Not found')}`
-    }
+    { path: '**', redirectTo: `error/not-found` }
 ];
 
 @NgModule({

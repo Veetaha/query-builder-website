@@ -4,7 +4,11 @@
         first:        offset$ | async
     } as opts"
 >
-<app-pagination-settings [state]="PaginationState"></app-pagination-settings>
+<app-pagination-settings 
+    [state]="state"
+    [filterKeys]="filterKeys"
+    [sortKeys]="sortKeys"
+></app-pagination-settings>
 <ng-container *ngIf="opts.totalRecords != null; else elsePageNotLoaded">
     <ng-content></ng-content>
     <p-paginator
@@ -20,19 +24,5 @@
 <ng-template #elsePageNotLoaded>
     <p-progressSpinner></p-progressSpinner>
 </ng-template>
-<!-- <mat-paginator #paginator
-    [length]         ="dataPage!.total"
-    [pageSize]       ="pagination.limit"
-    [pageIndex]      ="pagination.page - 1"
-    [pageSizeOptions]="pageSizeOptions"
-    (page)="
-        doSearchRequest({
-            page:  $event.pageIndex + 1,
-            limit: $event.pageSize
-        });
-    "
-    color="primary"
-    showFirstLastButtons="showFirstLastButtons"
-></mat-paginator> -->
 
 </ng-container>

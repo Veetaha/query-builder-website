@@ -33,6 +33,14 @@ export class AuthState implements NgxsOnInit {
         private readonly log:   LoggingService
     ) {}
 
+    static selectEnsureClientIsAuthorizedOrFail(store: Store) {
+        return this.selectClient(store).pipe(map(client => {
+            if (client == null) {
+                throw new Error('client is not authorized');
+            }
+        }));
+    }
+
     static selectClientRole(store: Store) {
         return this.selectClient(store).pipe(map(
             client => client == null ? UserRole.Guest : client.role
@@ -83,7 +91,8 @@ export class AuthState implements NgxsOnInit {
     @Action(SignIn)
     signIn({getState, setState}: StateCtx, action: SignIn) {
         getState().ensureCanAuthOrFail();
-        return this.fetchClient(setState, this.auth.signIn(action));
+        return this
+            .fetchClient(setState, this.auth.signIn(action));
     }
 
     @Action(SignUp)

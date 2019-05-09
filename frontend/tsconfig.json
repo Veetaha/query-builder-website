@@ -9,6 +9,7 @@
         "@common/*":  [ "../../../common/*" ],
         "@app/*":     [ "./*" ]
     },
+    "resolveJsonModule": true,
     "sourceMap": true,
     "module": "esnext",
     "moduleResolution": "node",

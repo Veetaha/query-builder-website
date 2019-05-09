@@ -19,26 +19,29 @@ export class PaginationComponent implements OnInit {
     offset$!: Observable<number>;
     total$!:  Observable<Nullable<number>>;
 
-    @Input('state') PaginationState!: PaginationStateClass;
+    @Input() state!: PaginationStateClass;
+    @Input() filterKeys!: string[];
+    @Input() sortKeys!:   string[];
+
 
     constructor(private readonly store: Store) {
 
     }
 
     updateLimitAndOffset(limit: number, offset: number) {
-        this.store.dispatch(new this.PaginationState.actions.UpdateLimitAndOffset({
+        this.store.dispatch(new this.state.actions.patchInput({
             limit,
             offset
         }));
     }
 
     ngOnInit() {
-        this.limit$  = this.store.select(this.PaginationState.limit);
-        this.offset$ = this.store.select(this.PaginationState.offset);
-        this.total$  = this.store.select(this.PaginationState.currentTotal);
+        this.limit$  = this.store.select(this.state.limit);
+        this.offset$ = this.store.select(this.state.offset);
+        this.total$  = this.store.select(this.state.total);
 
-        if (this.store.selectSnapshot(this.PaginationState.currentPage) == null) {
-            this.store.dispatch(this.PaginationState.actions.UpdateCurrentPage.instance);
+        if (this.store.selectSnapshot(this.state.items) == null) {
+            this.store.dispatch(this.state.actions.fetchPage.instance);
         }
     }
 

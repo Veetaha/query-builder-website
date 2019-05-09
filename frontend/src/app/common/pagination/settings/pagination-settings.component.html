@@ -1,51 +1,53 @@
 <form
     [formGroup]="form"
-    [ngxsForm]="getNgxsFormName()"
-    (ngSubmit)="updateCurrentPageImmediate()"
+    (ngSubmit)="fetchPage();"
+    class="p-grid"
 >
-    <fieldset *ngIf="form.get('filter') != null" 
+    <div
         formGroupName="filter"
-        class="ui-inputgroup"
+        class="p-col-8"
     >
-        <button 
-            type="submit" 
-            label="Search"
-            pButton 
-        ></button>
-        <input 
-            placeholder="Type here to search..."
-            (keyup)="updateCurrentPageDebounced()"
-            (keyup.enter)="updateCurrentPageImmediate()"
-            type="text" 
-            formControlName="value"
-            pInputText
-        >  
-        <p-dropdown 
-            [options]="filterOptions" 
-            formControlName="key"
-            placeholder="Filter by {{filterOptions[0].label}}"
-            optionLabel="label"
-        ></p-dropdown>       
-    </fieldset>
-    <fieldset *ngIf="form.get('sort') != null"
+        <div class="ui-inputgroup">
+            <button 
+                type="submit" 
+                label="Search"
+                class="ui-button-raised ui-button-primary"
+                icon="pi pi-search"
+                pButton
+            ></button>
+            <input 
+                [formControl]="searchQuery"
+                placeholder="Type here to search..."
+                type="text"
+                pInputText
+            >  
+            <p-dropdown 
+                [options]="filterOptions"
+                formControlName="key"
+                placeholder="Select filter key"
+                optionLabel="label"
+            ></p-dropdown>       
+        </div>
+    </div>
+    <div 
         formGroupName="sort"
+        class="p-col-4 p-grid p-align-right"
     > 
-        <p-dropdown
-            [options]="sortOptions"
-            formControlName="key"
-            placeholder="Sort by {{sortOptions[0].label}}"
-            optionLabel="label"
-        ></p-dropdown>
-        
-        <label>
-            Order: 
-            <p-toggleButton
-                onLabel="Ascending"
-                offLabel="Descending"
-                onIcon="pi pi-sort-up"
-                offIcon="pi pi-sort-down"
-                formControlName="isAscendingOrder"
-            ></p-toggleButton>
-        </label>
-    </fieldset>
+        <div class="p-col">
+            <p-dropdown
+                [options]="sortOptions"
+                formControlName="key"
+                placeholder="Select sort key"
+                optionLabel="label"
+            ></p-dropdown>
+        </div>
+        <p-toggleButton
+            class="p-col"
+            onLabel="Ascending"
+            offLabel="Descending"
+            offIcon="pi pi-sort-down"
+            onIcon="pi pi-sort-up"
+            formControlName="isAscendingOrder"
+        ></p-toggleButton>
+    </div>
 </form>

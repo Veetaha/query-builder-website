@@ -1,11 +1,14 @@
 import { Injectable       } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { GraphQLDatabaseLoader } from 'typeorm-loader';
+import { GraphQLResolveInfo    } from 'graphql';
 
 import { OrmUtilsService } from '@utils/orm/orm-utils.service';
 
 import { RatingRepo            } from './rating.repository';
 import { Rating                } from './rating.entity';
 import { RatingPaginationInput } from './gql/rating-pagination.input';
+
 
 
 
@@ -25,6 +28,18 @@ export class RatingService {
      */
     async getPage(pageInput: RatingPaginationInput) {
         return this.orm.getPage(this.repo, pageInput);
+    }
+
+    /**
+     * Loads rating by the given primary keys or `null` if nothig was found. 
+     */
+    async loadOne(
+        loader:     GraphQLDatabaseLoader,
+        info:       GraphQLResolveInfo,
+        raterLogin: string,
+        proposalId: number
+    ) {
+        return loader.loadOne<Rating>(Rating, { raterLogin, proposalId }, info);
     }
 
     /**
