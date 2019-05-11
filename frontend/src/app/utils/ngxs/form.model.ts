@@ -1,4 +1,4 @@
-import { Obj } from '@app/interfaces';
+import { Obj, DeepReadonly } from '@app/interfaces';
 
 export const enum NgxsFormValidityState {
     /**
@@ -20,8 +20,8 @@ export const enum NgxsFormValidityState {
 }
 
 export interface NgxsFormStateModel<TInputControlsModel extends Obj = Obj> {
-    model:  TInputControlsModel;
-    dirty:  boolean;
-    status: NgxsFormValidityState;
-    errors: {};
+    readonly model:  DeepReadonly<TInputControlsModel>;
+    readonly dirty:  boolean;
+    readonly status: NgxsFormValidityState;
+    readonly errors: Obj;
 } 

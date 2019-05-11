@@ -18,9 +18,10 @@ type NgxsModuleOptions = NonNullable<Parameters<(typeof NgxsModule)['forRoot']>[
 
 @Injectable({ providedIn: 'root' })
 export class ConfigService {
-    
 
     static readonly isDevelopmentMode = isDevelopmentMode;
+    
+    readonly uploadcarePublicApiKey = '93d19e223c7ee0f0581a';
     
     private readonly httpLinkHandler: HttpLinkHandler;
     

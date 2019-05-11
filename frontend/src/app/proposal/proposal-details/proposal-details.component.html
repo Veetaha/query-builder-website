@@ -18,14 +18,14 @@
         <p-button
             [label]="proposal.likes.toString()"
             [styleClass]="getRatingButtonClasses(proposal.myRating, true)"
-            [disabled]="shouldDisableRatingButton(proposal.myRating, true)"
+            [disabled]="client == null"
             (onClick)="rateProposal(true)"
             icon="far fa-thumbs-up"
         ></p-button>
         <p-button
             [label]="proposal.dislikes.toString()"
             [styleClass]="getRatingButtonClasses(proposal.myRating, false)"
-            [disabled]="shouldDisableRatingButton(proposal.myRating, false)"
+            [disabled]="client == null"
             (onClick)="rateProposal(false)"
             icon="far fa-thumbs-down"
         ></p-button>

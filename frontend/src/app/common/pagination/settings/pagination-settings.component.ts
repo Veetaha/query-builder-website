@@ -108,7 +108,7 @@ export class PaginationSettingsComponent extends Disposable implements OnInit {
         this.form = new FormGroup({
             filter: new FormGroup({ key: new FormControl }),
             sort: new FormGroup({
-                isAscendingOrder:  new FormControl(true),
+                isAscendingOrder:  new FormControl(false),
                 key:               new FormControl
             })
         });
@@ -120,5 +120,8 @@ export class PaginationSettingsComponent extends Disposable implements OnInit {
         this.initDebounceMethod();
         this.initFormControlls();
         this.initSubscriptions();
+        if (this.store.selectSnapshot(this.state.items) == null) {
+            this.fetchPage();
+        }
     }
 }

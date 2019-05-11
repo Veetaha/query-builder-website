@@ -8,9 +8,7 @@ import { SignInComponent } from './sign-in/sign-in.component';
 import { AuthGuard       } from './auth.guard';
 import { allow           } from './user-role-limit.obj';
 
-
 const canActivate = [AuthGuard];
-
 
 const { routeMap, routes } = RouteMap.create([
     {

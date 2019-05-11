@@ -27,7 +27,12 @@ export class ProposalDetailsComponent implements OnInit {
     }
 
     rateProposal(liked: boolean) {
-        this.store.dispatch(new RateProposal(liked));
+        const proposalRating = this.store.selectSnapshot(
+            ProposalDetailsState.clientProposalRating
+        );
+        if (proposalRating == null || proposalRating.liked !== liked) {
+            this.store.dispatch(new RateProposal(liked));
+        }
     }
 
     getRatingButtonClasses(rating: Nullable<Rating>, isLikeButton: boolean){

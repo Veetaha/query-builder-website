@@ -12,6 +12,9 @@ import { ProgressBarModule     } from 'primeng/progressbar';
 import { PanelModule           } from 'primeng/panel';
 import { ToastModule           } from 'primeng/toast';
 import { CardModule            } from 'primeng/card';
+import { InputTextModule       } from 'primeng/inputtext';
+import { InputTextareaModule   } from 'primeng/inputtextarea';
+import { InputSwitchModule     } from 'primeng/inputswitch';
 
 @NgModule({
     exports: [
@@ -26,7 +29,10 @@ import { CardModule            } from 'primeng/card';
         ProgressBarModule,
         PanelModule,
         ToastModule,
-        CardModule
+        CardModule,
+        InputTextModule,
+        InputTextareaModule,
+        InputSwitchModule
     ]
 })
 export class CommonPrimeNgModule { }

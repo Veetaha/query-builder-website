@@ -16,6 +16,7 @@ export class AuthTokenInterceptor implements HttpInterceptor {
 
     constructor(private readonly store: Store) {}
 
+    // TODO filter only requests to the native host domain
     intercept(req: HttpRequest<unknown>, next: HttpHandler) {
         this.store.dispatch(new AwaitResponse(true));
 

@@ -1,7 +1,9 @@
-import { createPayloadedAction } from '@utils/ngxs/create-payloaded-action';
-
-import { ProposalUpdateInput } from '@app/gql/generated';
 import { RemoveKeys } from 'ts-typedefs';
+import { Navigate } from '@ngxs/router-plugin';
+
+import { createPayloadedAction } from '@utils/ngxs/create-payloaded-action';
+import { ProposalUpdateInput   } from '@app/gql/generated';
+
 
 export class FetchProposal {
     static readonly type = '[ProposalDetail] FetchProposal';
@@ -17,3 +19,9 @@ export const UpdateProposal = createPayloadedAction<RemoveKeys<ProposalUpdateInp
     '[ProposalDetail] UpdateProposal'
 );
 export type UpdateProposal = InstanceType<typeof UpdateProposal>;
+
+export class OpenProposalDetailsPage extends Navigate {
+    constructor(proposalId: number) {
+        super([`proposals`, proposalId]);
+    }
+}

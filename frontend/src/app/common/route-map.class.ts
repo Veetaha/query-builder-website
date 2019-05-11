@@ -1,5 +1,7 @@
 import _ from 'lodash';
+
 import { RouteArray, RouteMapObj } from './route-map.interface';
+
 
 export interface RouteMapAndArray<TPaths extends string> {
     routeMap: RouteMap<TPaths>;

@@ -1,0 +1,44 @@
+<form 
+    [formGroup]="form" 
+    ngxsForm="createProposal.form"
+    (ngSubmit)="submitForm()"
+>
+    <label class="ui-float-label">
+        Name
+        <input 
+            formControlName="name"
+            type="text"
+            pInputText
+        />
+    </label>
+    <label>
+        Main picture:
+        <app-upload-file formControlName="mainPictureUrl"></app-upload-file>
+    </label>
+    <label class="ui-float-label">
+        Intro text
+        <textarea
+            formControlName="introText"
+            rows="5"
+            cols="100"
+            pInputTextarea
+        ></textarea>
+    </label>
+    <label class=ui-float-label>
+        Body text
+        <textarea
+            formControlName="bodyText"
+            rows="30"
+            cols="100"
+            pInputTextarea
+        ></textarea>
+    </label>
+    <label>
+        Openned: <p-inputSwitch formControlName="isOpenned"></p-inputSwitch>
+    </label>
+    <p-button 
+        [disabled]="form.invalid"
+        label="Submit" 
+        type="submit"
+    ></p-button>
+</form>

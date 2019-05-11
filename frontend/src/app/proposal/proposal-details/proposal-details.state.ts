@@ -13,10 +13,6 @@ import { ProposalDetailsModel as StateModel } from './proposal-details.model';
 import { FetchProposal, RateProposal, UpdateProposal } from './proposal-details.actions';
 import { EntireProposal } from '../interfaces';
 
-
-
-
-
 type StateCtx = StateContext<StateModel>;
 
 @State<StateModel>({
@@ -34,8 +30,10 @@ export class ProposalDetailsState {
         private readonly proposals: ProposalService
     ) {}
 
+    @Selector() static clientProposalRating(s: StateModel) {
+        return s.proposal == null ? null : s.proposal.myRating;
+    }
     @Selector() static proposal(s: StateModel) { return s.proposal; } 
-
 
     @Action(FetchProposal)
     async fetchProposal(ctx: StateCtx, { proposalId }: FetchProposal) {
@@ -60,8 +58,8 @@ export class ProposalDetailsState {
             await this.proposals.rateProposal({ proposalId: id, liked}).toPromise();
 
             this.setNewLikes(ctx, { liked });
-            ctx.patchState({ 
-                proposal: { ...ctx.getState().proposal!, myRating: { liked } }
+            ctx.patchState({  
+                proposal: { ...ctx.getState().proposal!, myRating: { liked } } 
             });
         });
     }
@@ -80,17 +78,16 @@ export class ProposalDetailsState {
 
     private swapLikeAndDislike(ctx: StateCtx, shouldSetLike: boolean) {
         const state = ctx.getState();
+        const incr  = shouldSetLike ? +1 : -1;
         ctx.setState(produce(state, draft => { 
-            draft.proposal!.likes    += shouldSetLike ? +1 : -1;
-            draft.proposal!.dislikes += shouldSetLike ? -1 : +1;
+            draft.proposal!.likes    += incr;
+            draft.proposal!.dislikes -= incr;
         }));
     }
 
     private changeLikes(ctx: StateCtx, isLikes: boolean, shouldIncrement: boolean) {
         ctx.setState(produce(ctx.getState(), draft => {
-            draft.proposal![isLikes ? 'likes' : 'dislikes'] += (
-                shouldIncrement ? +1 : -1
-            );
+            draft.proposal![isLikes ? 'likes' : 'dislikes'] += shouldIncrement ? +1 : -1;
         }));
     }
 

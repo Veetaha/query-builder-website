@@ -524,6 +524,14 @@ export type UpdateProposalMutation = { __typename?: "Mutation" } & {
     updateProposal: { __typename?: "Proposal" } & EntireProposalFragment;
 };
 
+export type CreateProposalMutationVariables = {
+    params: ProposalCreateInput;
+};
+
+export type CreateProposalMutation = { __typename?: "Mutation" } & {
+    createProposal: { __typename?: "Proposal" } & Pick<Proposal, "id">;
+};
+
 export type GetUsersPageQueryVariables = {
     params: UserPaginationInput;
 };
@@ -727,6 +735,23 @@ export class UpdateProposalGQL extends Apollo.Mutation<
     UpdateProposalMutationVariables
 > {
     document = UpdateProposalDocument;
+}
+export const CreateProposalDocument = gql`
+    mutation createProposal($params: ProposalCreateInput!) {
+        createProposal(params: $params) {
+            id
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root"
+})
+export class CreateProposalGQL extends Apollo.Mutation<
+    CreateProposalMutation,
+    CreateProposalMutationVariables
+> {
+    document = CreateProposalDocument;
 }
 export const GetUsersPageDocument = gql`
     query getUsersPage($params: UserPaginationInput!) {

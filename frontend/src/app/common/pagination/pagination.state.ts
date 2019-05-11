@@ -58,7 +58,7 @@ export function createPaginationState
         ) {}
         
         @Action(PaginationState.actions.patchInput)
-        updateLimitAndOffset(ctx: StateCtx, patch: PatchInput) {
+        patchInput(ctx: StateCtx, patch: PatchInput) {
             ctx.patchState({ 
                 input: { 
                     ...ctx.getState().input, 

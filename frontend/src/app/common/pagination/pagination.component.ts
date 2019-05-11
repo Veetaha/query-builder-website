@@ -39,10 +39,6 @@ export class PaginationComponent implements OnInit {
         this.limit$  = this.store.select(this.state.limit);
         this.offset$ = this.store.select(this.state.offset);
         this.total$  = this.store.select(this.state.total);
-
-        if (this.store.selectSnapshot(this.state.items) == null) {
-            this.store.dispatch(this.state.actions.fetchPage.instance);
-        }
     }
 
 }

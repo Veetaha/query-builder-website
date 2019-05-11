@@ -56,3 +56,9 @@ mutation rateProposal($proposalId: Int!, $liked: Boolean!) {
 mutation updateProposal($params: ProposalUpdateInput!) {
     updateProposal(params: $params) { ...EntireProposal }
 }
+
+mutation createProposal($params: ProposalCreateInput!) {
+    createProposal(params: $params) {
+        id
+    }
+}
