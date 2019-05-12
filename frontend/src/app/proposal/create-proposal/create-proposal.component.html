@@ -3,39 +3,45 @@
     ngxsForm="createProposal.form"
     (ngSubmit)="submitForm()"
 >
-    <label class="ui-float-label">
-        Name
+    <span class="ui-float-label">
         <input 
-            formControlName="name"
+            id="name"
             type="text"
+            formControlName="name"
             pInputText
         />
-    </label>
+        <label for="name">Name</label>
+    </span>
     <label>
         Main picture:
         <app-upload-file formControlName="mainPictureUrl"></app-upload-file>
     </label>
-    <label class="ui-float-label">
-        Intro text
+    <span class="ui-float-label">
         <textarea
+            id="introText"
             formControlName="introText"
             rows="5"
             cols="100"
             pInputTextarea
         ></textarea>
-    </label>
-    <label class=ui-float-label>
-        Body text
+        <label for="introText">Intro text</label>
+    </span>
+    <span class=ui-float-label>
         <textarea
+            id="body-text"
             formControlName="bodyText"
             rows="30"
             cols="100"
             pInputTextarea
         ></textarea>
+        <label for="body-text">Body text</label>
+    </span>
+
+    <label for="is-openned">
+        Openned: 
     </label>
-    <label>
-        Openned: <p-inputSwitch formControlName="isOpenned"></p-inputSwitch>
-    </label>
+    <p-inputSwitch inputId="is-openned" formControlName="isOpenned"></p-inputSwitch>
+    <br/>
     <p-button 
         [disabled]="form.invalid"
         label="Submit" 

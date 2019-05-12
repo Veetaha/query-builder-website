@@ -1,19 +1,22 @@
 import { NgModule       } from '@angular/core';
 import { BrowserModule  } from '@angular/platform-browser';
-import { MarkdownModule } from 'ngx-markdown';
 import { UcWidgetModule } from 'ngx-uploadcare-widget';
+import { MessageService } from 'primeng/api';
 
 import { VeeModule     } from '@utils/vee/vee.module';
 import { GraphQLModule } from '@app/gql/gql.module';
 
-import { CommonNgxsModule    } from './common-ngxs.module';
-import { CommonPrimeNgModule } from './common-prime-ng.module';
-import { PaginationComponent } from './pagination/pagination.component';
-import { UploadFileComponent } from './upload-file/upload-file.component';
+import { CommonMarkdownModule } from './common-markdown.module';
+import { CommonNgxsModule     } from './common-ngxs.module';
+import { CommonPrimeNgModule  } from './common-prime-ng.module';
+
+import { PaginationComponent     } from './pagination/pagination.component';
+import { UploadFileComponent     } from './upload-file/upload-file.component';
+import { MarkdownEditorComponent } from './markdown-editor/markdown-editor.component';
 
 import { PaginationSettingsComponent } 
 from './pagination/settings/pagination-settings.component';
-import { MessageService } from 'primeng/api';
+
 
 
 const reexports = [
@@ -22,28 +25,29 @@ const reexports = [
     GraphQLModule,
     CommonNgxsModule,   
     CommonPrimeNgModule,
-    UcWidgetModule
+    UcWidgetModule,
+    CommonMarkdownModule
 ];
 
 @NgModule({
     imports: [
-        ...reexports,
-        MarkdownModule.forRoot()
+        ...reexports
     ],
     declarations: [
         PaginationComponent,
         PaginationSettingsComponent,
-        UploadFileComponent
+        UploadFileComponent,
+        MarkdownEditorComponent
     ],
     providers: [
         MessageService  
     ],
     exports: [
         ...reexports,
-        MarkdownModule,
         PaginationComponent,
         PaginationSettingsComponent,
-        UploadFileComponent
+        UploadFileComponent,
+        MarkdownEditorComponent
     ]
 })
 export class CommonModule { }

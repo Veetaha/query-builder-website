@@ -1,9 +1,14 @@
 <ng-container *veeLet="proposal$ | async as proposal">
+<ng-container *ngIf="proposal != null">
 <ng-container *veeLet="client$ | async as client">
+<ng-container *veeLet="canClientUpdateProposal(client, proposal.creator.login) as isUpdateEnabled">
 
 <p-card>
     <p-header>
-        {{proposal.name}}
+        <app-proposal-details-header
+            [proposalName]="proposal.name"
+            [isUpdateEnabled]="isUpdateEnabled"
+        ></app-proposal-details-header>
     </p-header>
     <article>
         <figure>
@@ -12,7 +17,13 @@
                 class="main-picture"
             />
         </figure>
-        <markdown [data]="proposal.bodyText"></markdown>
+        <p-card>
+            <markdown [data]="proposal.introText"></markdown>
+        </p-card>
+        <app-proposal-details-body-text
+            [proposalBodyText]="proposal.bodyText"
+            [isUpdateEnabled]="isUpdateEnabled"
+        ></app-proposal-details-body-text>
     </article>
     <p-footer>
         <p-button
@@ -32,6 +43,8 @@
     </p-footer>
 </p-card>
 
+</ng-container>
+</ng-container>
 </ng-container>
 </ng-container>
 

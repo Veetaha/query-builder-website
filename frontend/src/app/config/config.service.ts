@@ -1,5 +1,7 @@
-import { Injectable } from '@angular/core';
-import { Message    } from 'primeng/api';
+import { Injectable      } from '@angular/core';
+import { Message         } from 'primeng/api';
+import { EditorOption    } from 'angular-markdown-editor';
+import { MarkdownService } from 'ngx-markdown';
 
 import { ApolloClientOptions } from 'apollo-client';
 import { InMemoryCache       } from 'apollo-cache-inmemory';
@@ -29,8 +31,17 @@ export class ConfigService {
         life: 8000
     };
 
-    constructor(httpLink: HttpLink) {
+    readonly markdownEditorOptions: EditorOption;
+    
+
+    constructor(
+        httpLink: HttpLink, 
+        markdown: MarkdownService
+    ) {
         this.httpLinkHandler = httpLink.create({ uri: '/gql' });
+        this.markdownEditorOptions = {
+            parser: input => markdown.compile(input.trim())
+        };
     }
 
     static createNgxsLoggerPluginOptions(): NgxsLoggerPluginOptions {

@@ -2,11 +2,12 @@ import { Nullable } from 'ts-typedefs';
 import { Store    } from '@ngxs/store';
 import { Component, OnInit } from '@angular/core';
 
-import { Rating    } from '@app/gql/generated';
+import { Rating, UserRole    } from '@app/gql/generated';
 import { AuthState } from '@app/auth/auth.state';
 
 import { ProposalDetailsState } from './proposal-details.state';
 import { RateProposal } from './proposal-details.actions';
+import { Client } from '@app/auth/interfaces';
 
 
 
@@ -47,4 +48,9 @@ export class ProposalDetailsComponent implements OnInit {
         return rating != null && rating.liked === isLikeButton;
     }
 
+    canClientUpdateProposal(client: Nullable<Client>, proposalCreatorLogin: string) {
+        return client != null && (
+            client.login === proposalCreatorLogin || client.role === UserRole.Admin
+        );
+    }
 }

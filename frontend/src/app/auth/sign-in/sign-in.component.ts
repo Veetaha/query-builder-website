@@ -19,6 +19,8 @@ import { AuthState } from '../auth.state';
 export class SignInComponent {
     constructor(private readonly store: Store) { }
 
+    readonly isFetchingClient$ = this.store.select(AuthState.isFetchingClient);
+
     readonly limits = limits;
     readonly form = new FormGroup({
         login:    new FormControl(''),

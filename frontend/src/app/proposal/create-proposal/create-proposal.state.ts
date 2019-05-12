@@ -23,9 +23,10 @@ export class CreateProposalState {
     submitCreatedProposal(ctx: StateCtx) {
         return this.proposals
             .createProposal(ctx.getState().form.model)
-            .pipe(tap(proposalId => this.store.dispatch(
-                new OpenProposalDetailsPage(proposalId)
-            )));
+            .pipe(tap(proposalId => {
+                this.store.dispatch(new OpenProposalDetailsPage(proposalId));
+                // TODO clear state afterwards
+            }));
     }
 
 }

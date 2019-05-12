@@ -13,7 +13,7 @@ export class SnackBarService {
         private readonly config: ConfigService
     ) {}
 
-    addSnackBar(message: Message) {
+    private addSnackBar(message: Message) {
         return this.toasts.add({ ...this.config.defaultToastOptions, ...message });
     }
 

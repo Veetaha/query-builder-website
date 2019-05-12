@@ -9,7 +9,6 @@ import { HomeComponent      } from './home/home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProposalModule     } from './proposal/proposal.module';
 
-
 @NgModule({
     imports: [   
         CommonModule,

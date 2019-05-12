@@ -1,8 +1,6 @@
-<ng-container *veeLet="{
-    client:              client$ | async,
-    isAwaitingResponses: isAwaitingResponses$ | async
-} as state
-">
+<ng-container *veeLet="client$ | async as client">
+<ng-container *veeLet="isAwaitingResponses$ | async as isAwaitingResponses">
+
 <div class="p-grid p-nogutter">
     <p-toolbar class="p-col-12">
         <p-button 
@@ -17,10 +15,15 @@
             styleClass="ui-button-raised ui-button-primary"
         ></p-button>
 
+        <p-button *appIfClientRole="proposalsRouteMap.getRoleLimitFor('proposals/create')"
+            routerLink="proposals/create"
+            label="Create proposal"
+            styleClass="ui-button-raised ui-button-success"
+        ></p-button>
 
-        <p-button *appIfClientRole="routeMap.getRoleLimitFor('sign-in'); else elseForNotGuest"
-            label="Sign in"
+        <p-button *appIfClientRole="authRouteMap.getRoleLimitFor('sign-in'); else elseForNotGuest"
             routerLink="/sign-in"
+            label="Sign in"
             styleClass="ui-button-raised ui-button-primary"
         ></p-button>
         <ng-template #elseForNotGuest>
@@ -30,14 +33,18 @@
                 styleClass="ui-button-raised ui-button-warning"
             ></p-button>
         </ng-template>
+
     </p-toolbar>
     <p-progressBar
-        [mode]="state.isAwaitingResponses ? 'indeterminate' : 'determinate'"
+        [mode]="isAwaitingResponses ? 'indeterminate' : 'determinate'"
         [showValue]="false"
         class="p-col-12"
-        styleClass="progress-bar"
+        styleClass="inner-progress-bar"
         value="100"
     >
     </p-progressBar>
 </div>
+
+
+</ng-container>
 </ng-container>

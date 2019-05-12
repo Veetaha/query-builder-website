@@ -1,0 +1,34 @@
+<ng-container *ngIf="!isEditState(); else elseEditState">
+    
+    <h1 class="name">{{proposalName}}</h1>
+    <p-button *ngIf="isUpdateEnabled"
+        (onClick)="setEditState()"
+        icon="fas fa-pen"
+        label="Edit"
+        styleClass="ui-button-raised ui-button-primary"
+    ></p-button>
+
+</ng-container>
+<ng-template #elseEditState>
+    <div class="ui-inputgroup">
+        <input 
+            [formControl]="nameFC"
+            type="text"
+            pInputText
+        />
+        <p-button
+            [disabled]="nameFC!.invalid"
+            (onClick)="submitUpdate()"
+            class="ui-inputgroup-addon"
+            icon="fas fa-save"
+            label="Save"
+            styleClass="ui-button-flat ui-button-success"
+        ></p-button>
+        <p-button
+            (onClick)="cancelUpdate()"
+            class="ui-inputgroup-addon"
+            label="Cancel"
+            styleClass="ui-button-flat ui-button-secondary"
+        ></p-button>
+    </div>    
+</ng-template>

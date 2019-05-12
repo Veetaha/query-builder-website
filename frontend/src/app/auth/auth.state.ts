@@ -6,6 +6,8 @@ import { State, Selector, StateContext, Action, NgxsOnInit, UpdateState, Store }
 
 import { UserRole } from '@app/gql/generated';
 import { Nullable } from '@app/interfaces';
+import { Warning  } from '@app/error/error.actions';
+import { Success, Info } from '@app/common/common.actions';
 
 import { LoggingService } from '@utils/logging.service';
 
@@ -29,8 +31,9 @@ type StateCtx = StateContext<StateModel>;
 })
 export class AuthState implements NgxsOnInit {
     constructor(
-        private readonly auth:  AuthService,
-        private readonly log:   LoggingService
+        private readonly store:     Store,
+        private readonly auth:      AuthService,
+        private readonly log:       LoggingService
     ) {}
 
     static selectEnsureClientIsAuthorizedOrFail(store: Store) {
@@ -91,20 +94,48 @@ export class AuthState implements NgxsOnInit {
     @Action(SignIn)
     signIn({getState, setState}: StateCtx, action: SignIn) {
         getState().ensureCanAuthOrFail();
-        return this
-            .fetchClient(setState, this.auth.signIn(action));
+        return this.fetchClient(setState, this.auth.signIn(action))
+            .pipe(tap((res) => {
+                if (res == null) {
+                    this.store.dispatch(new Warning(
+                        `Failed to sign in, probably invalid credentials.`
+                    ));
+                } else {
+                    this.store.dispatch(new Success(
+                        `Signed in under name '${res.client.name}'`,
+                        'Successfully signed in'
+                    ));
+                }
+            }));
     }
 
     @Action(SignUp)
     signUp({setState, getState}: StateCtx, action: SignUp) {
         getState().ensureCanAuthOrFail();
-        return this.fetchClient(setState, this.auth.signUp(action));
+        return this.fetchClient(setState, this.auth.signUp(action))
+            .pipe(tap((res) => {
+                if (res == null) {
+                    this.store.dispatch(new Warning(
+                        `Failed to sign up, login '${action.credentials.login
+                        }' is probably already taken.`
+                    ));
+                } else {
+                    this.store.dispatch(new Success(
+                        `Signed up under name '${res.client.name}'`,
+                        'Successfully signed up'
+                    ));
+                }
+            }));
     }
 
     @Action(SignOut)
     signOut({getState, setState}: StateCtx) {
         getState().ensureCanSignOutOrFail();
         setState(StableUnAuthSnap.instance);
+        this.store.dispatch(new Info(
+            `Sign in again to get access to your account.`, 
+            'You are signed out'
+        ));
     }
 
 

@@ -23,5 +23,5 @@ export interface NgxsFormStateModel<TInputControlsModel extends Obj = Obj> {
     readonly model:  DeepReadonly<TInputControlsModel>;
     readonly dirty:  boolean;
     readonly status: NgxsFormValidityState;
-    readonly errors: Obj;
+    readonly errors?: Obj;
 } 

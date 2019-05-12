@@ -33,11 +33,11 @@ export class ProposalDetailsState {
     @Selector() static clientProposalRating(s: StateModel) {
         return s.proposal == null ? null : s.proposal.myRating;
     }
-    @Selector() static proposal(s: StateModel) { return s.proposal; } 
+    @Selector() static proposal(s: StateModel) { return s.proposal; }
 
     @Action(FetchProposal)
     async fetchProposal(ctx: StateCtx, { proposalId }: FetchProposal) {
-        await this.runExclusive(async () => ctx.setState({
+        await this.runExclusive(async () => ctx.patchState({
             proposal: await this.proposals.getProposalById(proposalId).toPromise()
         }));
     }   
@@ -99,7 +99,7 @@ export class ProposalDetailsState {
             const updatedProposal = await this.proposals
                 .updateProposal({ ...update, id: ctx.getState().proposal!.id })
                 .toPromise();
-            ctx.setState({ proposal: updatedProposal });
+            ctx.patchState({ proposal: updatedProposal });
 
         });
     }

@@ -1,39 +1,48 @@
-<h1>Sign in component</h1>
+<ng-container *veeLet="isFetchingClient$ | async as isFetchingClient">
+
 <form
     [formGroup]="form"
     (ngSubmit)="submitForm()"
-    class="sign-in-form"
+    class="form"
     ngxsForm="signIn"
     
 >
-    <label>
-        Login: 
+    <span class="ui-float-label text-input">
         <input 
             [maxlength]="limits.user.login.max - 1"
             [minlength]="limits.user.login.min"
+            id="login"
+            class="text-input__element"
             formControlName="login" 
             type="text"
             required
+            pInputText
         />
-    </label>
-
-    <label>
-        Password: 
+        <label for="login">Login</label>
+    </span>
+    
+    <span class="ui-float-label text-input">
         <input 
             [maxlength]="limits.user.password.max - 1"
             [minlength]="limits.user.password.min"
+            id="password"
+            class="text-input__element"
             formControlName="password" 
             type="password"
             pPassword
             required
         />
-    </label>
+        <label for="password">Password</label>
+    </span>
 
     <button 
-        [disabled]="form.invalid"
-        class="submit-button" 
+        [disabled]="form.invalid || isFetchingClient"
+        class="submit-button"
         type="submit"
+        label="Sign in"
+        pButton
     >
-        Sign in
     </button>
 </form>
+
+</ng-container>
