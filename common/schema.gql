@@ -185,6 +185,7 @@ input ProposalCreateInput {
   name: String!
   introText: String!
   bodyText: String!
+  isOpenned: Boolean!
   mainPictureUrl: String
 }
 
