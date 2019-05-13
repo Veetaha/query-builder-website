@@ -142,7 +142,7 @@ type Mutation {
   Requires auth. Deletes the proposal by id and returns `true`, but throws  if
   propsal doesn't exist or client has no rights to mutate the proposal.
   """
-  deleteProposal(id: Float!): Boolean!
+  deleteProposal(id: Int!): Boolean!
 }
 
 type Proposal {

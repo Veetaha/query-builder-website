@@ -1,28 +1,36 @@
 import _ from 'lodash';
 import { Nullable } from 'ts-typedefs';
-import { Component, forwardRef } from '@angular/core';
+import { Component, ViewChild, forwardRef, Input } from '@angular/core';
+import { UcWidgetComponent, UcWidgetCustomComponent } from 'ngx-uploadcare-widget';
 
 import { ConfigService } from '@app/config/config.service';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
-
 export type FileUrlChangeHandler = (fileUrl: string) => void;
 
 @Component({
-    selector:    'app-upload-file',
-    templateUrl: './upload-file.component.html',
-    styleUrls:  ['./upload-file.component.scss'],
+    selector:    'app-upload-image',
+    templateUrl: './upload-image.component.html',
+    styleUrls:  ['./upload-image.component.scss'],
     providers: [{
         provide:     NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => UploadFileComponent),
+        useExisting: forwardRef(() => UploadImageComponent),
         multi:       true
     }]
 })
-export class UploadFileComponent implements ControlValueAccessor {
+export class UploadImageComponent implements ControlValueAccessor {
+
+    @Input() shouldDisplayButton!: boolean;
+    @ViewChild('ucWidget') ucWidget!: UcWidgetComponent | UcWidgetCustomComponent;
+
     fileUrl!: string;
     notifyFileUrlChanged: FileUrlChangeHandler = _.noop;
 
     constructor(readonly config: ConfigService) { }
+
+    openDialog() {
+        this.ucWidget.openDialog();
+    }
 
     onUploadComplete(fileUrl: string) {
         this.fileUrl = fileUrl;

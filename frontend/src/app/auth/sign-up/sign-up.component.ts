@@ -1,23 +1,22 @@
-import { Component  } from '@angular/core';
-import { Store      } from '@ngxs/store';
-import { FormGroup  } from '@angular/forms';
+import _ from 'lodash';
+import { Component } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { Store     } from '@ngxs/store';
 
-import { limits       } from '@common/constants';
 import { OpenHomePage } from '@app/app.actions';
+import { limits       } from '@common/constants';
 
-import { SubmitSignInForm } from './sign-in.actions';
 import { AuthState        } from '../auth.state';
 import { AuthFormService  } from '../auth-form.service';
-
-
+import { SubmitSignUpForm } from './sign-up.actions';
 
 
 @Component({
-  selector:    'app-sign-in',
-  templateUrl: './sign-in.component.html',
-  styleUrls:  ['./sign-in.component.scss']
+    selector:    'app-sign-up',
+    templateUrl: './sign-up.component.html',
+    styleUrls:  ['./sign-up.component.scss']
 })
-export class SignInComponent {
+export class SignUpComponent {
     readonly isFetchingClient$ = this.store.select(AuthState.isFetchingClient);
     readonly limits = limits;
     readonly form: FormGroup;
@@ -28,17 +27,19 @@ export class SignInComponent {
     ) { 
         this.form = new FormGroup({
             login:    authForms.createLoginFormControl(''),
-            password: authForms.createPasswordFormControl('')
+            password: authForms.createPasswordFormControl(''),
+            name:     authForms.createNameFormControl('')
         });
     }
 
     submitForm() {
         this.store
-            .dispatch(SubmitSignInForm.instance)
+            .dispatch(SubmitSignUpForm.instance)
             .subscribe(() => {
                 if (this.store.selectSnapshot(AuthState.clientSnap) != null) {
                     this.store.dispatch(OpenHomePage);
-                }
-            });
+                }   
+            }, _.noop);
     }
+
 }

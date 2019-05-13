@@ -17,8 +17,8 @@ from './proposal-details/proposal-details-header/proposal-details-header.compone
 import { ProposalDetailsMainPictureComponent }
 from './proposal-details/proposal-details-main-picture/proposal-details-main-picture.component';
 
-import { ProposalDetailsIntroComponent }
-from './proposal-details/proposal-details-intro/proposal-details-intro.component';
+import { ProposalDetailsIntroTextComponent }
+from './proposal-details/proposal-details-intro-text/proposal-details-intro-text.component';
 
 import { ProposalDetailsBodyTextComponent }
 from './proposal-details/proposal-details-body-text/proposal-details-body-text.component';
@@ -53,7 +53,7 @@ import { CreateProposalState  } from './create-proposal/create-proposal.state';
         CreateProposalComponent,
         ProposalDetailsHeaderComponent,
         ProposalDetailsMainPictureComponent,
-        ProposalDetailsIntroComponent,
+        ProposalDetailsIntroTextComponent,
         ProposalDetailsBodyTextComponent,
         ProposalDetailsRatingComponent
     ]

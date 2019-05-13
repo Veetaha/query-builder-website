@@ -11,15 +11,14 @@
         ></app-proposal-details-header>
     </p-header>
     <article>
-        <figure>
-            <img 
-                [src]="proposal.mainPictureUrl"
-                class="main-picture"
-            />
-        </figure>
-        <p-card>
-            <markdown [data]="proposal.introText"></markdown>
-        </p-card>
+        <app-proposal-details-main-picture
+            [proposalMainPictureUrl]="proposal.mainPictureUrl"
+            [isUpdateEnabled]="isUpdateEnabled"
+        ></app-proposal-details-main-picture>
+        <app-proposal-details-intro-text
+            [proposalIntroText]="proposal.introText"
+            [isUpdateEnabled]="isUpdateEnabled"
+        ></app-proposal-details-intro-text>
         <app-proposal-details-body-text
             [proposalBodyText]="proposal.bodyText"
             [isUpdateEnabled]="isUpdateEnabled"
@@ -40,6 +39,22 @@
             (onClick)="rateProposal(false)"
             icon="far fa-thumbs-down"
         ></p-button>
+        <ng-container *ngIf="isUpdateEnabled">
+            <p-confirmDialog 
+                header="AHTUNG!"
+                icon="pi pi-exclamation-triangle"
+            >
+            </p-confirmDialog>
+            <p-button 
+                (onClick)="tryDeleteProposal()"
+                label="Delete proposal"
+                styleClass="ui-button-flat ui-button-danger"
+                icon="fas fa-trash"
+            >
+            </p-button>
+        </ng-container>
+
+
     </p-footer>
 </p-card>
 

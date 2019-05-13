@@ -1,0 +1,10 @@
+.picture {
+    
+    max-width: 80vw;
+    max-height: 80vh;
+
+    &--updatable {
+        cursor: pointer;
+    }
+
+}

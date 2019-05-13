@@ -4,7 +4,7 @@ import { tap } from 'rxjs/operators';
 import { CreateProposalStateModel as StateModel } from './create-proposal.model';
 import { SubmitCreatedProposal   } from './create-proposal.actions';
 import { ProposalService         } from '../proposal.service';
-import { OpenProposalDetailsPage } from '../proposal-details/proposal-details.actions';
+import { OpenProposalDetailsPage } from '../proposal-routing.actions';
 
 
 type StateCtx = StateContext<StateModel>;

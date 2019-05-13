@@ -1,13 +1,14 @@
-import { Nullable } from 'ts-typedefs';
-import { Store    } from '@ngxs/store';
-import { Component, OnInit } from '@angular/core';
+import { Nullable  } from 'ts-typedefs';
+import { Store     } from '@ngxs/store';
+import { Component } from '@angular/core';
+import { ConfirmationService } from 'primeng/api';
 
-import { Rating, UserRole    } from '@app/gql/generated';
 import { AuthState } from '@app/auth/auth.state';
+import { Client    } from '@app/auth/interfaces';
+import { Rating, UserRole } from '@app/gql/generated';
 
 import { ProposalDetailsState } from './proposal-details.state';
-import { RateProposal } from './proposal-details.actions';
-import { Client } from '@app/auth/interfaces';
+import { RateProposal, DeleteProposal } from './proposal-details.actions';
 
 
 
@@ -16,15 +17,21 @@ import { Client } from '@app/auth/interfaces';
     templateUrl: './proposal-details.component.html',
     styleUrls:  ['./proposal-details.component.scss']
 })
-export class ProposalDetailsComponent implements OnInit {
+export class ProposalDetailsComponent {
 
     readonly proposal$ = this.store.select(ProposalDetailsState.proposal);
     readonly client$   = AuthState.selectClient(this.store);
         
-    constructor(private readonly store: Store) {}
+    constructor(
+        private readonly store: Store,
+        private readonly confirms: ConfirmationService
+    ) {}
 
-    ngOnInit() {
-        
+    tryDeleteProposal() {
+        this.confirms.confirm({
+            message: `Are you sure you want to delete this proposal?`,
+            accept: () => this.store.dispatch(DeleteProposal.instance)
+        });
     }
 
     rateProposal(liked: boolean) {

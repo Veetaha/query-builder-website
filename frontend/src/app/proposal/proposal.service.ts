@@ -17,7 +17,8 @@ export class ProposalService implements ProposalPaginationService {
         private readonly getProposalByIdGQL:  Gql.GetProposalByIdGQL,
         private readonly rateProposalGQL:     Gql.RateProposalGQL,
         private readonly updateProposalGQL:   Gql.UpdateProposalGQL,
-        private readonly createProposalGQL:   Gql.CreateProposalGQL
+        private readonly createProposalGQL:   Gql.CreateProposalGQL,
+        private readonly deleteProposalGQL:   Gql.DeleteProposalGQL
     ) {}
 
     getPage(params: Gql.ProposalPaginationInput) {
@@ -48,5 +49,11 @@ export class ProposalService implements ProposalPaginationService {
         return this.createProposalGQL
             .mutate({ params })
             .pipe(map(v => v.data!.createProposal.id));
+    }
+
+    deleteProposal(id: number) {
+        return this.deleteProposalGQL
+            .mutate({ id })
+            .pipe(map(v => v.data!.deleteProposal));
     }
 }

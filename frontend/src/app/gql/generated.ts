@@ -145,7 +145,7 @@ export type MutationUpdateProposalArgs = {
 };
 
 export type MutationDeleteProposalArgs = {
-    id: Scalars["Float"];
+    id: Scalars["Int"];
 };
 
 export type Proposal = {
@@ -177,6 +177,7 @@ export type ProposalCreateInput = {
     name: Scalars["String"];
     introText: Scalars["String"];
     bodyText: Scalars["String"];
+    isOpenned: Scalars["Boolean"];
     mainPictureUrl?: Maybe<Scalars["String"]>;
 };
 
@@ -532,6 +533,15 @@ export type CreateProposalMutation = { __typename?: "Mutation" } & {
     createProposal: { __typename?: "Proposal" } & Pick<Proposal, "id">;
 };
 
+export type DeleteProposalMutationVariables = {
+    id: Scalars["Int"];
+};
+
+export type DeleteProposalMutation = { __typename?: "Mutation" } & Pick<
+    Mutation,
+    "deleteProposal"
+>;
+
 export type GetUsersPageQueryVariables = {
     params: UserPaginationInput;
 };
@@ -752,6 +762,21 @@ export class CreateProposalGQL extends Apollo.Mutation<
     CreateProposalMutationVariables
 > {
     document = CreateProposalDocument;
+}
+export const DeleteProposalDocument = gql`
+    mutation deleteProposal($id: Int!) {
+        deleteProposal(id: $id)
+    }
+`;
+
+@Injectable({
+    providedIn: "root"
+})
+export class DeleteProposalGQL extends Apollo.Mutation<
+    DeleteProposalMutation,
+    DeleteProposalMutationVariables
+> {
+    document = DeleteProposalDocument;
 }
 export const GetUsersPageDocument = gql`
     query getUsersPage($params: UserPaginationInput!) {

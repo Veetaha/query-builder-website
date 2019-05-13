@@ -3,18 +3,27 @@ import { Injectable } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 
 import { limits } from '@common/constants';
+import { FormService } from '@utils/form.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProposalFormService {
 
+    constructor(private readonly forms: FormService) {}
+
     createNameFormControl(initialValue: string) {
-        return this.createTextFormControl(initialValue, 'name');
+        return this.forms.createRequiredTextFromControl(
+            initialValue, limits.proposal.name
+        );
     }
     createIntroTextFormControl(initialValue: string) {
-        return this.createTextFormControl(initialValue, 'introText');
+        return this.forms.createRequiredTextFromControl(
+            initialValue, limits.proposal.introText
+        );
     }
     createBodyTextFormControl(initialValue: string) {
-        return this.createTextFormControl(initialValue, 'bodyText');
+        return this.forms.createRequiredTextFromControl(
+            initialValue, limits.proposal.bodyText
+        );
     }
     createIsOpennedFormControl(initialValue: boolean) {
         return new FormControl(initialValue, [Validators.required]);
@@ -23,11 +32,5 @@ export class ProposalFormService {
         return new FormControl(initialValue);
     }
 
-    private createTextFormControl(initialValue: string, key: keyof typeof limits['proposal']) {
-        return new FormControl(initialValue, [
-            Validators.min(limits.proposal[key].min),
-            Validators.max(limits.proposal[key].max),
-            Validators.required
-        ]);
-    }
+
 }

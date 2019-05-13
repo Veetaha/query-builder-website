@@ -1,4 +1,4 @@
-import { tap, skip, map } from 'rxjs/operators';
+import { tap, skip, map, catchError } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 import { State, Selector, StateContext, Action, NgxsOnInit, UpdateState, Store } from '@ngxs/store';
@@ -75,26 +75,26 @@ export class AuthState implements NgxsOnInit {
     }
 
     @Action(UpdateState)
-    _ngxsOnInit({ getState, setState }: StateCtx): void | Observable<any> {
+    _ngxsOnInit(ctx: StateCtx): void | Observable<any> {
         
         this.log.warning('Using temporary workaround @Action(UpdateState) instead of ngxsOnInit()');
 
-        const { token } = getState();
+        const { token } = ctx.getState();
         if (token != null) {
-            setState(new FetchingClientStateSnap(token));
+            ctx.setState(new FetchingClientStateSnap(token));
             // you should subscribe to this observable when moving this code to ngxsOnInit()
             return this.auth.getMe().pipe(tap(
-                client => setState(new AuthSnap({ token, client }))
+                client => ctx.setState(new AuthSnap({ token, client }))
             ));
         } else {
-            setState(StableUnAuthSnap.instance);
+            ctx.setState(StableUnAuthSnap.instance);
         }
     }
 
     @Action(SignIn)
-    signIn({getState, setState}: StateCtx, action: SignIn) {
-        getState().ensureCanAuthOrFail();
-        return this.fetchClient(setState, this.auth.signIn(action))
+    signIn(ctx: StateCtx, action: SignIn) {
+        ctx.getState().ensureCanAuthOrFail();
+        return this.fetchClient(ctx, this.auth.signIn(action))
             .pipe(tap((res) => {
                 if (res == null) {
                     this.store.dispatch(new Warning(
@@ -110,28 +110,25 @@ export class AuthState implements NgxsOnInit {
     }
 
     @Action(SignUp)
-    signUp({setState, getState}: StateCtx, action: SignUp) {
-        getState().ensureCanAuthOrFail();
-        return this.fetchClient(setState, this.auth.signUp(action))
-            .pipe(tap((res) => {
-                if (res == null) {
-                    this.store.dispatch(new Warning(
-                        `Failed to sign up, login '${action.credentials.login
-                        }' is probably already taken.`
-                    ));
-                } else {
-                    this.store.dispatch(new Success(
-                        `Signed up under name '${res.client.name}'`,
-                        'Successfully signed up'
-                    ));
-                }
-            }));
+    signUp(ctx: StateCtx, action: SignUp) {
+        ctx.getState().ensureCanAuthOrFail();
+        return this.fetchClient(ctx, this.auth.signUp(action))
+            .pipe(
+                tap(res => this.store.dispatch(new Success(
+                    `Signed up under name '${res.client.name}'`,
+                    'Successfully signed up'
+                ))),
+                catchError(() => this.store.dispatch(new Warning(
+                    `Failed to sign up, login '${action.credentials.login
+                    }' is probably already taken.`
+                )))
+            );
     }
 
     @Action(SignOut)
-    signOut({getState, setState}: StateCtx) {
-        getState().ensureCanSignOutOrFail();
-        setState(StableUnAuthSnap.instance);
+    signOut(ctx: StateCtx) {
+        ctx.getState().ensureCanSignOutOrFail();
+        ctx.setState(StableUnAuthSnap.instance);
         this.store.dispatch(new Info(
             `Sign in again to get access to your account.`, 
             'You are signed out'
@@ -139,14 +136,20 @@ export class AuthState implements NgxsOnInit {
     }
 
 
-    private fetchClient(
-        setState:    StateCtx['setState'], 
-        userAndToken$: Observable<Nullable<ClientAndToken>>
+    private fetchClient<TClientAndToken extends Nullable<ClientAndToken>>(
+        ctx:           StateCtx, 
+        userAndToken$: Observable<TClientAndToken>
     ) {
-        setState(new FetchingClientSnap);
-        return userAndToken$.pipe(tap(res => setState(
-            res == null ? StableUnAuthSnap.instance : new AuthSnap(res)
-        )));
+        ctx.setState(new FetchingClientSnap);
+        return userAndToken$.pipe(
+            tap(res => ctx.setState(
+                res == null ? StableUnAuthSnap.instance : new AuthSnap(res!)
+            )),
+            catchError(err => { 
+                ctx.setState(StableUnAuthSnap.instance);
+                throw err;
+            })
+        );
     }
 
 }

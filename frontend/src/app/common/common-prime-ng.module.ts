@@ -15,6 +15,8 @@ import { CardModule            } from 'primeng/card';
 import { InputTextModule       } from 'primeng/inputtext';
 import { InputTextareaModule   } from 'primeng/inputtextarea';
 import { InputSwitchModule     } from 'primeng/inputswitch';
+import { ConfirmDialogModule   } from 'primeng/confirmdialog';
+import { DynamicDialogModule   } from 'primeng/dynamicdialog';
 
 @NgModule({
     exports: [
@@ -32,7 +34,9 @@ import { InputSwitchModule     } from 'primeng/inputswitch';
         CardModule,
         InputTextModule,
         InputTextareaModule,
-        InputSwitchModule
+        InputSwitchModule,
+        ConfirmDialogModule,
+        DynamicDialogModule
     ]
 })
 export class CommonPrimeNgModule { }

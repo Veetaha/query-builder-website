@@ -12,10 +12,11 @@
         />
         <label for="name">Name</label>
     </span>
-    <label>
-        Main picture:
-        <app-upload-file formControlName="mainPictureUrl"></app-upload-file>
-    </label>
+    <app-upload-image 
+        [shouldDisplayButton]="true"
+        formControlName="mainPictureUrl"
+    ></app-upload-image>
+    
     <span class="ui-float-label">
         <textarea
             id="introText"

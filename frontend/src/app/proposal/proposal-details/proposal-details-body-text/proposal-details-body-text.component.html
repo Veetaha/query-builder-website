@@ -1,41 +1,41 @@
 <p-card>
-    <markdown *ngIf="!isEditState(); else elseEditStateForMain"
-        [data]="proposalBodyText"
-    ></markdown>
-    <ng-template #elseEditStateForMain>
-        <app-markdown-editor 
-            [formControl]="bodyTextFC"
-            textareaId="editor"
-        ></app-markdown-editor>
-    </ng-template>
+<ng-container *ngIf="!isEditState(); else elseEditState">
 
 
+    <markdown [data]="proposalBodyText" ></markdown>
     <p-footer *ngIf="isUpdateEnabled">
-
-        <p-button *ngIf="!isEditState(); else elseEditStateForFooter"
+        <p-button
             (onClick)="setEditState()"
             icon="fas fa-pen"
             label="Edit"
             styleClass="ui-button-raised ui-button-primary"
         ></p-button>
-        <ng-template #elseEditStateForFooter>
-
-            <p-button
-                [disabled]="bodyTextFC!.invalid"
-                (onClick)="submitUpdate()"
-                icon="fas fa-save"
-                label="Save"
-                styleClass="ui-button-flat ui-button-success"
-            ></p-button>
-            <p-button
-                (onClick)="cancelUpdate()"
-                label="Cancel"
-                styleClass="ui-button-flat ui-button-secondary"
-            ></p-button>
-
-
-        </ng-template>
-
-
     </p-footer>
+
+
+</ng-container>
+<ng-template #elseEditState>
+
+
+    <app-markdown-editor 
+        [formControl]="getFormControl()"
+        textareaId="proposal-body-text-editor"
+    ></app-markdown-editor>
+    <p-footer>
+        <p-button
+            [disabled]="getFormControl()!.invalid"
+            (onClick)="submitEdits()"
+            icon="fas fa-save"
+            label="Save"
+            styleClass="ui-button-flat ui-button-success"
+        ></p-button>
+        <p-button
+            (onClick)="cancelEdits()"
+            label="Cancel"
+            styleClass="ui-button-flat ui-button-secondary"
+        ></p-button>
+    </p-footer>
+
+
+</ng-template>
 </p-card>

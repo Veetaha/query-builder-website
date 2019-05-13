@@ -1,0 +1,35 @@
+<ng-container *ngIf="!isEditState(); else elseEditState">
+
+    
+    <markdown [data]="proposalIntroText"></markdown>
+    <p-button *ngIf="isUpdateEnabled"
+        (onClick)="setEditState()"
+        icon="fas fa-pen"
+        label="Edit"
+        styleClass="ui-button-raised ui-button-primary"
+    ></p-button>
+
+
+</ng-container>
+<ng-template #elseEditState>
+
+
+    <app-markdown-editor 
+        [formControl]="getFormControl()"
+        textareaId="proposal-intro-text-editor"
+    ></app-markdown-editor>
+    <p-button
+        [disabled]="getFormControl()!.invalid"
+        (onClick)="submitEdits()"
+        icon="fas fa-save"
+        label="Save"
+        styleClass="ui-button-flat ui-button-success"
+    ></p-button>
+    <p-button
+        (onClick)="cancelEdits()"
+        label="Cancel"
+        styleClass="ui-button-flat ui-button-secondary"
+    ></p-button>
+
+
+</ng-template>

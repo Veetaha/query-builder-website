@@ -1,7 +1,7 @@
 import { NgModule       } from '@angular/core';
 import { BrowserModule  } from '@angular/platform-browser';
 import { UcWidgetModule } from 'ngx-uploadcare-widget';
-import { MessageService } from 'primeng/api';
+import { MessageService, DialogService, ConfirmationService } from 'primeng/api';
 
 import { VeeModule     } from '@utils/vee/vee.module';
 import { GraphQLModule } from '@app/gql/gql.module';
@@ -11,8 +11,9 @@ import { CommonNgxsModule     } from './common-ngxs.module';
 import { CommonPrimeNgModule  } from './common-prime-ng.module';
 
 import { PaginationComponent     } from './pagination/pagination.component';
-import { UploadFileComponent     } from './upload-file/upload-file.component';
+import { UploadImageComponent    } from './upload-image/upload-image.component';
 import { MarkdownEditorComponent } from './markdown-editor/markdown-editor.component';
+import { PictureDialogComponent  } from './picture-dialog/picture-dialog.component';
 
 import { PaginationSettingsComponent } 
 from './pagination/settings/pagination-settings.component';
@@ -36,18 +37,25 @@ const reexports = [
     declarations: [
         PaginationComponent,
         PaginationSettingsComponent,
-        UploadFileComponent,
-        MarkdownEditorComponent
+        UploadImageComponent,
+        MarkdownEditorComponent,
+        PictureDialogComponent
     ],
     providers: [
-        MessageService  
+        MessageService,
+        DialogService,
+        ConfirmationService
     ],
     exports: [
         ...reexports,
         PaginationComponent,
         PaginationSettingsComponent,
-        UploadFileComponent,
-        MarkdownEditorComponent
+        UploadImageComponent,
+        MarkdownEditorComponent,
+        PictureDialogComponent
+    ],
+    entryComponents: [
+        PictureDialogComponent
     ]
 })
 export class CommonModule { }

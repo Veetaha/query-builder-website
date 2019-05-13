@@ -120,7 +120,7 @@ export class ProposalResolver {
         "Requires auth. Deletes the proposal by id and returns `true`, but throws " +
         " if propsal doesn't exist or client has no rights to mutate the proposal."
     })
-    async deleteProposal(@Client client: User, @Args('id') proposalId: number) {
+    async deleteProposal(@Client client: User, @ArgsId proposalId: number) {
         await  this.proposals.ensureUserCanMutateProposalOrFail(client, proposalId);
         return this.proposals.delete(proposalId);
     }

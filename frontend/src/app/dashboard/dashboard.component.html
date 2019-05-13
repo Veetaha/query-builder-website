@@ -21,11 +21,18 @@
             styleClass="ui-button-raised ui-button-success"
         ></p-button>
 
-        <p-button *appIfClientRole="authRouteMap.getRoleLimitFor('sign-in'); else elseForNotGuest"
-            routerLink="/sign-in"
-            label="Sign in"
-            styleClass="ui-button-raised ui-button-primary"
-        ></p-button>
+        <ng-container *appIfClientRole="authRouteMap.getRoleLimitFor('sign-in'); else elseForNotGuest">
+            <p-button 
+                routerLink="/sign-in"
+                label="Sign in"
+                styleClass="ui-button-raised ui-button-primary"
+            ></p-button>
+            <p-button *appIfClientRole="authRouteMap.getRoleLimitFor('sign-up')"
+                routerLink="/sign-up"
+                label="Sign up"
+                styleClass="ui-button-raised ui-button-primary"
+            ></p-button>
+        </ng-container>
         <ng-template #elseForNotGuest>
             <p-button 
                 (click)="signOut()"

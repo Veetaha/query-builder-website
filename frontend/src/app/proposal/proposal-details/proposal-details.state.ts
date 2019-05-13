@@ -7,11 +7,15 @@ import { State, StateContext, Action, Store, Selector } from '@ngxs/store';
 import { Warning   } from '@app/error/error.actions';
 import { AuthState } from '@app/auth/auth.state';
 import { UserRole  } from '@app/gql/generated';
+import { Success   } from '@app/common/common.actions';
 
 import { ProposalService } from '../proposal.service';
 import { ProposalDetailsModel as StateModel } from './proposal-details.model';
-import { FetchProposal, RateProposal, UpdateProposal } from './proposal-details.actions';
 import { EntireProposal } from '../interfaces';
+
+import { FetchProposal, RateProposal, UpdateProposal, DeleteProposal } 
+from './proposal-details.actions';
+import { OpenViewProposalsPage } from '../proposal-routing.actions';
 
 type StateCtx = StateContext<StateModel>;
 
@@ -50,7 +54,7 @@ export class ProposalDetailsState {
 
             if (myRating != null && myRating.liked === liked) {
                 this.store.dispatch(new Warning(
-                    `User already ${liked ? 'likes' : 'dislikes'} current proposal.`
+                    `Client already ${liked ? 'likes' : 'dislikes'} current proposal.`
                 ));
                 return;
             }
@@ -96,10 +100,33 @@ export class ProposalDetailsState {
         await this.runExclusive(async () => {
 
             await this.ensureClientCanUpdateProposalOrFail(ctx);
+            
+            const { name, id } = ctx.getState().proposal!;
             const updatedProposal = await this.proposals
-                .updateProposal({ ...update, id: ctx.getState().proposal!.id })
+                .updateProposal({ ...update, id })
                 .toPromise();
+
             ctx.patchState({ proposal: updatedProposal });
+            this.store.dispatch(new Success(
+                `Proposal '${name}' was successfully updated.`
+            ));
+
+        });
+    }
+
+    @Action(DeleteProposal)
+    async deleteProposal(ctx: StateCtx) {
+        await this.runExclusive(async () => {
+            await this.ensureClientCanUpdateProposalOrFail(ctx);
+
+            const proposal = ctx.getState().proposal!;
+
+            await this.proposals.deleteProposal(proposal.id).toPromise();
+            ctx.patchState({ proposal: null });
+            this.store.dispatch([
+                OpenViewProposalsPage,
+                new Success(`Proposal '${proposal.name}' was successfully deleted`)
+            ]);
 
         });
     }

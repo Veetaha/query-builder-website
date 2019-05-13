@@ -1,0 +1,35 @@
+<figure *ngIf="formControl == null; else elseUpdateIsEnabled">
+    <img 
+        [src]="pictureUrl"
+        class="picture"
+    />
+</figure>
+
+<ng-template #elseUpdateIsEnabled>
+
+    <figure>
+        <app-upload-image #uploadImage
+            [formControl]="formControl"
+            [shouldDisplayButton]="false"
+        ></app-upload-image>
+        <img 
+            [src]="formControl!.value"
+            (click)="uploadImage.openDialog()"
+            class="picture picture--updatable"
+        />
+        <!-- <p-button
+            [disabled]="getFormControl()!.invalid"
+            (onClick)="submitEdits()"
+            icon="fas fa-save"
+            label="Save"
+            styleClass="ui-button-flat ui-button-success"
+        ></p-button>
+        <p-button
+            (onClick)="cancelEdits()"
+            label="Cancel"
+            styleClass="ui-button-flat ui-button-secondary"
+        ></p-button> -->
+    </figure>
+
+
+</ng-template>

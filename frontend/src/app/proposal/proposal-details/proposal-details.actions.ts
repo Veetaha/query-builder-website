@@ -1,8 +1,8 @@
 import { RemoveKeys } from 'ts-typedefs';
-import { Navigate } from '@ngxs/router-plugin';
 
 import { createPayloadedAction } from '@utils/ngxs/create-payloaded-action';
 import { ProposalUpdateInput   } from '@app/gql/generated';
+import { createSimpleAction } from '@utils/ngxs/create-simple-action';
 
 
 export class FetchProposal {
@@ -20,8 +20,4 @@ export const UpdateProposal = createPayloadedAction<RemoveKeys<ProposalUpdateInp
 );
 export type UpdateProposal = InstanceType<typeof UpdateProposal>;
 
-export class OpenProposalDetailsPage extends Navigate {
-    constructor(proposalId: number) {
-        super([`proposals`, proposalId]);
-    }
-}
+export const DeleteProposal = createSimpleAction('[ProposalDetail] DeleteProposal');

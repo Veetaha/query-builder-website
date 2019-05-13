@@ -7,14 +7,16 @@ import { CommonModule } from '@app/common/common.module';
 import { AuthRoutingModule        } from './auth-routing.module';
 import { AuthState                } from './auth.state';
 import { SignInState              } from './sign-in/sign-in.state';
+import { SignUpState              } from './sign-up/sign-up.state';
 import { SignInComponent          } from './sign-in/sign-in.component';
+import { SignUpComponent          } from './sign-up/sign-up.component';
 import { AuthTokenInterceptor     } from './auth-token.interceptor';
 import { AppIfClientRoleDirective } from './app-if-client-role.directive';
 
 @NgModule({
     imports: [ 
         CommonModule,
-        NgxsModule.forFeature([SignInState, AuthState])
+        NgxsModule.forFeature([SignInState, SignUpState, AuthState])
     ],
     exports: [
         AuthRoutingModule,
@@ -29,7 +31,7 @@ import { AppIfClientRoleDirective } from './app-if-client-role.directive';
     ],
     declarations: [
         SignInComponent, 
-        AppIfClientRoleDirective
+        AppIfClientRoleDirective, SignUpComponent
     ]
 })
 export class AuthModule {}

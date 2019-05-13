@@ -62,3 +62,7 @@ mutation createProposal($params: ProposalCreateInput!) {
         id
     }
 }
+
+mutation deleteProposal($id: Int!) {
+    deleteProposal(id: $id)
+}
