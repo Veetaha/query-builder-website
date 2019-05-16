@@ -20,6 +20,11 @@
             label="Create proposal"
             styleClass="ui-button-raised ui-button-success"
         ></p-button>
+        <p-button
+                routerLink="/developer"
+                label="API docs"
+                styleClass="ui-button-raised ui-button-secondary"
+        ></p-button>
 
         <ng-container *appIfClientRole="authRouteMap.getRoleLimitFor('sign-in'); else elseForNotGuest">
             <p-button 

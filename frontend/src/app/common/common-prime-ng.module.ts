@@ -17,6 +17,8 @@ import { InputTextareaModule   } from 'primeng/inputtextarea';
 import { InputSwitchModule     } from 'primeng/inputswitch';
 import { ConfirmDialogModule   } from 'primeng/confirmdialog';
 import { DynamicDialogModule   } from 'primeng/dynamicdialog';
+import { TooltipModule         } from 'primeng/tooltip';
+
 
 @NgModule({
     exports: [
@@ -36,7 +38,8 @@ import { DynamicDialogModule   } from 'primeng/dynamicdialog';
         InputTextareaModule,
         InputSwitchModule,
         ConfirmDialogModule,
-        DynamicDialogModule
+        DynamicDialogModule,
+        TooltipModule
     ]
 })
 export class CommonPrimeNgModule { }

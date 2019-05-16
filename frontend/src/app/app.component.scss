@@ -1,4 +1,16 @@
+.main, .header {
+    margin: auto;
+    flex: 1 0 auto;
+}
 .main {
     width: 80%;
-    margin: auto
+}
+
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.footer {
+    flex-shrink: 0;
 }

@@ -4,7 +4,7 @@ import { NgxsModule } from '@ngxs/store';
 
 import { NotFoundComponent  } from './not-found.component';
 import { GlobalErrorHandler } from './global-error.handler';
-import { ErrorRoutingModule } from './error.routing.module';
+import { ErrorRoutingModule } from './error-routing.module';
 import { ErrorState         } from './error.state';
 
 @NgModule({

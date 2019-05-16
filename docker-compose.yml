@@ -5,6 +5,5 @@ services:
         ports:
             - ${PORT}:${PORT}
             - 9229:9229
-        command:  npm run start
         env_file: .env
         

@@ -34,6 +34,7 @@
   },
   "homepage": "https://github.com/Veetaha/query-builder-website#readme",
   "dependencies": {
+    "@hapi/joi": "^15.0.3",
     "@ngxs/form-plugin": "^3.4.3",
     "@ngxs/router-plugin": "^3.4.3",
     "@ngxs/storage-plugin": "^3.4.3",

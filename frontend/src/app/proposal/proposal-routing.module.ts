@@ -12,10 +12,10 @@ import { ProposalDetailsComponent       } from './proposal-details/proposal-deta
 import { ProposalDetailsResolverService } 
 from './proposal-details/proposal-details-resolver.service';
 
-
+// @dynamic
 const canActivate = [AuthGuard];
 
-const { routeMap, routes } = RouteMap.create([
+const routes = [
     {
         path:      'proposals/create',
         component:  CreateProposalComponent,
@@ -33,12 +33,13 @@ const { routeMap, routes } = RouteMap.create([
         path:      'proposals',
         component:  ViewProposalsComponent
     }
-]);
+];
 
+// @dynamic
 @NgModule({
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
 export class ProposalRoutingModule { 
-    static readonly routeMap = routeMap;
+    static readonly routeMap = RouteMap.create(routes).routeMap;
 }

@@ -17,8 +17,9 @@ import { isDevelopmentMode   } from './environment';
 
 type NgxsModuleOptions = NonNullable<Parameters<(typeof NgxsModule)['forRoot']>[1]>;
 
-
+// @dynamic
 @Injectable({ providedIn: 'root' })
+// @dynamic
 export class ConfigService {
 
     static readonly isDevelopmentMode = isDevelopmentMode;
@@ -28,7 +29,7 @@ export class ConfigService {
     private readonly httpLinkHandler: HttpLinkHandler;
     
     readonly defaultToastOptions: Partial<Message> = {
-        life: 8000
+        life: 4000
     };
 
     readonly markdownEditorOptions: EditorOption;

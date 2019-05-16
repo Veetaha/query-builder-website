@@ -8,10 +8,10 @@ import { SignInComponent } from './sign-in/sign-in.component';
 import { AuthGuard       } from './auth.guard';
 import { allow           } from './user-role-limit.obj';
 import { SignUpComponent } from './sign-up/sign-up.component';
-
+// @dynamic
 const canActivate = [AuthGuard];
 
-const { routeMap, routes } = RouteMap.create([
+const routes = [
     {
         path:      'sign-in',
         component: SignInComponent,
@@ -24,12 +24,13 @@ const { routeMap, routes } = RouteMap.create([
         data:      allow(UserRole.Guest),
         canActivate
     }
-]);
+];
+
 
 @NgModule({
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
 export class AuthRoutingModule { 
-    static readonly routeMap = routeMap;
+    static readonly routeMap = RouteMap.create(routes).routeMap;
 }

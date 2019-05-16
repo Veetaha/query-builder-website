@@ -8,10 +8,13 @@ import { AppComponent       } from './app.component';
 import { HomeComponent      } from './home/home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProposalModule     } from './proposal/proposal.module';
+import { DeveloperModule    } from './developer/developer.module';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
     imports: [   
         CommonModule,
+        DeveloperModule,
         ProposalModule,
         AuthModule,
         ErrorModule,
@@ -20,7 +23,8 @@ import { ProposalModule     } from './proposal/proposal.module';
     declarations: [
         AppComponent,
         DashboardComponent,
-        HomeComponent
+        HomeComponent,
+        FooterComponent
     ],
     bootstrap: [AppComponent]
 })

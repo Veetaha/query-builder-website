@@ -1,6 +1,7 @@
-import { NgModule       } from '@angular/core';
-import { BrowserModule  } from '@angular/platform-browser';
-import { UcWidgetModule } from 'ngx-uploadcare-widget';
+import { NgModule        } from '@angular/core';
+import { BrowserModule   } from '@angular/platform-browser';
+import { UcWidgetModule  } from 'ngx-uploadcare-widget';
+import { ClipboardModule } from 'ngx-clipboard';
 import { MessageService, DialogService, ConfirmationService } from 'primeng/api';
 
 import { VeeModule     } from '@utils/vee/vee.module';
@@ -27,7 +28,8 @@ const reexports = [
     CommonNgxsModule,   
     CommonPrimeNgModule,
     UcWidgetModule,
-    CommonMarkdownModule
+    CommonMarkdownModule,
+    ClipboardModule
 ];
 
 @NgModule({

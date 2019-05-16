@@ -1,13 +1,13 @@
 @import "./theme.scss";
 
-// .ui-dropdown {
-//     // min-width: fit-content;
-// }
-
 p-progressBar .inner-progress-bar {
     height: 2px;
 }
 
 [ng-reflect-router-link] {
     cursor: pointer;
+}
+
+body, html {
+    height: 100%;
 }

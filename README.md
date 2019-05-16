@@ -144,3 +144,9 @@ See [this issue](https://github.com/ngxs/store/issues/917) for details.
 TODO investigate.
 As a workaround, don't derive your action from `Error`, but save the error in
 your action property.
+
+
+### `ERROR in Cannot read property 'loadChildren' of undefined`
+
+Your routing module is a target for static analysis, thus must not have function 
+for creating `Routes`. See [this discussion](https://www.bountysource.com/issues/52474675-angular-5-upgrade-can-t-get-lazy-loading-to-work).
