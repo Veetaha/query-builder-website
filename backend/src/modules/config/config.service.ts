@@ -15,7 +15,7 @@ import { EnvService     } from '@utils/env/env.service';
 export class ConfigService
 implements TypeOrmOptionsFactory, GqlOptionsFactory, JwtOptionsFactory, AuthOptionsFactory {
     // development mode by default
-    static readonly isDevelopmentMode = process.env.NODE_ENV !== 'production';
+    static readonly isDevelopmentMode = process.env.NODE_ENV === 'production';
 
     readonly default = {
         user:     { avatarUrl:      '/assets/default-user-avatar.svg'           },
