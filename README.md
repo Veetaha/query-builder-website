@@ -145,6 +145,7 @@ TODO investigate.
 As a workaround, don't derive your action from `Error`, but save the error in
 your action property.
 
+---
 
 ### `ERROR in Cannot read property 'loadChildren' of undefined`
 
