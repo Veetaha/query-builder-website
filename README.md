@@ -1,5 +1,7 @@
 # QueryBuilder website fullstack project
 
+[Click here to open the deployed app](https://query-builder-website.herokuapp.com/)
+
 [![Build Status](https://travis-ci.com/Veetaha/query-builder-website.svg?branch=master)](https://travis-ci.com/Veetaha/query-builder-website) 
 [![Coverage Status](https://coveralls.io/repos/github/Veetaha/query-builder-website/badge.svg?branch=master)](https://coveralls.io/github/Veetaha/query-builder-website?branch=master)
 
